@@ -1,0 +1,14 @@
+{
+    "trigger": true,
+    "modules": [
+        "custom"
+    ],
+    "parentResource": "users",
+    "functionName": "usersPostAuthentication",
+    "parentStack": "auth",
+    "triggerEnvs": "[]",
+    "triggerTemplate": "PostAuthentication.json.ejs",
+    "roleName": "usersPostAuthentication",
+    "skipEdit": true,
+    "resourceName": "usersPostAuthentication"
+}

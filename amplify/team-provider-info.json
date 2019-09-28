@@ -1,6 +1,7 @@
 {
     "dev": {
         "awscloudformation": {
+<<<<<<< HEAD
             "AuthRoleName": "twistter7-dev-20190902175247-authRole",
             "UnauthRoleArn": "arn:aws:iam::995573383865:role/twistter7-dev-20190902175247-unauthRole",
             "AuthRoleArn": "arn:aws:iam::995573383865:role/twistter7-dev-20190902175247-authRole",
@@ -9,6 +10,48 @@
             "UnauthRoleName": "twistter7-dev-20190902175247-unauthRole",
             "StackName": "twistter7-dev-20190902175247",
             "StackId": "arn:aws:cloudformation:us-east-1:995573383865:stack/twistter7-dev-20190902175247/00be1330-cdcc-11e9-a0fa-0a456a010dd4"
+=======
+            "AuthRoleName": "twistter7-dev-20190927180403-authRole",
+            "UnauthRoleArn": "arn:aws:iam::995573383865:role/twistter7-dev-20190927180403-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::995573383865:role/twistter7-dev-20190927180403-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "twistter7-dev-20190927180403-deployment",
+            "UnauthRoleName": "twistter7-dev-20190927180403-unauthRole",
+            "StackName": "twistter7-dev-20190927180403",
+            "StackId": "arn:aws:cloudformation:us-east-1:995573383865:stack/twistter7-dev-20190927180403/b7e94430-e172-11e9-9999-1262c1c6cf8e"
+        },
+        "categories": {
+            "function": {
+                "usersPostAuthentication": {},
+                "usersPostConfirmation": {},
+                "usersPreSignup": {}
+            },
+            "auth": {
+                "users": {}
+            }
+        }
+    },
+    "devtwo": {
+        "awscloudformation": {
+            "AuthRoleName": "twistter7-devtwo-20190928155057-authRole",
+            "UnauthRoleArn": "arn:aws:iam::995573383865:role/twistter7-devtwo-20190928155057-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::995573383865:role/twistter7-devtwo-20190928155057-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "twistter7-devtwo-20190928155057-deployment",
+            "UnauthRoleName": "twistter7-devtwo-20190928155057-unauthRole",
+            "StackName": "twistter7-devtwo-20190928155057",
+            "StackId": "arn:aws:cloudformation:us-east-1:995573383865:stack/twistter7-devtwo-20190928155057/4a5d3630-e229-11e9-86f9-0ad7f2019cc4"
+        },
+        "categories": {
+            "auth": {
+                "users": {}
+            },
+            "function": {
+                "usersPostAuthentication": {},
+                "usersPostConfirmation": {},
+                "usersPreSignup": {}
+            }
+>>>>>>> 83939d226c584afcab11261c7abb7af550b03ad4
         }
     }
 }
