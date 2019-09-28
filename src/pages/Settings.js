@@ -24,7 +24,8 @@ class Settings extends Component {
   }
 
   handleSubmitEmail(event){
-    console.log(this.state.email);
+    var user = await Auth.currentAuthenticatedUser();
+    console.log(Auth.updateUserAttributes(user,{email: this.state.email}));
   }
 
   handleChangePhoneNumber(event){
@@ -32,7 +33,8 @@ class Settings extends Component {
   }
 
   handleSubmitPhoneNumber(event){
-    console.log("submit phone no");
+    var user = await Auth.currentAuthenticatedUser();
+    console.log(Auth.updateUserAttributes(user,{phone_number: this.state.phone_number}));
   }
 
   handleChangeOldPassword(event){
