@@ -1,35 +1,22 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { Auth } from 'aws-amplify'
+
+import Settings from './pages/Settings.js'
+
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import { withAuthenticator } from 'aws-amplify-react'
 
 class App extends Component {
   async componentDidMount(){
-    var user = await Auth.currentAuthenticatedUser()
-    console.log(user)
-    console.log(Auth.userAttributes( user ))
-    Auth.signOut()
   }
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+        <Router>
+            <Switch>
+                <Route path="/" exact component = { Settings } />
+            </Switch>
+        </Router>
     );
   }
 }
