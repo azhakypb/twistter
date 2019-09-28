@@ -108,7 +108,7 @@
 				"Runtime": "nodejs8.10",
 				"Timeout": "25",
 				"Code": {
-					"S3Bucket": "twistter7-dev-20190927180403-deployment",
+					"S3Bucket": "twistter7-devtwo-20190928155057-deployment",
 					"S3Key": "amplify-builds/usersPreSignup-67346b4349442b356457-build.zip"
 				}
 			}
