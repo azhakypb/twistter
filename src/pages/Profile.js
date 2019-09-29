@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Col, FormControl, InputGroup, Jumbotron, Row, Container, Image} from 'react-bootstrap';
+import { Button, Card, Col, FormControl, InputGroup, Jumbotron, Row, Container, Image} from 'react-bootstrap';
 import { Auth } from 'aws-amplify';
 import Navbar from '../components/Navbar.js'
-
 
 class Profile extends Component {
 
@@ -37,12 +36,11 @@ class Profile extends Component {
             <Col xs={6}>
                 <Container className="My profile">
                     <Jumbotron>
-                        <h1>My Profile</h1>
-                        <Image src={this.state.url} roundedCircle/>
-                        <p>{this.state.username}</p>
-                        <p>{this.state.name}</p>
-                        <Button variant="outline-success"> 27 Followers</Button>
-                        <Button variant="outline-danger">13 Following</Button>
+                        <Card className="bg-dark text-black">
+                            <Card.Img src={url} alt="Card image"/>
+                        </Card>
+                        <h1>{name}</h1>
+                        <h2>@{username}</h2>
                     </Jumbotron>
                 </Container>
 
