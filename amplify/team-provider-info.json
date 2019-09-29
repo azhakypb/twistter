@@ -9,6 +9,16 @@
             "UnauthRoleName": "twistter7-dev-20190928191012-unauthRole",
             "StackName": "twistter7-dev-20190928191012",
             "StackId": "arn:aws:cloudformation:us-east-1:995573383865:stack/twistter7-dev-20190928191012/2042a490-e245-11e9-b53d-0e1ffe4de6a4"
+        },
+        "categories": {
+            "auth": {
+                "users": {}
+            },
+            "function": {
+                "usersPostAuthentication": {},
+                "usersPostConfirmation": {},
+                "usersPreSignup": {}
+            }
         }
     },
     "devjustin": {
