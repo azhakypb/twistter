@@ -1,24 +1,35 @@
-import React, { Component } from 'react';
+// react modules
+import { BrowserRouter as Router, Route, Switch }   from 'react-router-dom';
+import React, { Component }                         from 'react';
+// aws modules
+import { withAuthenticator } from 'aws-amplify-react'
+import { Auth } from 'aws-amplify';
+// pages
+import Settings from './pages/Settings.js'
+import Profile from './pages/Profile.js'
+// style sheet
 import './App.css';
 
-import Settings from './pages/Settings.js'
-
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-
-import { withAuthenticator } from 'aws-amplify-react'
-
 class App extends Component {
-  async componentDidMount(){
-  }
-  render() {
-    return (
-        <Router>
-            <Switch>
-                <Route path="/" exact component = { Settings } />
-            </Switch>
-        </Router>
-    );
-  }
+
+    render() {
+
+        return (
+
+            <Router>
+                <Switch>
+                    <Route 
+                        exact path="/" 
+                        component = { Profile }
+                    />
+                    <Route 
+                        path="/settings"
+                        component = { Settings } 
+                    />
+                </Switch>
+            </Router>
+        );
+    }
 }
 
 export default withAuthenticator( App );

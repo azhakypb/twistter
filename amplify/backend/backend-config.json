@@ -1,24 +1,4 @@
-<<<<<<< HEAD
-{}
-=======
 {
-	"function": {
-		"usersPostAuthentication": {
-			"service": "Lambda",
-			"providerPlugin": "awscloudformation",
-			"build": true
-		},
-		"usersPostConfirmation": {
-			"service": "Lambda",
-			"providerPlugin": "awscloudformation",
-			"build": true
-		},
-		"usersPreSignup": {
-			"service": "Lambda",
-			"providerPlugin": "awscloudformation",
-			"build": true
-		}
-	},
 	"auth": {
 		"users": {
 			"service": "Cognito",
@@ -53,6 +33,37 @@
 				}
 			]
 		}
+	},
+	"function": {
+		"usersPostAuthentication": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true
+		},
+		"usersPostConfirmation": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true
+		},
+		"usersPreSignup": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true
+		}
+	},
+	"api": {
+		"db": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"securityType": "API_KEY"
+			}
+		}
+	},
+	"hosting": {
+		"S3AndCloudFront": {
+			"service": "S3AndCloudFront",
+			"providerPlugin": "awscloudformation"
+		}
 	}
 }
->>>>>>> 83939d226c584afcab11261c7abb7af550b03ad4
