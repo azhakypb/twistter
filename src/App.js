@@ -7,6 +7,7 @@ import { Auth } from 'aws-amplify';
 // pages
 import Settings from './pages/Settings.js'
 import Profile from './pages/Profile.js'
+import Test from './pages/Test.js'
 // style sheet
 import './App.css';
 
@@ -18,13 +19,17 @@ class App extends Component {
 
             <Router>
                 <Switch>
-                    <Route 
-                        exact path="/" 
+                    <Route
+                        exact path="/"
                         component = { Profile }
                     />
-                    <Route 
+                    <Route
                         path="/settings"
-                        component = { Settings } 
+                        component = { Settings }
+                    />
+                    <Route
+                        path="/testing"
+                        component = { Test }
                     />
                 </Switch>
             </Router>

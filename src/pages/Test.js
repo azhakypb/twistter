@@ -36,8 +36,17 @@ class Test extends Component {
   }
 
   createUser = async () => {
-    const create = await API.graphql(graphqlOperation(userCreation, userInfo));
-    return create;
+    const create = null;
+    try {
+      create = await API.graphql(graphqlOperation(userCreation, userInfo));
+    }
+    catch (error) {
+      console.log(error);
+    }
+    if (create == null) {
+      console.log("User already exists");
+    }
+    // return create;
   }
 
   searchUser = async () => {
@@ -61,7 +70,6 @@ class Test extends Component {
         <p>User Operations</p>
         <button onClick={this.createUser}>Create User</button>
         <button onClick={this.searchUser}>Search User</button>
-        <p id="test">{ id }</p>
       </div>
     );
   }
