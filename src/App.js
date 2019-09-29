@@ -20,7 +20,7 @@ class App extends Component {
     return (
         <Router>
             <Switch>
-                <Route path="/" exact component = { Profile } />
+                <Route exact path="/" component = { Profile } />
                 <Route path="/settings" component = { Settings } />
             </Switch>
         </Router>

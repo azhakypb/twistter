@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, } from 'react';
 import { Button, Jumbotron } from 'react-bootstrap';
-import { Auth } from 'aws-amplify'
+import { Auth } from 'aws-amplify';
+import { Link } from 'react-router-dom';
 
 class Navbar extends Component {
 
@@ -26,12 +27,16 @@ class Navbar extends Component {
     return(
     	<Jumbotron>
     		<h2>Navbar</h2>
-    		<Button variant="secondary" size="md" block>
-    			My Profile
-  			</Button>
-  			<Button variant="secondary" size="md" block>
-    			Settings
-  			</Button>
+    		<Link to= '/' paddingTop="50px">
+	  			<Button variant="secondary" size="md" block>
+	    			Profile
+	  			</Button>
+    		</Link>
+    		<Link to= '/settings' paddingTop="50px">
+	  			<Button variant="secondary" size="md" block>
+	    			Settings
+	  			</Button>
+  			</Link>
   			<Button variant="secondary" size="md" onClick ={this.logOut} block>
     			Log Out
   			</Button>
