@@ -7,8 +7,13 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import { withAuthenticator } from 'aws-amplify-react'
 
+import { Auth } from 'aws-amplify';
+
 class App extends Component {
   async componentDidMount(){
+    console.log(window.location.hostname);
+    var userInfo = Auth.currentUserInfo()
+    console.log(userInfo);
   }
   render() {
     return (

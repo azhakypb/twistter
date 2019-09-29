@@ -8,22 +8,30 @@ class Settings extends Component {
 
   constructor(props){
     super(props);
-    this.state = { email:'', phone_number:'', old_password:'', new_password:'' };
+    this.state = { 
+      email:'', 
+      phone_number:'', 
+      old_password:'', 
+      new_password:'', 
+      name:'',
+    };
 
-    this.handleChangeEmail = this.handleChangeEmail.bind(this);
-    this.handleSubmitEmail = this.handleSubmitEmail.bind(this);
-    this.handleChangePhoneNumber = this.handleChangePhoneNumber.bind(this);
-    this.handleSubmitPhoneNumber = this.handleSubmitPhoneNumber.bind(this);
-    this.handleChangeOldPassword = this.handleChangeOldPassword.bind(this);
-    this.handleChangeNewPassword = this.handleChangeNewPassword.bind(this);
-    this.handleSubmitNewPassword = this.handleSubmitNewPassword.bind(this);
+    this.handleChangeEmail        = this.handleChangeEmail.bind(this);
+    this.handleChangeNewPassword  = this.handleChangeNewPassword.bind(this);
+    this.handleChangeOldPassword  = this.handleChangeOldPassword.bind(this);
+    this.handleChangePhoneNumber  = this.handleChangePhoneNumber.bind(this);
+    this.handleSubmitEmail        = this.handleSubmitEmail.bind(this);
+    this.handleSubmitNewPassword  = this.handleSubmitNewPassword.bind(this);
+    this.handleSubmitPhoneNumber  = this.handleSubmitPhoneNumber.bind(this);
+    this.handleChangeName         = this.handleChangeName.bind(this);
+    this.handleSubmitName         = this.handleSubmitName.bind(this);
   }
 
   handleChangeEmail(event){
     this.setState({ email: event.target.value });
   }
 
-  handleSubmitEmail(event){
+  async handleSubmitEmail(event){
     var user = await Auth.currentAuthenticatedUser();
     console.log(Auth.updateUserAttributes(user,{email: this.state.email}));
   }
@@ -32,9 +40,10 @@ class Settings extends Component {
     this.setState({ phone_number: event.target.value });
   }
 
-  handleSubmitPhoneNumber(event){
+  async handleSubmitPhoneNumber(event){
     var user = await Auth.currentAuthenticatedUser();
-    console.log(Auth.updateUserAttributes(user,{phone_number: this.state.phone_number}));
+    var res = await Auth.updateUserAttributes(user, {phone_number:this.state.phone_number}).catch((err) => { console.error(err); });
+    console.log( res );
   }
 
   handleChangeOldPassword(event){
@@ -47,7 +56,19 @@ class Settings extends Component {
 
   async handleSubmitNewPassword(event){
     var user = await Auth.currentAuthenticatedUser();
-    console.log(Auth.changePassword(user, this.state.old_password, this.state.new_password));
+    var res = await Auth.changePassword(user, this.state.old_password, this.state.new_password);
+    console.log(res);
+  }
+
+  handleChangeName(event){
+    console.log(event.target.value);
+    this.setState({ name: event.target.value });
+  }
+
+  async handleSubmitName(event){
+    var user = await Auth.currentAuthenticatedUser();
+    var res = await Auth.updateUserAttributes(user, {name:this.state.name}).catch((err) => { console.error(err); });
+    console.log(res);
   }
 
   render() {
@@ -56,7 +77,7 @@ class Settings extends Component {
         <Col>
           <Navbar></Navbar>
         </Col>
-        <Col>
+        <Col xs="6">
           <Jumbotron>
             <h2>User Settings</h2>
             <InputGroup className="mb-3" value={this.state.email} onChange={this.handleChangeEmail}>
@@ -70,7 +91,7 @@ class Settings extends Component {
               </InputGroup.Append>
             </InputGroup>
 
-            <InputGroup className="mb-3" value={this.state.email} onChange={this.handleChangeEmail}>
+            <InputGroup className="mb-3" value={this.state.phone_number} onChange={this.handleChangePhoneNumber}>
               <FormControl
                 placeholder="New Phone #"
                 aria-label="New Phone #"
@@ -96,6 +117,18 @@ class Settings extends Component {
               />
               <InputGroup.Append>
                 <Button variant="outline-secondary" onClick={this.handleSubmitNewPassword}>Change Your Password</Button>
+              </InputGroup.Append>
+            </InputGroup>
+
+            <InputGroup className="mb-3">
+              <FormControl
+                value={this.state.name} onChange={this.handleChangeName}
+                placeholder="Name"
+                aria-label="Name"
+                aria-describedby="basic-addon2"
+              />
+              <InputGroup.Append>
+                <Button variant="outline-secondary" onClick={this.handleSubmitName}>Change Your Name</Button>
               </InputGroup.Append>
             </InputGroup>
           </Jumbotron>

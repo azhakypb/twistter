@@ -1,0 +1,14 @@
+{
+    "trigger": true,
+    "modules": [
+        "custom"
+    ],
+    "parentResource": "users",
+    "functionName": "usersPreSignup",
+    "parentStack": "auth",
+    "triggerEnvs": "[]",
+    "triggerTemplate": "PreSignup.json.ejs",
+    "roleName": "usersPreSignup",
+    "skipEdit": true,
+    "resourceName": "usersPreSignup"
+}

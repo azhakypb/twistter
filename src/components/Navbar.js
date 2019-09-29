@@ -3,11 +3,25 @@ import { Button, Jumbotron } from 'react-bootstrap';
 import { Auth } from 'aws-amplify'
 
 class Navbar extends Component {
-  render() {
 
-  	function logOut(e) {
-  		Auth.signOut()
+	constructor(props){
+    	super(props);
+
+	    this.logOut        			=	this.logOut.bind(this);
+	    this.displayUserAttributes 	=	this.displayUserAttributes.bind(this); 
   	}
+
+  	logOut(){
+  		Auth.signOut();
+  	}
+
+  	async displayUserAttributes(){
+
+  		var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+  		console.log(user.attributes);
+  	}
+
+	render() {
 
     return(
     	<Jumbotron>
@@ -18,8 +32,11 @@ class Navbar extends Component {
   			<Button variant="secondary" size="md" block>
     			Settings
   			</Button>
-  			<Button variant="secondary" size="md" onClick ={logOut} block>
+  			<Button variant="secondary" size="md" onClick ={this.logOut} block>
     			Log Out
+  			</Button>
+  			<Button variant="secondary" size="md" onClick ={this.displayUserAttributes} block>
+    			Display Attributes
   			</Button>
     	</Jumbotron>
     );

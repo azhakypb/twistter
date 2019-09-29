@@ -10,5 +10,27 @@
             "StackName": "twistter7-dev-20190928191012",
             "StackId": "arn:aws:cloudformation:us-east-1:995573383865:stack/twistter7-dev-20190928191012/2042a490-e245-11e9-b53d-0e1ffe4de6a4"
         }
+    },
+    "devjustin": {
+        "awscloudformation": {
+            "AuthRoleName": "twistter7-devjustin-20190928192343-authRole",
+            "UnauthRoleArn": "arn:aws:iam::995573383865:role/twistter7-devjustin-20190928192343-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::995573383865:role/twistter7-devjustin-20190928192343-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "twistter7-devjustin-20190928192343-deployment",
+            "UnauthRoleName": "twistter7-devjustin-20190928192343-unauthRole",
+            "StackName": "twistter7-devjustin-20190928192343",
+            "StackId": "arn:aws:cloudformation:us-east-1:995573383865:stack/twistter7-devjustin-20190928192343/03655a00-e247-11e9-a310-12b4f4762c6a"
+        },
+        "categories": {
+            "function": {
+                "usersPostAuthentication": {},
+                "usersPostConfirmation": {},
+                "usersPreSignup": {}
+            },
+            "auth": {
+                "users": {}
+            }
+        }
     }
 }
