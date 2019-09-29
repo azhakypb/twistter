@@ -14,6 +14,7 @@ class Settings extends Component {
       old_password:'', 
       new_password:'', 
       name:'',
+      url:''
     };
 
     this.handleChangeEmail        = this.handleChangeEmail.bind(this);
@@ -25,6 +26,9 @@ class Settings extends Component {
     this.handleSubmitPhoneNumber  = this.handleSubmitPhoneNumber.bind(this);
     this.handleChangeName         = this.handleChangeName.bind(this);
     this.handleSubmitName         = this.handleSubmitName.bind(this);
+    this.handleChangeUrl          = this.handleChangeUrl.bind(this);
+    this.handleSubmitUrl          = this.handleSubmitUrl.bind(this);
+
   }
 
   handleChangeEmail(event){
@@ -69,6 +73,15 @@ class Settings extends Component {
     var user = await Auth.currentAuthenticatedUser();
     var res = await Auth.updateUserAttributes(user, {name:this.state.name}).catch((err) => { console.error(err); });
     console.log(res);
+  }
+
+  handleChangeUrl(event){
+    this.setState({ url: event.target.value });
+  }
+
+  async handleSubmitUrl(event){
+    var user = await Auth.currentAuthenticatedUser();
+    console.log(Auth.updateUserAttributes(user,{picture: this.state.url}));
   }
 
   render() {
@@ -131,6 +144,19 @@ class Settings extends Component {
                 <Button variant="outline-secondary" onClick={this.handleSubmitName}>Change Your Name</Button>
               </InputGroup.Append>
             </InputGroup>
+
+            <InputGroup className="mb-3">
+              <FormControl
+                value={this.state.url} onChange={this.handleChangeUrl}
+                placeholder="Picture URL"
+                aria-label="Picture URL"
+                aria-describedby="basic-addon2"
+              />
+              <InputGroup.Append>
+                <Button variant="outline-secondary" onClick={this.handleSubmitUrl}>Change Your Picture</Button>
+              </InputGroup.Append>
+            </InputGroup>
+
           </Jumbotron>
         </Col>
         <Col>
