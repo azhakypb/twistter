@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import Settings from './pages/Settings.js'
+import Profile from './pages/Profile.js'
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
@@ -19,7 +20,8 @@ class App extends Component {
     return (
         <Router>
             <Switch>
-                <Route path="/" exact component = { Settings } />
+                <Route path="/" exact component = { Profile } />
+                <Route path="/settings" component = { Settings } />
             </Switch>
         </Router>
     );
