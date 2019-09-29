@@ -52,23 +52,45 @@ class Navbar extends Component {
     	return(
     		<Jumbotron>
     			<h2>Navbar</h2>
-    			<Link to= '/' paddingTop="50px">
-	  				<Button variant="secondary" size="md" block>
+    			<Link 
+    				to= '/' 
+    				paddingTop="50px">
+	  				<Button 
+	  					variant="secondary" 
+	  					size="md" 
+	  					block>
 	    				Profile
 	  				</Button>
     			</Link>
-    			<Link to= '/settings' paddingTop="50px">
-	  				<Button variant="secondary" size="md" block>
+    			<Link 
+    				to= '/settings' 
+    				paddingTop="50px">
+	  				<Button 
+	  					variant="secondary" 
+	  					size="md" 
+	  					block>
 	    				Settings
 	  				</Button>
   				</Link>
-  				<Button variant="secondary" size="md" onClick ={this.logOut} block>
+  				<Button 
+  					variant="secondary" 
+  					size="md" 
+  					onClick ={this.logOut} 
+  					block>
     				Log Out
   				</Button>
-  				<Button variant="secondary" size="md" onClick ={this.displayUserAttributes} block>
+  				<Button 
+  					variant="secondary" 
+  					size="md" 
+  					onClick ={this.displayUserAttributes} 
+  					block>
     				Display Attributes
   				</Button>
-  				<Button variant="secondary" size="md" onClick ={this.deleteUser} block>
+  				<Button 
+  					variant="secondary" 
+  					size="md" 
+  					onClick ={this.deleteUser} 
+  					block>
     				Delete User
   				</Button>
     		</Jumbotron>

@@ -44,38 +44,34 @@ class Settings extends Component {
     async handleSubmitEmail(event){
         console.log('updating user email');
         var user    = await Auth.currentAuthenticatedUser()
-                                    .catch((err) => { console.error(err); })
-                                    .then(( res) => { console.log(  res); });
+                                    .catch((err) => { console.error(err); });
         var res     = await Auth.updateUserAttributes(user,{email: this.state.email})
-                                    .catch((err) => { console.error(err); })
-                                    .then(( res) => { console.log(  res); });
+                                    .catch((err) => { console.error(err); });
+        console.log(res);
     }
     async handleSubmitPhoneNumber(event){
         console.log('updating user phone no');
         var user    = await Auth.currentAuthenticatedUser()
-                                    .catch((err) => { console.error(err); })
-                                    .then(( res) => { console.log(  res); });
+                                    .catch((err) => { console.error(err); });
         var res     = await Auth.updateUserAttributes(user, {phone_number:this.state.phone_number})
-                                    .catch((err) => { console.error(err); })
-                                    .then(( res) => { console.log(  res); });
+                                    .catch((err) => { console.error(err); });
+        console.log(res);
     }
     async handleSubmitNewPassword(event){
         console.log('updating user password');
         var user    = await Auth.currentAuthenticatedUser()
-                                    .catch((err) => { console.error(err); })
-                                    .then(( res) => { console.log(  res); });
+                                    .catch((err) => { console.error(err); });
         var res     = await Auth.changePassword(user, this.state.old_password, this.state.new_password)
-                                    .catch((err) => { console.error(err); })
-                                    .then(( res) => { console.log(  res); });
+                                    .catch((err) => { console.error(err); });
+        console.log(res);
     }
     async handleSubmitName(event){
         console.log('updating user name');
         var user    = await Auth.currentAuthenticatedUser()
-                                    .catch((err) => { console.error(err); })
-                                    .then(( res) => { console.log(  res); });
+                                    .catch((err) => { console.error(err); });
         var res     = await Auth.updateUserAttributes(user, {name:this.state.name})
-                                    .catch((err) => { console.error(err); })
-                                    .then(( res) => { console.log(  res); });
+                                    .catch((err) => { console.error(err); });
+        console.log(res);
     }
     async handleSubmitUrl(event){
         console.log('updating user picture');
@@ -83,8 +79,8 @@ class Settings extends Component {
                                     .catch((err) => { console.error(err); })
                                     .then(( res) => { console.log(  res); });
         var res     = await Auth.updateUserAttributes(user,{picture: this.state.url})
-                                    .catch((err) => { console.error(err); })
-                                    .then(( res) => { console.log(  res); });
+                                    .catch((err) => { console.error(err); });
+        console.log(res);
     }
 
     render() {

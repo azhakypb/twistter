@@ -18,8 +18,14 @@ class App extends Component {
 
             <Router>
                 <Switch>
-                    <Route exact path="/" component = { Profile } />
-                    <Route path="/settings" component = { Settings } />
+                    <Route 
+                        exact path="/" 
+                        component = { Profile }
+                    />
+                    <Route 
+                        path="/settings"
+                        component = { Settings } 
+                    />
                 </Switch>
             </Router>
         );

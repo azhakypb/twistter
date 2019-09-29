@@ -24,7 +24,7 @@ class Profile extends Component {
         var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
         this.setState({username: user.username});
         if( user.attributes.hasOwnProperty('picture') ){ this.setState({url : user.attributes.picture}); }
-        if( user.attributes.hasOwnProperty('name   ') ){ this.setState({name: user.attributes.name   }); }
+        if( user.attributes.hasOwnProperty('name'   ) ){ this.setState({name: user.attributes.name   }); }
     }
 
     render() {
