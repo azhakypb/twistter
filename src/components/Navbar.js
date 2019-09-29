@@ -79,7 +79,7 @@ class Navbar extends Component {
   					block>
     				Log Out
   				</Button>
-  				<Button 
+  				<Button
   					variant="secondary" 
   					size="md" 
   					onClick ={this.displayUserAttributes} 

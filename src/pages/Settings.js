@@ -5,6 +5,7 @@ import { Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-boot
 import { Auth } from 'aws-amplify' 
 // components
 import Navbar from '../components/Navbar.js'
+import Userlist from '../components/Userlist.js'
 
 
 class Settings extends Component {
@@ -13,12 +14,12 @@ class Settings extends Component {
         // props and state
         super(props);
         this.state = { 
-            email           :   '', 
-            phone_number    :   '', 
-            old_password    :   '', 
-            new_password    :   '', 
-            name            :   '',
-            url             :   ''
+            email           : '', 
+            phone_number    : '', 
+            old_password    : '', 
+            new_password    : '', 
+            name            : '',
+            url             : ''
         };
         // bind functions
         this.handleChangeEmail        = this.handleChangeEmail          .bind(this);
@@ -43,7 +44,7 @@ class Settings extends Component {
     // submission field handlers
     async handleSubmitEmail(event){
         console.log('updating user email');
-        var user    = await Auth.currentAuthenticatedUser()
+        var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
         var res     = await Auth.updateUserAttributes(user,{email: this.state.email})
                                     .catch((err) => { console.error(err); });
@@ -51,7 +52,7 @@ class Settings extends Component {
     }
     async handleSubmitPhoneNumber(event){
         console.log('updating user phone no');
-        var user    = await Auth.currentAuthenticatedUser()
+        var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
         var res     = await Auth.updateUserAttributes(user, {phone_number:this.state.phone_number})
                                     .catch((err) => { console.error(err); });
@@ -59,7 +60,7 @@ class Settings extends Component {
     }
     async handleSubmitNewPassword(event){
         console.log('updating user password');
-        var user    = await Auth.currentAuthenticatedUser()
+        var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
         var res     = await Auth.changePassword(user, this.state.old_password, this.state.new_password)
                                     .catch((err) => { console.error(err); });
@@ -67,7 +68,7 @@ class Settings extends Component {
     }
     async handleSubmitName(event){
         console.log('updating user name');
-        var user    = await Auth.currentAuthenticatedUser()
+        var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
         var res     = await Auth.updateUserAttributes(user, {name:this.state.name})
                                     .catch((err) => { console.error(err); });
@@ -75,9 +76,8 @@ class Settings extends Component {
     }
     async handleSubmitUrl(event){
         console.log('updating user picture');
-        var user    = await Auth.currentAuthenticatedUser()
-                                    .catch((err) => { console.error(err); })
-                                    .then(( res) => { console.log(  res); });
+        var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
+                                    .catch((err) => { console.error(err); });
         var res     = await Auth.updateUserAttributes(user,{picture: this.state.url})
                                     .catch((err) => { console.error(err); });
         console.log(res);
@@ -89,7 +89,7 @@ class Settings extends Component {
                 <Col>
                     <Navbar></Navbar>
                 </Col>
-                <Col xs="6">
+                <Col md="6" xs="10" >
                     <Jumbotron>
                         <h2>User Settings</h2>
 
@@ -192,7 +192,7 @@ class Settings extends Component {
                     </Jumbotron>
                 </Col>
                 <Col>
-                    <h1>.</h1>
+                    <p>.</p>
                 </Col>
             </Row>
         );
