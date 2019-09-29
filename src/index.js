@@ -4,13 +4,14 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import MyprofileTemp from './MyprofileTemp';
 
 import Amplify from 'aws-amplify'
 import config from './aws-exports'
 
 console.log(Amplify.configure(config))
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<MyprofileTemp />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
