@@ -9,7 +9,8 @@ class Navbar extends Component {
     	super(props);
 
 	    this.logOut        			=	this.logOut.bind(this);
-	    this.displayUserAttributes 	=	this.displayUserAttributes.bind(this); 
+	    this.displayUserAttributes 	=	this.displayUserAttributes.bind(this);
+	    this.deleteUser				=	this.deleteUser.bind(this);
   	}
 
   	logOut(){
@@ -20,6 +21,26 @@ class Navbar extends Component {
 
   		var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
   		console.log(user.attributes);
+  	}
+
+  	async deleteUser(){
+
+  		Auth
+            .currentAuthenticatedUser()
+            .then((user: CognitoUser) => new Promise((resolve, reject) => {
+                user.deleteUser(error => {
+                    if (error) {
+                        return reject(error);
+                    }
+                    if (this.props.onSessionChange) {               
+                        this.props.onSessionChange();
+                    }
+                    document.location.href = "/login";
+                    
+                    resolve();
+                });
+            }))
+            .catch(this.onError);
   	}
 
 	render() {
@@ -42,6 +63,9 @@ class Navbar extends Component {
   			</Button>
   			<Button variant="secondary" size="md" onClick ={this.displayUserAttributes} block>
     			Display Attributes
+  			</Button>
+  			<Button variant="secondary" size="md" onClick ={this.deleteUser} block>
+    			Delete User
   			</Button>
     	</Jumbotron>
     );
