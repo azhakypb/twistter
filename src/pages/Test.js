@@ -39,27 +39,54 @@ class Test extends Component {
     }
     this.followState = {
       id: "",
-      followee: "",
-      follower: ""
+      followFollowerId: "",
+      followFolloweeId: ""
+    }
+    this.unfollowState = {
+      id: ""
+    }
+    this.deleteState = {
+      id: ""
     }
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
     this.handleFollowee = this.handleFollowee.bind(this);
     this.handleFollower = this.handleFollower.bind(this);
+    this.handleUnfollowInput = this.handleUnfollowInput.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+  }
+
+  handleDelete(event) {
+    this.deleteState.id = event.target.value;
+    console.log("Set deleteState followee to: " + event.target.value);
+  }
+
+  handleDeleteUser = () => {
+    console.log("handleDeleteUser: " + JSON.stringify(this.deleteState));
+    console.log("Delete deleting status: " + new DBOps().deleteUser(JSON.stringify(this.deleteState)));
+  }
+
+  handleUnfollowInput(event) {
+    this.unfollowState.id = event.target.value;
+    console.log("Set followState followee to: " + event.target.value);
+  }
+
+  handleUnFollow = () => {
+    console.log("UnFollow creation status: " + new DBOps().deleteFollow(JSON.stringify(this.unfollowState)));
   }
 
   handleFollowee(event) {
-    this.followState.followee = event.target.value;
+    this.followState.followFolloweeId = event.target.value;
     console.log("Set followState followee to: " + event.target.value);
   }
 
   handleFollower(event) {
-    this.followState.follower = event.target.value;
+    this.followState.followFollowerId = event.target.value;
     console.log("Set followState follower to: " + event.target.value);
   }
 
   handleFollow = () => {
-    this.followState.id = this.followState.followee + this.followState.follower;
+    this.followState.id = this.followState.followFolloweeId + this.followState.followFollowerId;
     console.log("Follow creation status: " + new DBOps().createFollow(JSON.stringify(this.followState)));
   }
 
@@ -78,7 +105,7 @@ class Test extends Component {
   }
 
   handleSearchUser = () => {
-    console.log("Search Successful: " + new DBOps().searchUser(JSON.stringify(this.searchState)));
+    console.log("Search Successful: " + new DBOps().searchUser(JSON.stringify(this.searchState)).toString());
   }
 
   render() {
@@ -92,11 +119,17 @@ class Test extends Component {
         Enter Username: <input onChange={this.handleSearch}/>
         <button onClick={this.handleSearchUser}>Search User</button>
         <br/>
+        Delete user: <input onChange={this.handleDelete}/>
+        <button onClick={this.handleDeleteUser}>Search User</button>
+        <br/>
         Follow A User: <br/>
         Enter Follower: <input onChange={this.handleFollower}/>
         <br/>
         Enter Followee: <input onChange={this.handleFollowee}/><br/>
         <button onClick={this.handleFollow}>Follow User</button>
+        <br/>
+        Unfollow User: <input onChange={this.handleUnfollowInput}/>
+        <button onClick={this.handleUnFollow}>Search User</button>
       </div>
 
     );

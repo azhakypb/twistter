@@ -18,15 +18,24 @@ const userSearchTemplate = `query getUser($id: ID!) {
   }
 }`
 
+const userDeletionTemplate = `mutation deleteUser($id: ID!) {
+  deleteUser(input: {
+    id: $id
+  }) {
+    id
+  }
+}
+`
+
 const followCreateTemplate = `mutation createFollow(
     $id: ID!,
-    $followerid: ID!,
-    $followeeid: ID!
+    $followFollowerId: ID!,
+    $followFolloweeId: ID!
   ) {
     createFollow(input: {
       id: $id,
-      followFollowerId: $followerid,
-      followFolloweeId: $followeeid
+      followFollowerId: $followFollowerId,
+      followFolloweeId: $followFolloweeId
     }) {
       id
       followee {
@@ -37,6 +46,21 @@ const followCreateTemplate = `mutation createFollow(
       }
     }
   }
+`
+
+const followDeleteTemplate = `mutation deleteFollow($id: ID!) {
+  deleteFollow (input: {
+    id: $id
+  }){
+    id
+    followee {
+      id
+    }
+    follower {
+      id
+    }
+  }
+}
 `
 
 class DBOps extends Component {
@@ -75,6 +99,7 @@ class DBOps extends Component {
     this.state = JSON.parse(info);
     console.log("searchUser: " + JSON.stringify(this.state));
     this.dbSearchUser();
+    console.log(this.return);
     return JSON.stringify(this.return);
   }
 
@@ -91,6 +116,29 @@ class DBOps extends Component {
   }
 
   /***** END SEARCH USER FUNCTIONS *****/
+
+  /***** BEGIN DELETE USER FUNCTIONS *****/
+
+  deleteUser = info => {
+    console.log(info)
+    this.state = (JSON.parse(info));
+    console.log("deleteUser: " + info);
+    this.dbDeleteUser();
+    return JSON.stringify(this.return);
+  }
+
+  dbDeleteUser = async () => {
+    try {
+      console.log("dbDeleteUser deleting: " + JSON.stringify(this.state));
+      this.return = await API.graphql(graphqlOperation(userDeletionTemplate, this.state));
+    }
+    catch (error) {
+      this.return = null;
+      console.log("dbDeleteUser: " + JSON.stringify(error));
+    }
+  }
+
+  /***** END DELETE USER FUNCTIONS *****/
 
   /***** BEGIN CREATE FOLLOW FUNCTIONS *****/
 
@@ -109,11 +157,34 @@ class DBOps extends Component {
     }
     catch (error) {
       this.return = null;
-      console.log("dbCreateFollow: " + error);
+      console.log("dbCreateFollow: " + JSON.stringify(error));
     }
   }
 
   /***** END CREATE FOLLOW FUNCTIONS *****/
+
+  /***** BEGIN UNFOLLOW FUNCTIONS *****/
+
+  deleteFollow = info => {
+    console.log(info)
+    this.state = (JSON.parse(info.toString()));
+    console.log(this.state);
+    this.dbDeleteFollow();
+    return JSON.stringify(this.state);
+  }
+
+  dbDeleteFollow = async () => {
+    try {
+      console.log("dbDeleteFollow: creating Follow: " + JSON.stringify(this.state));
+      this.return = await API.graphql(graphqlOperation(followDeleteTemplate, this.state));
+    }
+    catch (error) {
+      this.return = null;
+      console.log("dbDeleteFollow: " + error);
+    }
+  }
+
+  /***** END UNFOLLOW FUNCTIONS *****/
 
 
 }
