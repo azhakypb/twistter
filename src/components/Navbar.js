@@ -12,7 +12,7 @@ class Navbar extends Component {
     	super(props);
     	// bind functions
 	    this.logOut        			=	this.logOut					.bind(this);
-	    this.displayUserAttributes 	=	this.displayUserAttributes	.bind(this);
+	  //  this.displayUserAttributes 	=	this.displayUserAttributes	.bind(this);
 	    this.deleteUser				=	this.deleteUser				.bind(this);
   	}
 
@@ -21,11 +21,11 @@ class Navbar extends Component {
   		Auth.signOut();
   	}
 
-  	async displayUserAttributes(){
-  		// get user info and log it
-  		var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-  		console.log(user.attributes);
-  	}
+  	// async displayUserAttributes(){
+  	// 	// get user info and log it
+  	// 	var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+  	// 	console.log(user.attributes);
+  	// }
 
   	async deleteUser(){
 
@@ -36,11 +36,11 @@ class Navbar extends Component {
                     if (error) {
                         return reject(error);
                     }
-                    if (this.props.onSessionChange) {               
+                    if (this.props.onSessionChange) {
                         this.props.onSessionChange();
                     }
                     document.location.href = "/login";
-                    
+
                     resolve();
                 });
             }))
@@ -52,44 +52,37 @@ class Navbar extends Component {
     	return(
     		<Jumbotron>
     			<h2>Navbar</h2>
-    			<Link 
-    				to= '/' 
+    			<Link
+    				to= '/'
     				paddingTop="50px">
-	  				<Button 
-	  					variant="secondary" 
-	  					size="md" 
+	  				<Button
+	  					variant="secondary"
+	  					size="md"
 	  					block>
 	    				Profile
 	  				</Button>
     			</Link>
-    			<Link 
-    				to= '/settings' 
+    			<Link
+    				to= '/settings'
     				paddingTop="50px">
-	  				<Button 
-	  					variant="secondary" 
-	  					size="md" 
+	  				<Button
+	  					variant="secondary"
+	  					size="md"
 	  					block>
 	    				Settings
 	  				</Button>
   				</Link>
-  				<Button 
-  					variant="secondary" 
-  					size="md" 
-  					onClick ={this.logOut} 
+  				<Button
+  					variant="secondary"
+  					size="md"
+  					onClick ={this.logOut}
   					block>
     				Log Out
   				</Button>
   				<Button
-  					variant="secondary" 
-  					size="md" 
-  					onClick ={this.displayUserAttributes} 
-  					block>
-    				Display Attributes
-  				</Button>
-  				<Button 
-  					variant="secondary" 
-  					size="md" 
-  					onClick ={this.deleteUser} 
+  					variant="secondary"
+  					size="md"
+  					onClick ={this.deleteUser}
   					block>
     				Delete User
   				</Button>
