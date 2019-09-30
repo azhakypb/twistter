@@ -6,6 +6,8 @@ import { useHistory } from "react-router"
 // aws modules
 import { Auth } from 'aws-amplify';
 
+import DBOps from '../DBOps.js'
+
 class Navbar extends Component {
 
 	constructor(props){
@@ -24,6 +26,8 @@ class Navbar extends Component {
 
   	async deleteUser(){
 
+        var username = Auth.currentAuthenticatedUser().username;
+
   		Auth
             .currentAuthenticatedUser()
             .then((user: CognitoUser) => new Promise((resolve, reject) => {
@@ -35,7 +39,7 @@ class Navbar extends Component {
                         this.props.onSessionChange();
                     }
                     document.location.href = "/login";
-
+                    new DBOps().deleteUser(username);
                     resolve();
                 });
             }))
