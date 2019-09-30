@@ -1,6 +1,6 @@
 // react modules
 import React, { Component } from 'react';
-import { Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, Image} from 'react-bootstrap';
+import {Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, Image} from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
@@ -14,7 +14,7 @@ class Profile extends Component {
         this.state = {
             name        : '',
             username    : '',
-            url         : 'http://best-hack.net/customavatars/avatar98809_1.gif'
+            url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png'
         }
         // bind functions
     }
@@ -42,10 +42,10 @@ class Profile extends Component {
                 <Container
                     className="My profile">
                     <Jumbotron>
-                        <Card 
+                        <Card style={{width: '18rem'}}
                             className="bg-dark text-black">
-                            <Card.Img 
-                                src={url} 
+                            <Card.Img
+                                src={url}
                             />
                         </Card>
                         <h1>{name}</h1>
@@ -53,14 +53,14 @@ class Profile extends Component {
                     </Jumbotron>
                 </Container>
 
-                <Container 
+                <Container
                     className="timeline">
                     <Jumbotron>
-                        <Image 
-                            src="https://sc02.alicdn.com/kf/HTB1pfgTHFXXXXczXVXXq6xXFXXXc/110x110-size-Compressed-wooden-pallet.jpg_50x50.jpg" 
+                        <Image style={{width: '2rem'}}
+                            src={url}
                             roundedCircle
                         />
-                        <p>My Name</p>
+                        <p>{name}<br />@{username} </p>
                     </Jumbotron>
                 </Container>
             </Col>
