@@ -2,6 +2,7 @@
 // react modules
 import React, { Component } from 'react';
 import { Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, Image} from 'react-bootstrap';
+import DBOps from '../DBOps.js'
 
 // graphql modules
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
@@ -36,8 +37,30 @@ class Test extends Component {
     this.searchState = {
       id: ""
     }
+    this.followState = {
+      id: "",
+      followee: "",
+      follower: ""
+    }
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
+    this.handleFollowee = this.handleFollowee.bind(this);
+    this.handleFollower = this.handleFollower.bind(this);
+  }
+
+  handleFollowee(event) {
+    this.followState.followee = event.target.value;
+    console.log("Set followState followee to: " + event.target.value);
+  }
+
+  handleFollower(event) {
+    this.followState.follower = event.target.value;
+    console.log("Set followState follower to: " + event.target.value);
+  }
+
+  handleFollow = () => {
+    this.followState.id = this.followState.followee + this.followState.follower;
+    console.log("Follow creation status: " + new DBOps().createFollow(JSON.stringify(this.followState)));
   }
 
   handleCreate(event) {
@@ -45,22 +68,8 @@ class Test extends Component {
     console.log("Set createState id to: " + event.target.value);
   }
 
-  createUser = async () => {
-    var user = null;
-    try {
-      user = await API.graphql(graphqlOperation(userCreation, this.createState));
-      if (user.data.createUser == null) {
-        console.log("User already exists");
-      }
-      else {
-        console.log(JSON.stringify(user.data.createUser));
-        console.log("User creation status: success");
-
-      }
-    }
-    catch (error) {
-      console.log(error);
-    }
+  handleCreateUser = () => {
+    console.log("Creation Successful: " + new DBOps().createUser(JSON.stringify(this.createState)));
   }
 
   handleSearch(event) {
@@ -68,19 +77,8 @@ class Test extends Component {
     console.log("Set searchState id to: " + event.target.value);
   }
 
-  searchUser = async () => {
-    try {
-      var user = await API.graphql(graphqlOperation(searchUser, this.searchState));
-      if (user.data.getUser == null) {
-        console.log("User does not exist!")
-      }
-      else {
-        console.log(JSON.stringify(user.data.getUser));
-      }
-    }
-    catch (error) {
-      console.log("User does not exist!");
-    }
+  handleSearchUser = () => {
+    console.log("Search Successful: " + new DBOps().searchUser(JSON.stringify(this.searchState)));
   }
 
   render() {
@@ -89,10 +87,16 @@ class Test extends Component {
       <div className="App">
         <p>User Operations</p>
         Enter Username: <input onChange={this.handleCreate}/>
-        <button onClick={this.createUser}>Create User</button>
+        <button onClick={this.handleCreateUser}>Create User</button>
         <br/>
         Enter Username: <input onChange={this.handleSearch}/>
-        <button onClick={this.searchUser}>Search User</button>
+        <button onClick={this.handleSearchUser}>Search User</button>
+        <br/>
+        Follow A User: <br/>
+        Enter Follower: <input onChange={this.handleFollower}/>
+        <br/>
+        Enter Followee: <input onChange={this.handleFollowee}/><br/>
+        <button onClick={this.handleFollow}>Follow User</button>
       </div>
 
     );
