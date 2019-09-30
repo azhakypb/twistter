@@ -1,6 +1,7 @@
 // react modules
 import React, { Component } from 'react';
 import { Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-bootstrap';
+import { useHistory } from "react-router"
 // aws modules
 import { Auth } from 'aws-amplify' 
 // components

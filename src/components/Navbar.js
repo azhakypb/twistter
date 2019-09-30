@@ -2,6 +2,7 @@
 import React, { Component, } from 'react';
 import { Button, Jumbotron } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useHistory } from "react-router"
 // aws modules
 import { Auth } from 'aws-amplify';
 
@@ -11,14 +12,8 @@ class Navbar extends Component {
 		// props and states
     	super(props);
     	// bind functions
-	    this.logOut        			=	this.logOut					.bind(this);
 	  //  this.displayUserAttributes 	=	this.displayUserAttributes	.bind(this);
 	    this.deleteUser				=	this.deleteUser				.bind(this);
-  	}
-
-  	logOut(){
-  		// sign out cognito
-  		Auth.signOut();
   	}
 
   	// async displayUserAttributes(){
@@ -72,13 +67,17 @@ class Navbar extends Component {
 	    				Settings
 	  				</Button>
   				</Link>
-  				<Button
-  					variant="secondary"
-  					size="md"
-  					onClick ={this.logOut}
-  					block>
-    				Log Out
-  				</Button>
+          <Link
+            to= '/'
+            paddingTop="50px">
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={(e) => Auth.signOut()}
+              block>
+              Log Out
+            </Button>
+          </Link>
   				<Button
   					variant="secondary"
   					size="md"
