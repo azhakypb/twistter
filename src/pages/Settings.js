@@ -33,6 +33,8 @@ class Settings extends Component {
         this.handleSubmitNewPassword  = this.handleSubmitNewPassword    .bind(this);
         this.handleSubmitPhoneNumber  = this.handleSubmitPhoneNumber    .bind(this);
         this.handleSubmitUrl          = this.handleSubmitUrl            .bind(this);
+
+        console.log(Auth.currentAuthenticatedUser());
     }
     // input field handlers
     handleChangeEmail       (event){this.setState({ email:          event.target.value });}
