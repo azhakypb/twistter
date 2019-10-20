@@ -61,9 +61,9 @@ class Test extends Component {
     console.log("Set deleteState followee to: " + event.target.value);
   }
 
-  handleDeleteUser = () => {
-    console.log("handleDeleteUser: " + JSON.stringify(this.deleteState));
-    console.log("Delete deleting status: " + new DBOps().deleteUser(JSON.stringify(this.deleteState)));
+  handleDeleteUser = async () => {
+    var result = await new DBOps().deleteUser(JSON.stringify(this.deleteState));
+    console.log(result);
   }
 
   handleUnfollowInput(event) {
@@ -71,8 +71,9 @@ class Test extends Component {
     console.log("Set followState followee to: " + event.target.value);
   }
 
-  handleUnFollow = () => {
-    console.log("UnFollow creation status: " + new DBOps().deleteFollow(JSON.stringify(this.unfollowState)));
+  handleUnFollow = async () => {
+    var result = await new DBOps().deleteFollow(JSON.stringify(this.unfollowState));
+    console.log(result);
   }
 
   handleFollowee(event) {
@@ -85,9 +86,9 @@ class Test extends Component {
     console.log("Set followState follower to: " + event.target.value);
   }
 
-  handleFollow = () => {
-    this.followState.id = this.followState.followFolloweeId + this.followState.followFollowerId;
-    console.log("Follow creation status: " + new DBOps().createFollow(JSON.stringify(this.followState)));
+  handleFollow = async () => {
+    var result = await new DBOps().createFollow(JSON.stringify(this.followState));
+    console.log(result);
   }
 
   handleCreate(event) {
@@ -95,8 +96,9 @@ class Test extends Component {
     console.log("Set createState id to: " + event.target.value);
   }
 
-  handleCreateUser = () => {
-    console.log("Creation Successful: " + new DBOps().createUser(JSON.stringify(this.createState)));
+  handleCreateUser = async () => {
+    var result = await new DBOps().createUser(JSON.stringify(this.createState));
+    console.log(result);
   }
 
   handleSearch(event) {
@@ -104,8 +106,9 @@ class Test extends Component {
     console.log("Set searchState id to: " + event.target.value);
   }
 
-  handleSearchUser = () => {
-    console.log("Search Successful: " + new DBOps().searchUser(JSON.stringify(this.searchState)).toString());
+  handleSearchUser = async () => {
+    var result = await new DBOps().searchUser(JSON.stringify(this.searchState));
+    console.log(result);
   }
 
   render() {
