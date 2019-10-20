@@ -16,14 +16,20 @@ class Search extends Component {
         // props and state
         super(props);
         this.state = { 
-            search  : '',
+            search      : '',
+            posts       : [
+                'Post1','Post2','Post3','Post4','Post5',
+                'Post6','Post7','Post8','Post9','Post10'
+            ]
         };
+
         // bind functions
         this.handleChangeSearch = this.handleChangeSearch.bind(this);
         this.handleSubmitSearch = this.handleSubmitSearch.bind(this);
     
         console.log(Auth.currentAuthenticatedUser());
     }
+    // list of posts
     // input field handlers
     handleChangeSearch  (event){this.setState({ search: event.target.value });}
     // submission field handlers
@@ -48,7 +54,7 @@ class Search extends Component {
                             onChange={this.handleChangeSearch}>
                             <FormControl
                                 placeholder="Type Topic Here"
-                                aria-label="type topic here"
+                                aria-label="Type Topic Here"
                                 aria-describedby="basic-addon2"/>
                             <InputGroup.Append>
                                 <Button
@@ -58,10 +64,13 @@ class Search extends Component {
                                 </Button>
                             </InputGroup.Append>
                         </InputGroup>
-                    </Jumbotron>
-                    <Jumbotron>
-                        <h2>Searching for...</h2>
-                        <h2>{this.state.search}</h2>
+                        <hr></hr>
+                        <h5>Searching for... {this.state.search}</h5>
+                        <ul>
+                            {this.state.posts.map((posts) => (
+                                <p>{posts}</p>
+                            ))}
+                        </ul>
                     </Jumbotron>
                 </Col>                
                 <Col>
