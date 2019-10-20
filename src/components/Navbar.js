@@ -61,6 +61,16 @@ class Navbar extends Component {
 	    				Profile
 	  				</Button>
     			</Link>
+				<Link
+					to= '/search'
+					paddingTop="50px">
+					<Button
+						variant="secondary"
+						size="md"
+						block>
+						Search
+					</Button>
+				</Link>
     			<Link
     				to= '/settings'
     				paddingTop="50px">
@@ -71,24 +81,24 @@ class Navbar extends Component {
 	    				Settings
 	  				</Button>
   				</Link>
-          <Link
-            to= '/'
-            paddingTop="50px">
-            <Button
-              variant="secondary"
-              size="md"
-              onClick={(e) => Auth.signOut()}
-              block>
-              Log Out
-            </Button>
-          </Link>
-  				<Button
-  					variant="secondary"
-  					size="md"
-  					onClick ={this.deleteUser}
-  					block>
-    				Delete User
-  				</Button>
+				<Link
+					to= '/'
+					paddingTop="50px">
+					<Button
+						variant="secondary"
+						size="md"
+						onClick={(e) => Auth.signOut()}
+						block>
+						Log Out
+					</Button>
+				</Link>
+  					<Button
+						variant="secondary"
+						size="md"
+						onClick ={this.deleteUser}
+						block>
+						Delete User
+					</Button>
     		</Jumbotron>
     	);
   	}
