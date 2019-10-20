@@ -15,6 +15,16 @@ const userSearchTemplate = `query getUser($id: ID!) {
   ) {
     id
     image
+    posts {
+      items {
+        id
+        text
+        timestamp
+        author {
+          id
+        }
+      }
+    }
   }
 }`
 
@@ -63,10 +73,36 @@ const followDeleteTemplate = `mutation deleteFollow($id: ID!) {
 }
 `
 
-const postCreateTemplate = `mutation createPost($: ID!) {
-  createPost(input: {
-    id
-  })
+const postCreateTemplate = `mutation createPost(
+    $text: String!,
+    $timestamp: Int!,
+    $postAuthorId: ID!
+  ) {
+  createPost (input:{
+    text: $text,
+    timestamp: $timestamp,
+    postAuthorId: $postAuthorId
+  }){
+    id,
+    text,
+    timestamp,
+    author {
+      id
+    }
+  }
+}`
+
+const postSearchTemplate = `query getPost(
+    $id: ID!
+  ) {
+  getPost (id: $id){
+    id,
+    text,
+    timestamp,
+    author {
+      id
+    }
+  }
 }`
 
 class DBOps extends Component {
@@ -124,21 +160,22 @@ class DBOps extends Component {
 
   /***** BEGIN CREATE POST FUNCTIONS *****/
 
-  createFollow = async (info) => {
-    var temp = await API.graphql(graphqlOperation(followCreateTemplate, info));
-    return temp.data.createFollow;
+  createPost = async (info) => {
+    console.log(info);
+    var temp = await API.graphql(graphqlOperation(postCreateTemplate, info));
+    return temp.data.createPost;
   }
 
   /***** END CREATE POST FUNCTIONS *****/
 
-  /***** BEGIN DELETE POST FUNCTIONS *****/
+  /***** BEGIN SEARCH POST FUNCTIONS *****/
 
-  deleteFollow = async (info) => {
-    var temp = await API.graphql(graphqlOperation(followDeleteTemplate, info));
-    return temp.data.deleteFollow;
+  searchPost = async (info) => {
+    var temp = await API.graphql(graphqlOperation(postSearchTemplate, info));
+    return temp.data.getPost;
   }
 
-  /***** END DELETE POST FUNCTIONS *****/
+  /***** END SEARCH POST FUNCTIONS *****/
 
 
 }
