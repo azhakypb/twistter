@@ -63,6 +63,12 @@ const followDeleteTemplate = `mutation deleteFollow($id: ID!) {
 }
 `
 
+const postCreateTemplate = `mutation createPost($: ID!) {
+  createPost(input: {
+    id
+  })
+}`
+
 class DBOps extends Component {
 
   constructor(props) {
@@ -115,6 +121,24 @@ class DBOps extends Component {
   }
 
   /***** END UNFOLLOW FUNCTIONS *****/
+
+  /***** BEGIN CREATE POST FUNCTIONS *****/
+
+  createFollow = async (info) => {
+    var temp = await API.graphql(graphqlOperation(followCreateTemplate, info));
+    return temp.data.createFollow;
+  }
+
+  /***** END CREATE POST FUNCTIONS *****/
+
+  /***** BEGIN DELETE POST FUNCTIONS *****/
+
+  deleteFollow = async (info) => {
+    var temp = await API.graphql(graphqlOperation(followDeleteTemplate, info));
+    return temp.data.deleteFollow;
+  }
+
+  /***** END DELETE POST FUNCTIONS *****/
 
 
 }
