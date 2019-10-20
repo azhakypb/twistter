@@ -9,32 +9,46 @@ import Navbar from '../components/Navbar.js'
 import Post from '../components/Post.js'
 import Userlist from '../components/Userlist.js'
 
-
 class Search extends Component {
 
     constructor(props){
         // props and state
         super(props);
         this.state = { 
+            text        : '',
             search      : '',
+            showResults : false,
             posts       : [
-                'Post1','Post2','Post3','Post4','Post5',
-                'Post6','Post7','Post8','Post9','Post10'
+                <Post></Post>,
+                <Post></Post>,
+                <Post></Post>,
+                <Post></Post>,
+                <Post></Post>,
+                <Post></Post>,
+                <Post></Post>,
+                <Post></Post>,
+                <Post></Post>,
+                <Post></Post>
             ]
         };
 
         // bind functions
-        this.handleChangeSearch = this.handleChangeSearch.bind(this);
-        this.handleSubmitSearch = this.handleSubmitSearch.bind(this);
+        this.handleChangeText = this.handleChangeText.bind(this);
+        this.handleSubmitText = this.handleSubmitText.bind(this);
     
         console.log(Auth.currentAuthenticatedUser());
     }
     // list of posts
     // input field handlers
-    handleChangeSearch  (event){this.setState({ search: event.target.value });}
+    handleChangeText  (event){
+        this.setState({ text: event.target.value });
+    }
     // submission field handlers
-    async handleSubmitSearch(event){
-        this.setState({search: 'nope'});
+    async handleSubmitText(event){
+        if (!Object.is(this.state.text, '')) {
+            this.setState({ search: this.state.text });
+            this.setState({ showResults: true });
+        }
     }
     
 
@@ -51,7 +65,7 @@ class Search extends Component {
                         <InputGroup
                             className="mb-3"
                             value={this.state.search}
-                            onChange={this.handleChangeSearch}>
+                            onChange={this.handleChangeText}>
                             <FormControl
                                 placeholder="Type Topic Here"
                                 aria-label="Type Topic Here"
@@ -59,18 +73,17 @@ class Search extends Component {
                             <InputGroup.Append>
                                 <Button
                                     variant="outline-secondary"
-                                    onClick={this.handleSubmitSearch}>                                    >
+                                    onClick={this.handleSubmitText}>
                                     Search
                                 </Button>
                             </InputGroup.Append>
                         </InputGroup>
-                        <hr></hr>
-                        <h5>Searching for... {this.state.search}</h5>
-                        <ul>
-                            {this.state.posts.map((posts) => (
-                                <p>{posts}</p>
-                            ))}
-                        </ul>
+                    </Jumbotron>
+                    <Jumbotron>
+                        <h2>Searching for... {this.state.search}</h2>
+                        {this.state.posts.map(
+                            (posts) => (<ul>{posts}</ul>)
+                        )}
                     </Jumbotron>
                 </Col>                
                 <Col>
