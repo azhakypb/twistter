@@ -30,7 +30,7 @@ class Profile extends Component {
 
     render() {
 
-        const { name, username, url } = this.state
+        const { name, username, url} = this.state
 
         return (
         <Row>
