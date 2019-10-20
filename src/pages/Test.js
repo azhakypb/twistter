@@ -98,6 +98,8 @@ class Test extends Component {
   }
 
   handleFollow = async () => {
+    this.followState.id = this.followState.followFollowerId + "-" + this.followState.followFolloweeId;
+    console.log("Set followState id to: " + this.followState.id);
     var temp = await new DBOps().createFollow(JSON.stringify(this.followState));
     console.log(temp);
   }
@@ -169,11 +171,12 @@ class Test extends Component {
         <button onClick={this.handleFollow}>Follow User</button>
         <br/>
         Unfollow User: <input onChange={this.handleUnfollowInput}/>
-        <button onClick={this.handleUnFollow}>Search User</button><br/>
+        <button onClick={this.handleUnFollow}>Unfollow User</button><br/>
+        Create a Post: <br/>
         Post Text: <input onChange={this.handleCTPost}/><br/>
         Post Author: <input onChange={this.handleCAPost}/><br/>
         <button onClick={this.handleCreatePost}>Create Post</button><br/>
-        Search Post: <input onChange={this.handleSPost}/><br/>
+        Search Post: <input onChange={this.handleSPost}/>
         <button onClick={this.handleSearchPost}>Search Post</button>
       </div>
 
