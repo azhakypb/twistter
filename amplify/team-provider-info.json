@@ -1,0 +1,14 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "twistter7-dev-20191020131909-authRole",
+            "UnauthRoleArn": "arn:aws:iam::995573383865:role/twistter7-dev-20191020131909-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::995573383865:role/twistter7-dev-20191020131909-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "twistter7-dev-20191020131909-deployment",
+            "UnauthRoleName": "twistter7-dev-20191020131909-unauthRole",
+            "StackName": "twistter7-dev-20191020131909",
+            "StackId": "arn:aws:cloudformation:us-east-1:995573383865:stack/twistter7-dev-20191020131909/ba65e9a0-f35d-11e9-b5b3-0aad5d963972"
+        }
+    }
+}
