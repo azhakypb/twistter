@@ -105,7 +105,11 @@ class Test extends Component {
   }
 
   handleSearchUser = () => {
-    console.log("Search Successful: " + new DBOps().searchUser(JSON.stringify(this.searchState)).toString());
+    new DBOps().searchUser(JSON.stringify(this.searchState)).then(
+      function(data) {
+        console.log(data);
+      }
+    );
   }
 
   render() {

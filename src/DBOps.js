@@ -68,7 +68,7 @@ class DBOps extends Component {
   constructor(props) {
     super(props);
     this.state = null;
-    this.return = null;
+    this.return_value = null;
   }
   /***** BEGIN CREATE USER FUNCTIONS *****/
 
@@ -83,10 +83,10 @@ class DBOps extends Component {
   dbCreateUser = async () => {
     try {
       console.log("dbCreateUser: creating: " + JSON.stringify(this.state));
-      this.return = await API.graphql(graphqlOperation(userCreationTemplate, this.state));
+      this.return_value = await API.graphql(graphqlOperation(userCreationTemplate, this.state));
     }
     catch (error) {
-      this.return = null;
+      this.return_value = null;
       console.log("dbCreateUser: " + error);
     }
   }
@@ -95,24 +95,12 @@ class DBOps extends Component {
 
   /***** BEGIN SEARCH USER FUNCTIONS *****/
 
-  searchUser = info => {
+  searchUser = async (info) => {
     this.state = JSON.parse(info);
     console.log("searchUser: " + JSON.stringify(this.state));
-    this.dbSearchUser();
-    console.log(this.return);
-    return JSON.stringify(this.return);
-  }
-
-  dbSearchUser = async () => {
-    try {
-      console.log("searching for: " + JSON.stringify(this.state));
-      this.result = null;
-      this.result = await API.graphql(graphqlOperation(userSearchTemplate, this.state));
-    }
-    catch (error) {
-      this.return = null;
-      console.log("dbSearchUser: " + error);
-    }
+    //this.dbSearchUser();
+    var temp = await API.graphql(graphqlOperation(userSearchTemplate, this.state));
+    return temp;
   }
 
   /***** END SEARCH USER FUNCTIONS *****/
@@ -124,16 +112,16 @@ class DBOps extends Component {
     this.state = (JSON.parse(info));
     console.log("deleteUser: " + info);
     this.dbDeleteUser();
-    return JSON.stringify(this.return);
+    return JSON.stringify(this.return_value);
   }
 
   dbDeleteUser = async () => {
     try {
       console.log("dbDeleteUser deleting: " + JSON.stringify(this.state));
-      this.return = await API.graphql(graphqlOperation(userDeletionTemplate, this.state));
+      this.return_value = await API.graphql(graphqlOperation(userDeletionTemplate, this.state));
     }
     catch (error) {
-      this.return = null;
+      this.return_value = null;
       console.log("dbDeleteUser: " + JSON.stringify(error));
     }
   }
@@ -153,10 +141,10 @@ class DBOps extends Component {
   dbCreateFollow = async () => {
     try {
       console.log("dbCreateFollow: creating Follow: " + JSON.stringify(this.state));
-      this.return = await API.graphql(graphqlOperation(followCreateTemplate, this.state));
+      this.return_value = await API.graphql(graphqlOperation(followCreateTemplate, this.state));
     }
     catch (error) {
-      this.return = null;
+      this.return_value = null;
       console.log("dbCreateFollow: " + JSON.stringify(error));
     }
   }
@@ -176,10 +164,10 @@ class DBOps extends Component {
   dbDeleteFollow = async () => {
     try {
       console.log("dbDeleteFollow: creating Follow: " + JSON.stringify(this.state));
-      this.return = await API.graphql(graphqlOperation(followDeleteTemplate, this.state));
+      this.return_value = null;
+      this.return_value = await API.graphql(graphqlOperation(followDeleteTemplate, this.state));
     }
     catch (error) {
-      this.return = null;
       console.log("dbDeleteFollow: " + error);
     }
   }
