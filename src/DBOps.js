@@ -15,6 +15,16 @@ const userSearchTemplate = `query getUser($id: ID!) {
   ) {
     id
     image
+    posts {
+      items {
+        id
+        text
+        timestamp
+        author {
+          id
+        }
+      }
+    }
   }
 }`
 
@@ -63,6 +73,38 @@ const followDeleteTemplate = `mutation deleteFollow($id: ID!) {
 }
 `
 
+const postCreateTemplate = `mutation createPost(
+    $text: String!,
+    $timestamp: Int!,
+    $postAuthorId: ID!
+  ) {
+  createPost (input:{
+    text: $text,
+    timestamp: $timestamp,
+    postAuthorId: $postAuthorId
+  }){
+    id,
+    text,
+    timestamp,
+    author {
+      id
+    }
+  }
+}`
+
+const postSearchTemplate = `query getPost(
+    $id: ID!
+  ) {
+  getPost (id: $id){
+    id,
+    text,
+    timestamp,
+    author {
+      id
+    }
+  }
+}`
+
 class DBOps extends Component {
 
   constructor(props) {
@@ -72,107 +114,68 @@ class DBOps extends Component {
   }
   /***** BEGIN CREATE USER FUNCTIONS *****/
 
-  createUser = info => {
-    console.log(info)
-    this.state = (JSON.parse(info.toString()));
-    console.log(this.state);
-    this.dbCreateUser();
-    return JSON.stringify(this.state);
+  createUser = async (info) => {
+    var temp = await API.graphql(graphqlOperation(userCreationTemplate, info));
+    return temp.data.createUser;
   }
 
-  dbCreateUser = async () => {
-    try {
-      console.log("dbCreateUser: creating: " + JSON.stringify(this.state));
-      this.return_value = await API.graphql(graphqlOperation(userCreationTemplate, this.state));
-    }
-    catch (error) {
-      this.return_value = null;
-      console.log("dbCreateUser: " + error);
-    }
-  }
 
   /***** END CREATE USER FUNCTIONS *****/
 
   /***** BEGIN SEARCH USER FUNCTIONS *****/
 
   searchUser = async (info) => {
-    this.state = JSON.parse(info);
-    console.log("searchUser: " + JSON.stringify(this.state));
-    //this.dbSearchUser();
-    var temp = await API.graphql(graphqlOperation(userSearchTemplate, this.state));
-    return temp;
+    var temp = await API.graphql(graphqlOperation(userSearchTemplate, info));
+    return temp.data.getUser;
   }
 
   /***** END SEARCH USER FUNCTIONS *****/
 
   /***** BEGIN DELETE USER FUNCTIONS *****/
 
-  deleteUser = info => {
-    console.log(info)
-    this.state = (JSON.parse(info));
-    console.log("deleteUser: " + info);
-    this.dbDeleteUser();
-    return JSON.stringify(this.return_value);
-  }
-
-  dbDeleteUser = async () => {
-    try {
-      console.log("dbDeleteUser deleting: " + JSON.stringify(this.state));
-      this.return_value = await API.graphql(graphqlOperation(userDeletionTemplate, this.state));
-    }
-    catch (error) {
-      this.return_value = null;
-      console.log("dbDeleteUser: " + JSON.stringify(error));
-    }
+  deleteUser = async (info) => {
+    var temp = await API.graphql(graphqlOperation(userDeletionTemplate, info));
+    return temp.data.deleteUser;
   }
 
   /***** END DELETE USER FUNCTIONS *****/
 
   /***** BEGIN CREATE FOLLOW FUNCTIONS *****/
 
-  createFollow = info => {
-    console.log(info)
-    this.state = (JSON.parse(info.toString()));
-    console.log(this.state);
-    this.dbCreateFollow();
-    return JSON.stringify(this.state);
-  }
-
-  dbCreateFollow = async () => {
-    try {
-      console.log("dbCreateFollow: creating Follow: " + JSON.stringify(this.state));
-      this.return_value = await API.graphql(graphqlOperation(followCreateTemplate, this.state));
-    }
-    catch (error) {
-      this.return_value = null;
-      console.log("dbCreateFollow: " + JSON.stringify(error));
-    }
+  createFollow = async (info) => {
+    var temp = await API.graphql(graphqlOperation(followCreateTemplate, info));
+    return temp.data.createFollow;
   }
 
   /***** END CREATE FOLLOW FUNCTIONS *****/
 
   /***** BEGIN UNFOLLOW FUNCTIONS *****/
 
-  deleteFollow = info => {
-    console.log(info)
-    this.state = (JSON.parse(info.toString()));
-    console.log(this.state);
-    this.dbDeleteFollow();
-    return JSON.stringify(this.state);
-  }
-
-  dbDeleteFollow = async () => {
-    try {
-      console.log("dbDeleteFollow: creating Follow: " + JSON.stringify(this.state));
-      this.return_value = null;
-      this.return_value = await API.graphql(graphqlOperation(followDeleteTemplate, this.state));
-    }
-    catch (error) {
-      console.log("dbDeleteFollow: " + error);
-    }
+  deleteFollow = async (info) => {
+    var temp = await API.graphql(graphqlOperation(followDeleteTemplate, info));
+    return temp.data.deleteFollow;
   }
 
   /***** END UNFOLLOW FUNCTIONS *****/
+
+  /***** BEGIN CREATE POST FUNCTIONS *****/
+
+  createPost = async (info) => {
+    console.log(info);
+    var temp = await API.graphql(graphqlOperation(postCreateTemplate, info));
+    return temp.data.createPost;
+  }
+
+  /***** END CREATE POST FUNCTIONS *****/
+
+  /***** BEGIN SEARCH POST FUNCTIONS *****/
+
+  searchPost = async (info) => {
+    var temp = await API.graphql(graphqlOperation(postSearchTemplate, info));
+    return temp.data.getPost;
+  }
+
+  /***** END SEARCH POST FUNCTIONS *****/
 
 
 }
