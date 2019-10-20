@@ -100,7 +100,7 @@ class Test extends Component {
   handleFollow = async () => {
     this.followState.id = this.followState.followFollowerId + "-" + this.followState.followFolloweeId;
     console.log("Set followState id to: " + this.followState.id);
-    var temp = await new DBOps().createFollow(JSON.stringify(this.followState));
+   var temp = await new DBOps().createFollow(JSON.stringify(this.followState));
     console.log(temp);
   }
 

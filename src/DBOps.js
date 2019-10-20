@@ -25,12 +25,12 @@ const userSearchTemplate = `query getUser($id: ID!) {
         }
       }
     }
-    followers {
+    following {
       items {
         id
       }
     }
-    following {
+    followers {
       items {
         id
       }
