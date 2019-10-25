@@ -6,6 +6,7 @@ import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
 
+
 class Profile extends Component {
 
     constructor(props){

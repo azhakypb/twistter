@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-bootstrap';
 import { useHistory } from "react-router"
 // aws modules
-import { Auth } from 'aws-amplify' 
+import { Auth } from 'aws-amplify'
 // components
 import Navbar from '../components/Navbar.js'
 import Userlist from '../components/Userlist.js'
@@ -14,11 +14,11 @@ class Settings extends Component {
     constructor(props){
         // props and state
         super(props);
-        this.state = { 
-            email           : '', 
-            phone_number    : '', 
-            old_password    : '', 
-            new_password    : '', 
+        this.state = {
+            email           : '',
+            phone_number    : '',
+            old_password    : '',
+            new_password    : '',
             name            : '',
             url             : ''
         };
@@ -97,17 +97,17 @@ class Settings extends Component {
                         <h2>User Settings</h2>
 
                         {/* email field */}
-                        <InputGroup 
-                            className="mb-3" 
-                            value={this.state.email} 
+                        <InputGroup
+                            className="mb-3"
+                            value={this.state.email}
                             onChange={this.handleChangeEmail}>
                             <FormControl
                                 placeholder="New Email Address"
                                 aria-label="New Email Address"
                                 aria-describedby="basic-addon2"/>
                             <InputGroup.Append>
-                                <Button 
-                                    variant="outline-secondary" 
+                                <Button
+                                    variant="outline-secondary"
                                     onClick={this.handleSubmitEmail}>
                                     Change Your Email
                                 </Button>
@@ -115,17 +115,17 @@ class Settings extends Component {
                         </InputGroup>
 
                         {/* phone no field */}
-                        <InputGroup 
-                            className="mb-3" 
-                            value={this.state.phone_number} 
+                        <InputGroup
+                            className="mb-3"
+                            value={this.state.phone_number}
                             onChange={this.handleChangePhoneNumber}>
                             <FormControl
                                 placeholder="New Phone #"
                                 aria-label="New Phone #"
                                 aria-describedby="basic-addon2"/>
                             <InputGroup.Append>
-                                <Button 
-                                    variant="outline-secondary" 
+                                <Button
+                                    variant="outline-secondary"
                                     onClick={this.handleSubmitPhoneNumber}>
                                     Change Your Phone #
                                 </Button>
@@ -133,23 +133,23 @@ class Settings extends Component {
                         </InputGroup>
 
                         {/* password input field */}
-                        <InputGroup 
+                        <InputGroup
                             className="mb-3">
                             <FormControl
-                                value={this.state.old_password} 
+                                value={this.state.old_password}
                                 onChange={this.handleChangeOldPassword}
                                 placeholder="Old Password"
                                 aria-label="Old Password"
                                 aria-describedby="basic-addon2"/>
                             <FormControl
-                                value={this.state.new_password} 
+                                value={this.state.new_password}
                                 onChange={this.handleChangeNewPassword}
                                 placeholder="New Password"
                                 aria-label="New Password"
                                 aria-describedby="basic-addon2"/>
                             <InputGroup.Append>
-                                <Button 
-                                    variant="outline-secondary" 
+                                <Button
+                                    variant="outline-secondary"
                                     onClick={this.handleSubmitNewPassword}>
                                     Change Your Password
                                 </Button>
@@ -157,17 +157,17 @@ class Settings extends Component {
                         </InputGroup>
 
                         {/* name input field */}
-                        <InputGroup 
+                        <InputGroup
                             className="mb-3">
                             <FormControl
-                                value={this.state.name} 
+                                value={this.state.name}
                                 onChange={this.handleChangeName}
                                 placeholder="Name"
                                 aria-label="Name"
                                 aria-describedby="basic-addon2"
                             />
                             <InputGroup.Append>
-                                <Button 
+                                <Button
                                     variant="outline-secondary"
                                     onClick={this.handleSubmitName}>
                                     Change Your Name
@@ -176,7 +176,7 @@ class Settings extends Component {
                         </InputGroup>
 
                         {/* picture input field */}
-                        <InputGroup 
+                        <InputGroup
                             className="mb-3">
                             <FormControl
                                 value={this.state.url}
@@ -185,8 +185,8 @@ class Settings extends Component {
                                 aria-label="Picture URL"
                                 aria-describedby="basic-addon2"/>
                             <InputGroup.Append>
-                                <Button 
-                                    variant="outline-secondary" 
+                                <Button
+                                    variant="outline-secondary"
                                     onClick={this.handleSubmitUrl}>
                                     Change Your Picture
                                 </Button>
