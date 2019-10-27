@@ -26,7 +26,7 @@ class Post extends Component {
 		var db = new DBOps();
 		var info = JSON.stringify({id: this.state.id});
 		console.log(info);
-		var databaseRequest = await db.searchPost(info);
+		var databaseRequest = await db.searchPost(info).catch((err)=>{console.log(err)});
 
 		console.log(databaseRequest);
 
@@ -67,15 +67,6 @@ class Post extends Component {
 	}
 
 	async componentDidMount(){
-
-		if( this.state.id == '' ){
-
-			this.stub();
-
-		} else {
-
-			this.pull(this.state.id);
-		}
 
 	}
 

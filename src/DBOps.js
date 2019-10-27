@@ -155,7 +155,9 @@ const postSearchTemplate = `query getPost(
         id
       }
     }
-    quote,
+    quote{
+      id
+    }
     quoted {
       items {
         id
