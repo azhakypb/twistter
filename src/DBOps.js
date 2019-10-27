@@ -58,7 +58,7 @@ const userSearchTemplate = `query getUser($id: ID!) {
         }
       }
     }
-    notificaitons {
+    notifications {
       items {
         id
         user {
@@ -155,7 +155,9 @@ const postSearchTemplate = `query getPost(
         id
       }
     }
-    quote,
+    quote{
+      id
+    }
     quoted {
       items {
         id
