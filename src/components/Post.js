@@ -92,13 +92,22 @@ class Post extends Component {
 
 				<Toast>
 	  				<Toast.Header>
-	    				<strong className="mr-auto">@{username}</strong>
+	    					<strong 
+	    						onClick={(e) => document.location.href = "/otherprofile/"+{username} } 
+	    						className="mr-auto">
+	    						@{username}
+	    					</strong>
 	    				<small>{timestamp}</small>
 					</Toast.Header>
 
+					<div style={{ paddingLeft: 5, paddingRight: 5 }}>
 					<Toast>
 						<Toast.Header>
-	    					<strong className="mr-auto">@{q_username}</strong>
+	    					<strong 
+	    						onClick={(e) => document.location.href = "/otherprofile/"+{q_username} }
+	    						className="mr-auto">
+	    						@{q_username}
+	    					</strong>
 	    					<small>{q_timestamp}</small>
 						</Toast.Header>
 						<Toast.Body style={{ paddingLeft: 30, paddingRight: 0 }}>
@@ -112,6 +121,7 @@ class Post extends Component {
 							</Row>
 						</Toast.Body>
 					</Toast>
+					</div>
 
 					<Toast.Body style={{ paddingLeft: 30, paddingRight: 0 }}>
 						<Row style={{ paddingBottom: 5}}>
