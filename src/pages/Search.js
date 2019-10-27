@@ -8,6 +8,13 @@ import { Auth } from 'aws-amplify'
 import Navbar from '../components/Navbar.js'
 import Post from '../components/Post.js'
 import Userlist from '../components/Userlist.js'
+import DBOps from '../DBOps.js';
+
+const searchPost = `query getPost($id: ID!) {
+    getPost(id: $id) {
+        topics {items {id}}
+    }
+}`
 
 class Search extends Component {
 
@@ -32,6 +39,10 @@ class Search extends Component {
             ]
         };
 
+        this.searchState = {
+            id: ""
+        }
+
         // bind functions
         this.Results = this.Results.bind(this);
         this.handleChangeText = this.handleChangeText.bind(this);
@@ -46,7 +57,7 @@ class Search extends Component {
                 <Jumbotron>
                     <h2>Searching for... {this.state.search}</h2>
                     {this.state.posts.map(
-                        (posts) => (<ul>{posts}</ul>)
+                        (posts) => (<ul><Post></Post></ul>)
                     )}
                 </Jumbotron>
             </div>
@@ -59,10 +70,17 @@ class Search extends Component {
     handleChangeText  (event){
         this.setState({ text: event.target.value });
     }
+
     // submission field handlers
+    
     async handleSubmitText(event){
         if (!Object.is(this.state.text, '')) {
             this.setState({ search: this.state.text });
+            this.setState({ posts: [<p>Hello,</p>,<p>world</p>,<p>!</p>]});
+            console.log("Set searchState id to: " + this.state.text);
+
+            
+
             this.setState({ showResults: true });
         }
     }
