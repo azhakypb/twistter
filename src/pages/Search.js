@@ -33,12 +33,28 @@ class Search extends Component {
         };
 
         // bind functions
+        this.Results = this.Results.bind(this);
         this.handleChangeText = this.handleChangeText.bind(this);
         this.handleSubmitText = this.handleSubmitText.bind(this);
     
         console.log(Auth.currentAuthenticatedUser());
     }
     // list of posts
+    Results(props) {
+        if (this.state.showResults) return (
+            <div>
+                <Jumbotron>
+                    <h2>Searching for... {this.state.search}</h2>
+                    {this.state.posts.map(
+                        (posts) => (<ul>{posts}</ul>)
+                    )}
+                </Jumbotron>
+            </div>
+        )
+        else return (
+            <div />
+        )
+    }
     // input field handlers
     handleChangeText  (event){
         this.setState({ text: event.target.value });
@@ -79,12 +95,8 @@ class Search extends Component {
                             </InputGroup.Append>
                         </InputGroup>
                     </Jumbotron>
-                    <Jumbotron>
-                        <h2>Searching for... {this.state.search}</h2>
-                        {this.state.posts.map(
-                            (posts) => (<ul>{posts}</ul>)
-                        )}
-                    </Jumbotron>
+                    <this.Results />
+                    
                 </Col>                
                 <Col>
                     <p>.</p>
