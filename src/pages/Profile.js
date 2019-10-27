@@ -67,7 +67,6 @@ class Profile extends Component {
             </Col>
 
             <Col>
-                <Post></Post>
             </Col>
       </Row>
     );
