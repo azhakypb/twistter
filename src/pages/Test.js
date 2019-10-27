@@ -124,7 +124,7 @@ class Test extends Component {
   }
 
   handleSearchUser = async () => {
-    var temp = await new DBOps().searchUser(JSON.stringify(this.searchState));
+    var temp = await new DBOps().searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)})
     console.log(temp);
   }
 
