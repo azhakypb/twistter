@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, Image} from 'react-bootstrap';
 import DBOps from '../DBOps.js'
+import Post from '../components/Post.js'
 
 // graphql modules
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
@@ -31,6 +32,9 @@ class Test extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      id: ""
+    }
     this.createState = {
       id: ""
     }
@@ -146,11 +150,14 @@ class Test extends Component {
   }
 
   handleSearchPost = async () => {
-    var temp = await new DBOps().searchPost(JSON.stringify(this.searchPostState));
-    console.log(temp);
+    console.log('searching posts',this.searchPostState);
+    this.setState({id:this.searchPostState.id});
   }
 
   render() {
+
+    const {id} = this.state;
+    console.log('rendering',id);
 
     return (
       <div className="App">
@@ -178,6 +185,7 @@ class Test extends Component {
         <button onClick={this.handleCreatePost}>Create Post</button><br/>
         Search Post: <input onChange={this.handleSPost}/>
         <button onClick={this.handleSearchPost}>Search Post</button>
+        <Post id={id}></Post>
       </div>
 
     );
