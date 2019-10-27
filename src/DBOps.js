@@ -15,14 +15,14 @@ const userSearchTemplate = `query getUser($id: ID!) {
   ) {
     id
     image
-    posts {
+    likes {
       items {
         id
-        text
-        timestamp
-        author {
-          id
-        }
+      }
+    }
+    interests {
+      items {
+        id
       }
     }
     following {
@@ -33,6 +33,39 @@ const userSearchTemplate = `query getUser($id: ID!) {
     followers {
       items {
         id
+      }
+    }
+    posts {
+      items {
+        id
+        text
+        timestamp
+        author {
+          id
+        }
+        topics {
+          items {
+            id
+          }
+        }
+        quote {
+          id
+        }
+        quoted {
+          items {
+            id
+          }
+        }
+      }
+    }
+    notificaitons {
+      items {
+        id
+        user {
+          id
+        }
+        text
+        timestamp
       }
     }
   }
@@ -112,6 +145,71 @@ const postSearchTemplate = `query getPost(
     author {
       id
     }
+    likes {
+      items {
+        id
+      }
+    }
+    topics {
+      items {
+        id
+      }
+    }
+    quote,
+    quoted {
+      items {
+        id
+      }
+    }
+  }
+}`
+
+const notifCreateTemplate = `mutation createNotification(
+  $notificationAuthorID: ID!,
+  text: String!,
+  timestamp: Int!
+) {
+  createNotification(input: {
+    notificationAuthorID: $notificationAuthorID,
+    text: $text,
+    timestamp: $timestamp
+  }) {
+    id
+    user {
+      id
+    }
+    text
+    timestamp
+  }
+}`
+
+const notifDeleteTemplate = `mutation deleteNotification(
+  $id: ID!
+) {
+  deleteNotification(
+    id: $id
+  }) {
+    id
+    user {
+      id
+    }
+    text
+    timestamp
+  }
+}`
+
+const notifSearchTemplate = `query getNotification(
+  $id: ID!
+) {
+  getNotification(
+    id: $id
+  }) {
+    id
+    user {
+      id
+    }
+    text
+    timestamp
   }
 }`
 
@@ -187,6 +285,32 @@ class DBOps extends Component {
 
   /***** END SEARCH POST FUNCTIONS *****/
 
+  /***** CREATE NOTIFICATION *****/
+
+  createNotification = async (info) => {
+    var temp = await API.graphql(graphqlOperation(notifCreateTemplate, info));
+    return temp.data.createNotification;
+  }
+
+  /***** END CREATE NOTIFICATION *****/
+
+  /***** DELETE NOTIFICATION *****/
+
+  deleteNotification = async (info) => {
+    var temp = await API.graphql(graphqlOperation(notifDeleteTemplate, info));
+    return temp.data.deleteNotification;
+  }
+
+  /***** END DELETE NOTIFICATION *****/
+
+  /***** SEARCH NOTIFICATION *****/
+
+  searchNotification = async (info) => {
+    var temp = await API.graphql(graphqlOperation(notifSearchTemplate, info));
+    return temp.data.getNotification;
+  }
+
+  /***** END SEARCH NOTIFICATION *****/
 
 }
 
