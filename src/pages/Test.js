@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, Image} from 'react-bootstrap';
 import DBOps from '../DBOps.js'
+import Post from '../components/Post.js'
 
 // graphql modules
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
@@ -31,6 +32,9 @@ class Test extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      id: ""
+    }
     this.createState = {
       id: ""
     }
@@ -48,12 +52,23 @@ class Test extends Component {
     this.deleteState = {
       id: ""
     }
+    this.createPostState = {
+      text: "",
+      timestamp: 0,
+      postAuthorId: ""
+    }
+    this.searchPostState = {
+      id: ""
+    }
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
     this.handleFollowee = this.handleFollowee.bind(this);
     this.handleFollower = this.handleFollower.bind(this);
     this.handleUnfollowInput = this.handleUnfollowInput.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleCTPost = this.handleCTPost.bind(this);
+    this.handleCAPost = this.handleCAPost.bind(this);
+    this.handleSPost = this.handleSPost.bind(this);
   }
 
   handleDelete(event) {
@@ -61,9 +76,9 @@ class Test extends Component {
     console.log("Set deleteState followee to: " + event.target.value);
   }
 
-  handleDeleteUser = () => {
-    console.log("handleDeleteUser: " + JSON.stringify(this.deleteState));
-    console.log("Delete deleting status: " + new DBOps().deleteUser(JSON.stringify(this.deleteState)));
+  handleDeleteUser = async () => {
+    var temp = await new DBOps().deleteUser(JSON.stringify(this.deleteState));
+    console.log(temp);
   }
 
   handleUnfollowInput(event) {
@@ -71,8 +86,9 @@ class Test extends Component {
     console.log("Set followState followee to: " + event.target.value);
   }
 
-  handleUnFollow = () => {
-    console.log("UnFollow creation status: " + new DBOps().deleteFollow(JSON.stringify(this.unfollowState)));
+  handleUnFollow = async () => {
+    var temp = await new DBOps().deleteFollow(JSON.stringify(this.unfollowState));
+    console.log(temp);
   }
 
   handleFollowee(event) {
@@ -85,9 +101,11 @@ class Test extends Component {
     console.log("Set followState follower to: " + event.target.value);
   }
 
-  handleFollow = () => {
-    this.followState.id = this.followState.followFolloweeId + this.followState.followFollowerId;
-    console.log("Follow creation status: " + new DBOps().createFollow(JSON.stringify(this.followState)));
+  handleFollow = async () => {
+    this.followState.id = this.followState.followFollowerId + "-" + this.followState.followFolloweeId;
+    console.log("Set followState id to: " + this.followState.id);
+   var temp = await new DBOps().createFollow(JSON.stringify(this.followState));
+    console.log(temp);
   }
 
   handleCreate(event) {
@@ -95,8 +113,9 @@ class Test extends Component {
     console.log("Set createState id to: " + event.target.value);
   }
 
-  handleCreateUser = () => {
-    console.log("Creation Successful: " + new DBOps().createUser(JSON.stringify(this.createState)));
+  handleCreateUser = async () => {
+    var temp = await new DBOps().createUser(JSON.stringify(this.createState));
+    console.log(temp);
   }
 
   handleSearch(event) {
@@ -104,11 +123,41 @@ class Test extends Component {
     console.log("Set searchState id to: " + event.target.value);
   }
 
-  handleSearchUser = () => {
-    console.log("Search Successful: " + new DBOps().searchUser(JSON.stringify(this.searchState)).toString());
+  handleSearchUser = async () => {
+    var temp = await new DBOps().searchUser(JSON.stringify(this.searchState));
+    console.log(temp);
+  }
+
+  handleCTPost(event) {
+    this.createPostState.text = event.target.value;
+    console.log("Set createPostState text to: " + event.target.value);
+  }
+
+  handleCAPost(event) {
+    this.createPostState.postAuthorId = event.target.value;
+    console.log("Set createPostState postAuthorId to: " + event.target.value);
+  }
+
+  handleCreatePost = async () => {
+    this.createPostState.timestamp = 1234;
+    var temp = await new DBOps().createPost(JSON.stringify(this.createPostState));
+    console.log(temp);
+  }
+
+  handleSPost(event) {
+    this.searchPostState.id = event.target.value;
+    console.log("Set searchPostState id to: " + event.target.value);
+  }
+
+  handleSearchPost = async () => {
+    console.log('searching posts',this.searchPostState);
+    this.setState({id:this.searchPostState.id});
   }
 
   render() {
+
+    const {id} = this.state;
+    console.log('rendering',id);
 
     return (
       <div className="App">
@@ -129,7 +178,14 @@ class Test extends Component {
         <button onClick={this.handleFollow}>Follow User</button>
         <br/>
         Unfollow User: <input onChange={this.handleUnfollowInput}/>
-        <button onClick={this.handleUnFollow}>Search User</button>
+        <button onClick={this.handleUnFollow}>Unfollow User</button><br/>
+        Create a Post: <br/>
+        Post Text: <input onChange={this.handleCTPost}/><br/>
+        Post Author: <input onChange={this.handleCAPost}/><br/>
+        <button onClick={this.handleCreatePost}>Create Post</button><br/>
+        Search Post: <input onChange={this.handleSPost}/>
+        <button onClick={this.handleSearchPost}>Search Post</button>
+        <Post id={id}></Post>
       </div>
 
     );

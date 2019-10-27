@@ -5,6 +5,7 @@ import {Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, I
 import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
+import Post from '../components/Post.js'
 
 
 class Profile extends Component {
@@ -30,7 +31,7 @@ class Profile extends Component {
 
     render() {
 
-        const { name, username, url } = this.state
+        const { name, username, url} = this.state
 
         return (
         <Row>
@@ -67,7 +68,6 @@ class Profile extends Component {
             </Col>
 
             <Col>
-                <h1>.</h1>
             </Col>
       </Row>
     );

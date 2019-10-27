@@ -1,0 +1,51 @@
+type User @model(queries: {get: "getUser"}, mutations: {create: "createUser", update: "updateUser", delete: "deleteUser"}, subscriptions: null) {
+  id: ID!
+  image: String
+  likes:  [Like] @connection(name: "userLiker")
+  interests: [Topic] @connection
+  followers: [Follow] @connection(name: "userFollowee")
+  following: [Follow] @connection(name: "userFollower")
+  posts: [Post] @connection(name: "userPost")
+	notifications: [Notification] @connection(name: "notif")
+}
+
+type Topic @model(queries: {get: "getTopics"}, mutations: {create: "createTopic", delete: "deleteTopic"}, subscriptions:  null) {
+  id:   ID!
+  posts: [Tag] @connection(name:"topicTag")
+}
+
+type Post @model(queries: {get: "getPost"}, mutations: {create: "createPost", update: "updatePost", delete: "deletePost"}, subscriptions: null) {
+  id:   ID!
+  text:   String!
+  timestamp:  Int!
+  author: User! @connection(name: "userPost")
+  likes: [Like] @connection(name: "postLikee")
+  topics: [Tag] @connection(name: "postTag")
+  quote:    Post  @connection(name: "postQuoted")
+  quoted:   [Post]  @connection(name: "postQuoted")
+}
+
+type Follow @model(queries: {get: "getFollow"}, mutations: {create: "createFollow", delete: "deleteFollow"}, subscriptions: null){
+  id: ID!
+  follower: User! @connection(name: "userFollower")
+  followee: User! @connection(name: "userFollowee")
+}
+
+type Like @model(queries: {get: "getLike"}, mutations: {create: "createLike", delete: "deleteLike"}, subscriptions: null){
+  id:   ID!
+  liker:    User! @connection(name: "userLiker")
+  likee:    Post! @connection(name: "postLikee")
+}
+
+type Tag @model(queries: {get: "getTag"}, mutations: {create: "createTag", delete: "deleteTag"}, subscriptions: null) {
+  id:   ID!
+  post: Post! @connection(name: "postTag")
+  topic: Topic! @connection(name: "topicTag")
+}
+
+type Notification @model(queries: {get: "getNotification"}, mutation: {create: "createNotification", delete: "deleteNotification"}, subscriptions: null) {
+	id: ID!
+	user: User! @connection(name: "notif")
+	text: String!
+	timestamp: Int!
+}
