@@ -26,11 +26,10 @@ class Search extends Component {
             search      : '',
             showResults : true,
             posts       : [
-                <Post id='41775bcd-dfe6-45fc-aae2-c0af1802e535'></Post>,
-                <Post id='a7b40d69-5c32-4c27-a895-3d6aaf8216ee'></Post>,
-                <Post id='a98d0365-a8fa-4c5d-a71a-9d41866af52e'></Post>,
-                <Post id='beb2ae19-807c-4fb3-b95e-66277c4b7f76'></Post>,
-                <Post id='d856a0f7-abcd-4d97-9bf3-7f63bdede47d'></Post>
+                <Post id='679c4672-6714-4e01-9784-3b0f886253dc' key='1'></Post>,
+                <Post id='a98d0365-a8fa-4c5d-a71a-9d41866af52e' key='2'></Post>,
+                <Post id='aa1d30c4-738c-4195-a5f1-07480529cb7e' key='3'></Post>,
+                <Post id='fc8c9968-31f0-4052-9e08-b46a9044b594' key='4'></Post>
             ]
         };
 

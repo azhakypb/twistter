@@ -1,7 +1,6 @@
 // react modules
 import React, { Component, } from 'react';
-import { Alert, Badge, Button, Row, Jumbotron, Toast } from 'react-bootstrap';
-import ReactDOM from 'react-dom';
+import { Badge, Button, Row, Toast } from 'react-bootstrap';
 // aws modules
 // custom modules
 import DBOps from '../DBOps.js';
@@ -23,29 +22,45 @@ class Post extends Component {
 
 	async pull(){
 
-		var db = new DBOps();
 		var info = JSON.stringify({id: this.state.id});
-		console.log(info);
-		var databaseRequest = await db.searchPost(info).catch((err)=>{console.log(err)});
+		console.log('pull info',info);
 
-		console.log(databaseRequest);
+		this.DBOps.searchPost(info).then((res) => {
 
-		this.setState(this.baseState, () => {
-			this.setState({
-				'username'	: databaseRequest.author.id,
-				'timestamp'	: databaseRequest.timestamp,
-				'text'		: databaseRequest.text
+			console.log('search post call', res);
+
+			this.setState(this.clearState, () => {
+
+				console.log('cleared State');
+
+				this.setState({
+
+					'username'	: res.author.id,
+					'timestamp'	: res.timestamp,
+					'text'		: res.text
+
 				}, () => {
-					console.log(this.state);
+
+					console.log('state after pull',this.state);
+
+				});
+
 			});
+
+
+		}).catch((err)=>{
+
+			console.log('pull error',err);
+
 		});
 
 	}
 
 	constructor(props){
 		// props and states
-		super(props)
+		super(props);
 		this.state = {
+			'id'			: '',
 			'username'		: '',
 			'q_username'	: '',
 			'timestamp'		: '',
@@ -54,32 +69,36 @@ class Post extends Component {
 			'q_text'		: '',
 			'topics'		: []
 		}
-		this.baseState = this.state;
-
-		if( 'id' in this.props ){
-			this.setState({id:this.props.id});
-		} else {
-			this.setState({id:''});
+		this.clearState = {
+			'username'		: '',
+			'q_username'	: '',
+			'timestamp'		: '',
+			'q_timestamp'	: '',
+			'text'			: '',
+			'q_text'		: '',
+			'topics'		: []
 		}
 
+		this.DBOps = new DBOps();
 		this.pull = this.pull.bind(this);
 		this.stub = this.stub.bind(this);
+
+		if( 'id' in this.props && !(this.props.id == '') ){
+			console.log('new post with id:', this.props.id);
+			this.state.id = this.props.id;
+		}
+
 	}
 
 	async componentDidMount(){
-		this.stub();
+		this.pull();
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot){
 
-		if( this.props.id == '' ){ return 0; }
-
-		if( this.state.id != this.props.id ){
-			console.log('difference in state and prop',this.state.id,this.props.id);
-			this.setState({id:this.props.id}, () =>{
-				this.setState(this.baseState,
-					this.pull);
-			});
+		console.log('componentDidUpdate',this.state);
+		if( this.state.id != prevState.id ){
+			this.pull();
 		}
 	}
 
@@ -95,7 +114,7 @@ class Post extends Component {
 			topics,
 		} = this.state;
 
-		if( q_username == '' ){
+		if( q_username === '' ){
 
 			return(
 
