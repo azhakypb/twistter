@@ -24,18 +24,18 @@ class Search extends Component {
         this.state = { 
             text        : '',
             search      : '',
-            showResults : false,
+            showResults : true,
             posts       : [
-                <Post></Post>,
-                <Post></Post>,
-                <Post></Post>,
-                <Post></Post>,
-                <Post></Post>,
-                <Post></Post>,
-                <Post></Post>,
-                <Post></Post>,
-                <Post></Post>,
-                <Post></Post>
+                <p>1</p>,
+                <p>2</p>,
+                <p>3</p>,
+                <p>4</p>,
+                <p>5</p>,
+                <p>6</p>,
+                <p>7</p>,
+                <p>8</p>,
+                <p>9</p>,
+                <p>0</p>
             ]
         };
 
@@ -56,9 +56,7 @@ class Search extends Component {
             <div>
                 <Jumbotron>
                     <h2>Searching for... {this.state.search}</h2>
-                    {this.state.posts.map(
-                        (posts) => (<ul><Post></Post></ul>)
-                    )}
+                    <ul>{this.state.posts}</ul>
                 </Jumbotron>
             </div>
         )
@@ -73,14 +71,20 @@ class Search extends Component {
 
     // submission field handlers
     
-    async handleSubmitText(event){
+    handleSubmitText = async() => {
         if (!Object.is(this.state.text, '')) {
             this.setState({ search: this.state.text });
-            this.setState({ posts: [<p>Hello,</p>,<p>world</p>,<p>!</p>]});
-            console.log("Set searchState id to: " + this.state.text);
+            console.log("Set search state to: " + this.state.text);
 
+            this.setState({id: this.state.text});
+            console.log("Searching posts",this.searchState);
             
+            this.setState({id:this.searchState.id});
+            const listPosts = this.state.posts.map(
+                (post => <Post id={this.searchState.id}></Post>)
+            );
 
+            this.setState({ posts: listPosts});
             this.setState({ showResults: true });
         }
     }
