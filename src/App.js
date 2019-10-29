@@ -12,6 +12,8 @@ import OtherProfile from './pages/OtherProfile.js'
 // style sheet
 import './App.css';
 
+window.LOG_LEVEL = 'DEBUG';
+
 class App extends Component {
 
     render() {

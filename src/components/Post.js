@@ -67,10 +67,12 @@ class Post extends Component {
 	}
 
 	async componentDidMount(){
-
+		this.stub();
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot){
+
+		if( this.props.id == '' ){ return 0; }
 
 		if( this.state.id != this.props.id ){
 			console.log('difference in state and prop',this.state.id,this.props.id);
@@ -99,7 +101,11 @@ class Post extends Component {
 
 				<Toast>
 	  				<Toast.Header>
-	    				<strong className="mr-auto">@{username}</strong>
+	    				<strong 
+	    				onClick={(e) => {
+	    					document.location.href = "/otherprofile/"+username;
+	    				}}
+	    				className="mr-auto">@{username}</strong>
 	    				<small>{timestamp}</small>
 					</Toast.Header>
 					<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
@@ -128,7 +134,7 @@ class Post extends Component {
 				<Toast>
 	  				<Toast.Header>
 	    					<strong 
-	    						onClick={(e) => document.location.href = "/otherprofile/"+{username} } 
+	    						onClick={(e) => document.location.href = "/otherprofile/"+username } 
 	    						className="mr-auto">
 	    						@{username}
 	    					</strong>
@@ -139,7 +145,7 @@ class Post extends Component {
 					<Toast>
 						<Toast.Header>
 	    					<strong 
-	    						onClick={(e) => document.location.href = "/otherprofile/"+{q_username} }
+	    						onClick={(e) => document.location.href = "/otherprofile/"+q_username }
 	    						className="mr-auto">
 	    						@{q_username}
 	    					</strong>
