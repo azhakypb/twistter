@@ -12,7 +12,7 @@ import DBOps from '../DBOps.js';
 
 const searchPost = `query getPost($id: ID!) {
     getPost(id: $id) {
-        topics {items {id}}
+        id
     }
 }`
 
@@ -26,16 +26,11 @@ class Search extends Component {
             search      : '',
             showResults : true,
             posts       : [
-                <p>1</p>,
-                <p>2</p>,
-                <p>3</p>,
-                <p>4</p>,
-                <p>5</p>,
-                <p>6</p>,
-                <p>7</p>,
-                <p>8</p>,
-                <p>9</p>,
-                <p>0</p>
+                <Post id='41775bcd-dfe6-45fc-aae2-c0af1802e535'></Post>,
+                <Post id='a7b40d69-5c32-4c27-a895-3d6aaf8216ee'></Post>,
+                <Post id='a98d0365-a8fa-4c5d-a71a-9d41866af52e'></Post>,
+                <Post id='beb2ae19-807c-4fb3-b95e-66277c4b7f76'></Post>,
+                <Post id='d856a0f7-abcd-4d97-9bf3-7f63bdede47d'></Post>
             ]
         };
 
@@ -76,19 +71,20 @@ class Search extends Component {
             this.setState({ search: this.state.text });
             console.log("Set search state to: " + this.state.text);
 
-            this.setState({id: this.state.text});
-            console.log("Searching posts",this.searchState);
-            
-            this.setState({id:this.searchState.id});
-            const listPosts = this.state.posts.map(
-                (post => <Post id={this.searchState.id}></Post>)
-            );
+            //this.setState({id: this.state.text});
+            //console.log("Searching posts",this.searchState);
 
-            this.setState({ posts: listPosts});
+            //this.setState({id:this.searchState.id});
+
+            //const listPosts = this.state.posts.map(
+            //    (post => <Post id={this.state.text}></Post>)
+            //);
+
+            //this.setState({ posts: listPosts});
             this.setState({ showResults: true });
         }
     }
-    
+
 
     render() {
         return (
