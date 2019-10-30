@@ -1,10 +1,18 @@
 // react modules
-import React, { Component, } from 'react';
+import React, { Component } from 'react';
 import { Badge, Button, Row, Toast } from 'react-bootstrap';
 // aws modules
 // custom modules
-import DBOps from '../DBOps.js';
+import { searchPost } from '../DBOps.js';
 // globals
+
+function TopicList(props){
+	const topics = props.topics;
+	const items = topics.map((topic)=>
+		<Badge variant="primary" key={topic}>{topic}</Badge>
+	);
+	return <div>{items}</div>;
+}
 
 class Post extends Component {
 
@@ -23,28 +31,17 @@ class Post extends Component {
 	async pull(){
 
 		var info = JSON.stringify({id: this.state.id});
-		console.log('pull info',info);
 
-		this.DBOps.searchPost(info).then((res) => {
+		searchPost(info).then((res) => {
 
-			console.log('search post call', res);
+			res 		= res.data.getPost;
+			res.author 	= res.author.id
 
-			this.setState(this.clearState, () => {
-
-				console.log('cleared State');
-
-				this.setState({
-
-					'username'	: res.author.id,
-					'timestamp'	: res.timestamp,
-					'text'		: res.text
-
-				}, () => {
-
-					console.log('state after pull',this.state);
-
-				});
-
+			this.setState({
+				username: 		res.author,
+				timestamp: 		res.timestamp,
+				text: 			res.text,
+				topics: 		['Topic 1']
 			});
 
 
@@ -69,37 +66,23 @@ class Post extends Component {
 			'q_text'		: '',
 			'topics'		: []
 		}
-		this.clearState = {
-			'username'		: '',
-			'q_username'	: '',
-			'timestamp'		: '',
-			'q_timestamp'	: '',
-			'text'			: '',
-			'q_text'		: '',
-			'topics'		: []
-		}
 
-		this.DBOps = new DBOps();
-		this.pull = this.pull.bind(this);
-		this.stub = this.stub.bind(this);
-
-		if( 'id' in this.props && !(this.props.id == '') ){
-			console.log('new post with id:', this.props.id);
+		if( 'id' in this.props && !(this.props.id === '') ){
 			this.state.id = this.props.id;
 		}
 
+		this.pull = this.pull.bind(this);
+		this.stub = this.stub.bind(this);
 	}
 
 	async componentDidMount(){
-		this.pull();
+		
+		if( this.state.id !== '' ){ this.pull(); }
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot){
 
-		console.log('componentDidUpdate',this.state);
-		if( this.state.id != prevState.id ){
-			this.pull();
-		}
+		if( this.state.id !== prevState.id ){ this.pull(); }
 	}
 
 	render(){
@@ -111,7 +94,7 @@ class Post extends Component {
 			q_timestamp,
 			text,
 			q_text,
-			topics,
+			topics
 		} = this.state;
 
 		if( q_username === '' ){
@@ -132,9 +115,7 @@ class Post extends Component {
 							{text}
 						</Row>
 						<Row>
-							{topics.map(topic => (
-								<Badge variant="primary" key={topic}>{topic}</Badge>
-							))}
+							<TopicList topics={topics}/>
 						</Row>
 						<Row>
 							<Button variant="primary">
@@ -183,9 +164,7 @@ class Post extends Component {
 							{text}
 						</Row>
 						<Row style={{ paddingBottom: 5}}>
-							{topics.map(topic => (
-								<Badge variant="primary" key={topic}>{topic}</Badge>
-							))}
+							<TopicList topics={topics}/>
 						</Row>
 						<Row>
 							<Button size="sm"variant="primary">

@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch }   from 'react-router-dom';
 import React, { Component }                         from 'react';
 // aws modules
 import { withAuthenticator } from 'aws-amplify-react'
-import { Auth } from 'aws-amplify';
 // pages
 import Search from './pages/Search.js'
 import Settings from './pages/Settings.js'
@@ -12,8 +11,6 @@ import Test from './pages/Test.js'
 import OtherProfile from './pages/OtherProfile.js'
 // style sheet
 import './App.css';
-
-window.LOG_LEVEL = 'DEBUG';
 
 class App extends Component {
 

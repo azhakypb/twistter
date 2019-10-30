@@ -2,7 +2,6 @@
 import React, { Component, } from 'react';
 import { Button, Jumbotron } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useHistory } from "react-router"
 // aws modules
 import { Auth } from 'aws-amplify';
 
@@ -15,7 +14,7 @@ class Navbar extends Component {
     	super(props);
     	// bind functions
 	  //  this.displayUserAttributes 	=	this.displayUserAttributes	.bind(this);
-	    this.deleteUser				=	this.deleteUser				.bind(this);
+	    this.deleteUser				=	this.deleteUser.bind(this);
   	}
 
   	// async displayUserAttributes(){
@@ -52,8 +51,7 @@ class Navbar extends Component {
     		<Jumbotron>
     			<h2>Navbar</h2>
     			<Link
-    				to= '/'
-    				paddingTop="50px">
+    				to= '/'>
 	  				<Button
 	  					variant="secondary"
 	  					size="md"
@@ -62,8 +60,7 @@ class Navbar extends Component {
 	  				</Button>
     			</Link>
 				<Link
-					to= '/search'
-					paddingTop="50px">
+					to= '/search'>
 					<Button
 						variant="secondary"
 						size="md"
@@ -72,8 +69,7 @@ class Navbar extends Component {
 					</Button>
 				</Link>
     			<Link
-    				to= '/settings'
-    				paddingTop="50px">
+    				to= '/settings'>
 	  				<Button
 	  					variant="secondary"
 	  					size="md"
@@ -82,8 +78,7 @@ class Navbar extends Component {
 	  				</Button>
   				</Link>
 				<Link
-					to= '/'
-					paddingTop="50px">
+					to= '/'>
 					<Button
 						variant="secondary"
 						size="md"

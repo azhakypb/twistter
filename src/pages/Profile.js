@@ -1,11 +1,10 @@
 // react modules
 import React, { Component } from 'react';
-import {Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, Image} from 'react-bootstrap';
+import { Card, Col, Container,  Jumbotron, Row, Image } from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
-import Post from '../components/Post.js'
 
 class Profile extends Component {
 
