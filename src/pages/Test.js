@@ -8,26 +8,6 @@ import Post from '../components/Post.js'
 // graphql modules
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
 
-const userCreation = `mutation createUser($id: ID!) {
-  createUser(input:{
-    id: $id
-  }) {
-    id
-  }
-}`
-
-const searchUser = `query getUser($id: ID!) {
-  getUser(
-    id: $id
-  ) {
-    id
-  }
-}`
-
-const userInfo = {
-  id: "this is dsada tdest"
-}
-
 class Test extends Component {
 
   constructor(props) {
@@ -60,6 +40,12 @@ class Test extends Component {
     this.searchPostState = {
       id: ""
     }
+    this.searchNotifState = {
+      id: ""
+    }
+    this.deleteNotifState = {
+      id: ""
+    }
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
     this.handleFollowee = this.handleFollowee.bind(this);
@@ -69,6 +55,8 @@ class Test extends Component {
     this.handleCTPost = this.handleCTPost.bind(this);
     this.handleCAPost = this.handleCAPost.bind(this);
     this.handleSPost = this.handleSPost.bind(this);
+    this.handleSNotif = this.handleSNotif.bind(this);
+    this.handleDNotif = this.handleDNotif.bind(this);
   }
 
   handleDelete(event) {
@@ -104,7 +92,10 @@ class Test extends Component {
   handleFollow = async () => {
     this.followState.id = this.followState.followFollowerId + "-" + this.followState.followFolloweeId;
     console.log("Set followState id to: " + this.followState.id);
-   var temp = await new DBOps().createFollow(JSON.stringify(this.followState));
+    var data = {userid: "" + this.followState.followFolloweeId, text: "You have been followed by " + this.followFollowerId, timestamp: 1};
+    var ret = await new DBOps().createNotification(JSON.stringify(data));
+    console.log("Created Notification for: " + this.followState.followFolloweeId);
+    var temp = await new DBOps().createFollow(JSON.stringify(this.followState));
     console.log(temp);
   }
 
@@ -154,6 +145,27 @@ class Test extends Component {
     this.setState({id:this.searchPostState.id});
   }
 
+  handleSNotif(event) {
+    this.searchNotifState.id = event.target.value;
+    console.log("Set searchPostState id to: " + event.target.value);
+  }
+
+  searchNotif = async () => {
+    var temp = await new DBOps().searchNotification(JSON.stringify(this.searchNotifState));
+    console.log(temp);
+  }
+
+  handleDNotif(event) {
+    this.deleteNotifState.id = event.target.value;
+    console.log("Set searchPostState id to: " + event.target.value);
+  }
+
+  deleteNotif = async () => {
+    var temp = await new DBOps().deleteNotification(JSON.stringify(this.deleteNotifState));
+    console.log(temp);
+  }
+
+
   render() {
 
     const {id} = this.state;
@@ -169,7 +181,7 @@ class Test extends Component {
         <button onClick={this.handleSearchUser}>Search User</button>
         <br/>
         Delete user: <input onChange={this.handleDelete}/>
-        <button onClick={this.handleDeleteUser}>Search User</button>
+        <button onClick={this.handleDeleteUser}>Delete User</button>
         <br/>
         Follow A User: <br/>
         Enter Follower: <input onChange={this.handleFollower}/>
@@ -185,7 +197,12 @@ class Test extends Component {
         <button onClick={this.handleCreatePost}>Create Post</button><br/>
         Search Post: <input onChange={this.handleSPost}/>
         <button onClick={this.handleSearchPost}>Search Post</button>
-        <Post id={id}></Post>
+        <Post id={id}></Post><br/>
+        <br/>
+        Search Notification: <input onChange={this.handleSNotif}/>
+        <button onClick={this.searchNotif}>Search Notification</button><br/>
+        Delete Notification: <input onChange={this.handleDNotif}/>
+        <button onClick={this.deleteNotif}>Delete Notification</button><br/>
       </div>
 
     );

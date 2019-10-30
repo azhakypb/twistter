@@ -167,12 +167,12 @@ const postSearchTemplate = `query getPost(
 }`
 
 const notifCreateTemplate = `mutation createNotification(
-  $notificationAuthorID: ID!,
-  text: String!,
-  timestamp: Int!
+  $userid: ID!,
+  $text: String!,
+  $timestamp: Int!
 ) {
   createNotification(input: {
-    notificationAuthorID: $notificationAuthorID,
+    notificationUserID: $userid,
     text: $text,
     timestamp: $timestamp
   }) {
@@ -188,7 +188,7 @@ const notifCreateTemplate = `mutation createNotification(
 const notifDeleteTemplate = `mutation deleteNotification(
   $id: ID!
 ) {
-  deleteNotification(
+  deleteNotification(input: {
     id: $id
   }) {
     id
