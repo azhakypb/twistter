@@ -149,7 +149,8 @@ class Test extends Component {
 
   handleSearchPost = async () => {
     console.log('searching posts',this.searchPostState);
-    this.setState({id:this.searchPostState.id});
+    var temp = await new DBOps().searchPost(JSON.stringify(this.searchPostState));
+    console.log(temp)
   }
 
   handleSNotif(event) {

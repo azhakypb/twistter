@@ -215,6 +215,56 @@ const notifSearchTemplate = `query getNotification(
   }
 }`
 
+const createTopicTemplate = `mutation createTopic(
+  $id: ID!
+) {
+  createTopic(input: {
+    id: $id
+  }) {
+    id
+  }
+}
+`
+
+const searchTopicTemplate = `query searchTopic(
+  $id: ID!
+) {
+  getTopics(id: $id) {
+    id
+    posts {
+      items {
+        post {
+          id,
+          text,
+          timestamp,
+          author {
+            id
+          }
+          likes {
+            items {
+              id
+            }
+          }
+          topics {
+            items {
+              id
+            }
+          }
+          quote{
+            id
+          }
+          quoted {
+            items {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`
+
 class DBOps extends Component {
 
   constructor(props) {
