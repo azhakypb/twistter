@@ -26,6 +26,12 @@ class Search extends Component {
             search      : '',
             showResults : false,
             posts       : [
+                //<Post key='0'></Post>,
+                //<Post key='0'></Post>,
+                //<Post key='0'></Post>,
+                //<Post key='0'></Post>,
+                //<Post key='0'></Post>,
+                //<Post key='0'></Post>,
                 <Post id='679c4672-6714-4e01-9784-3b0f886253dc' key='1'></Post>,
                 <Post id='a98d0365-a8fa-4c5d-a71a-9d41866af52e' key='2'></Post>,
                 <Post id='aa1d30c4-738c-4195-a5f1-07480529cb7e' key='3'></Post>,
@@ -74,6 +80,14 @@ class Search extends Component {
             //console.log("Searching posts",this.searchState);
 
             //this.setState({id:this.searchState.id});
+
+            /*
+            const topicPosts = [];
+            const arrayPosts = topicPosts.map(
+                (post) => <Post id = {post}></Post>
+            );
+            this.setState({posts: arrayPosts});
+            */
 
             //const listPosts = this.state.posts.map(
             //    (post => <Post id={this.state.text}></Post>)
