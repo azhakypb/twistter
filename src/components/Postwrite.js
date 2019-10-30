@@ -23,7 +23,7 @@ class Postwrite extends Component {
     let buttonType = this.state.show ? "danger" : "success"
     return (
       <div>
-      {this.state.show ? <Singlepost action={this.handleClick}/>: null}
+      {this.state.show ? <Singlepost action={this.handleClick} username={this.props.username}/>: null}
        <Button variant={buttonType} size="md" onClick={this.handleClick} block> {buttonText} </Button>
       </div>
     )

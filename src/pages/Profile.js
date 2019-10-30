@@ -36,7 +36,7 @@ class Profile extends Component {
         return (
         <Row>
             <Col>
-                <Navbar></Navbar>
+                <Navbar username={this.state.username}></Navbar>
             </Col>
 
             <Col

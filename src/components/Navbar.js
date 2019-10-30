@@ -92,7 +92,7 @@ class Navbar extends Component {
 	    				Delete User
 	  				</Button>
 	    		</Jumbotron>
-					<Postwrite></Postwrite>
+					<Postwrite username={this.props.username}></Postwrite>
 				</div>
     	);
   	}
