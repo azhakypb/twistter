@@ -169,12 +169,12 @@ const postSearchTemplate = `query getPost(
 const notifCreateTemplate = `mutation createNotification(
   $userid: ID!,
   $text: String!,
-  $timestamp: Int!
+  $time: Int!
 ) {
   createNotification(input: {
-    notificationUserID: $userid,
+    notificationUserId: $userid,
     text: $text,
-    timestamp: $timestamp
+    timestamp: $time
   }) {
     id
     user {
@@ -205,7 +205,7 @@ const notifSearchTemplate = `query getNotification(
 ) {
   getNotification(
     id: $id
-  }) {
+  ) {
     id
     user {
       id
