@@ -64,7 +64,7 @@ class Singlepost extends Component {
       postAuthorId: this.state.postAuthorId1
     };
     var temp = await new DBOps().createPost(JSON.stringify(toSend));
-    console.log(temp);
+    //console.log(temp);
   }
 
 

@@ -1,11 +1,18 @@
 // react modules
-import React, { Component, } from 'react';
-import { Alert, Badge, Button, Row, Jumbotron, Toast } from 'react-bootstrap';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
+import { Badge, Button, Row, Toast } from 'react-bootstrap';
 // aws modules
 // custom modules
-import DBOps from '../DBOps.js';
+import { searchPost } from '../DBOps.js';
 // globals
+
+function TopicList(props){
+	const topics = props.topics;
+	const items = topics.map((topic)=>
+		<Badge variant="primary" key={topic}>{topic}</Badge>
+	);
+	return <div>{items}</div>;
+}
 
 class Post extends Component {
 
@@ -23,29 +30,34 @@ class Post extends Component {
 
 	async pull(){
 
-		var db = new DBOps();
 		var info = JSON.stringify({id: this.state.id});
-		console.log(info);
-		var databaseRequest = await db.searchPost(info);
 
-		console.log(databaseRequest);
+		searchPost(info).then((res) => {
 
-		this.setState(this.baseState, () => {
+			res 		= res.data.getPost;
+			res.author 	= res.author.id
+
 			this.setState({
-				'username'	: databaseRequest.author.id,
-				'timestamp'	: databaseRequest.timestamp,
-				'text'		: databaseRequest.text
-				}, () => {
-					console.log(this.state);
+				username: 		res.author,
+				timestamp: 		res.timestamp,
+				text: 			res.text,
+				topics: 		['Topic 1']
 			});
+
+
+		}).catch((err)=>{
+
+			console.log('pull error',err);
+
 		});
 
 	}
 
 	constructor(props){
 		// props and states
-		super(props)
+		super(props);
 		this.state = {
+			'id'			: '',
 			'username'		: '',
 			'q_username'	: '',
 			'timestamp'		: '',
@@ -54,12 +66,9 @@ class Post extends Component {
 			'q_text'		: '',
 			'topics'		: []
 		}
-		this.baseState = this.state;
 
-		if( 'id' in this.props ){
-			this.setState({id:this.props.id});
-		} else {
-			this.setState({id:''});
+		if( 'id' in this.props && !(this.props.id === '') ){
+			this.state.id = this.props.id;
 		}
 
 		this.pull = this.pull.bind(this);
@@ -67,27 +76,13 @@ class Post extends Component {
 	}
 
 	async componentDidMount(){
-
-		if( this.state.id == '' ){
-
-			this.stub();
-
-		} else {
-
-			this.pull(this.state.id);
-		}
-
+		
+		if( this.state.id !== '' ){ this.pull(); }
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot){
 
-		if( this.state.id != this.props.id ){
-			console.log('difference in state and prop',this.state.id,this.props.id);
-			this.setState({id:this.props.id}, () =>{
-				this.setState(this.baseState,
-					this.pull);
-			});
-		}
+		if( this.state.id !== prevState.id ){ this.pull(); }
 	}
 
 	render(){
@@ -99,16 +94,20 @@ class Post extends Component {
 			q_timestamp,
 			text,
 			q_text,
-			topics,
+			topics
 		} = this.state;
 
-		if( q_username == '' ){
+		if( q_username === '' ){
 
 			return(
 
 				<Toast>
 	  				<Toast.Header>
-	    				<strong className="mr-auto">@{username}</strong>
+	    				<strong 
+	    				onClick={(e) => {
+	    					document.location.href = "/otherprofile/"+username;
+	    				}}
+	    				className="mr-auto">@{username}</strong>
 	    				<small>{timestamp}</small>
 					</Toast.Header>
 					<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
@@ -116,9 +115,7 @@ class Post extends Component {
 							{text}
 						</Row>
 						<Row>
-							{topics.map(topic => (
-								<Badge variant="primary" key={topic}>{topic}</Badge>
-							))}
+							<TopicList topics={topics}/>
 						</Row>
 						<Row>
 							<Button variant="primary">
@@ -137,7 +134,7 @@ class Post extends Component {
 				<Toast>
 	  				<Toast.Header>
 	    					<strong 
-	    						onClick={(e) => document.location.href = "/otherprofile/"+{username} } 
+	    						onClick={(e) => document.location.href = "/otherprofile/"+username } 
 	    						className="mr-auto">
 	    						@{username}
 	    					</strong>
@@ -148,7 +145,7 @@ class Post extends Component {
 					<Toast>
 						<Toast.Header>
 	    					<strong 
-	    						onClick={(e) => document.location.href = "/otherprofile/"+{q_username} }
+	    						onClick={(e) => document.location.href = "/otherprofile/"+q_username }
 	    						className="mr-auto">
 	    						@{q_username}
 	    					</strong>
@@ -167,9 +164,7 @@ class Post extends Component {
 							{text}
 						</Row>
 						<Row style={{ paddingBottom: 5}}>
-							{topics.map(topic => (
-								<Badge variant="primary" key={topic}>{topic}</Badge>
-							))}
+							<TopicList topics={topics}/>
 						</Row>
 						<Row>
 							<Button size="sm"variant="primary">

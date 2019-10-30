@@ -2,7 +2,6 @@
 import React, { Component, } from 'react';
 import { Button, Jumbotron, Container, Row, Col} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { useHistory } from "react-router"
 // aws modules
 import { Auth } from 'aws-amplify';
 
@@ -16,7 +15,7 @@ class Navbar extends Component {
     	super(props);
     	// bind functions
 	  //  this.displayUserAttributes 	=	this.displayUserAttributes	.bind(this);
-	    this.deleteUser				=	this.deleteUser				.bind(this);
+	    this.deleteUser				=	this.deleteUser.bind(this);
   	}
 
   	// async displayUserAttributes(){

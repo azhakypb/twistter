@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import { Component } from 'react';
+import { API, graphqlOperation } from 'aws-amplify';
 
 const userCreationTemplate = `mutation createUser($id: ID!) {
   createUser(input:{
@@ -58,7 +58,7 @@ const userSearchTemplate = `query getUser($id: ID!) {
         }
       }
     }
-    notificaitons {
+    notifications {
       items {
         id
         user {
@@ -151,12 +151,6 @@ const postSearchTemplate = `query getPost(
       }
     }
     topics {
-      items {
-        id
-      }
-    }
-    quote,
-    quoted {
       items {
         id
       }
@@ -312,6 +306,46 @@ class DBOps extends Component {
 
   /***** END SEARCH NOTIFICATION *****/
 
+}
+
+export async function createUser(info){
+    return API.graphql(graphqlOperation(userCreationTemplate, info));
+}
+
+export async function searchUser(info) {
+    return API.graphql(graphqlOperation(userSearchTemplate, info));
+}
+
+export async function deleteUser(info){
+    return API.graphql(graphqlOperation(userDeletionTemplate, info));
+}
+
+export async function createFollow(info){
+    return API.graphql(graphqlOperation(followCreateTemplate, info));
+}
+
+export async function deleteFollow(info){
+    return API.graphql(graphqlOperation(followDeleteTemplate, info));
+}
+
+export async function createPost(info){
+    return API.graphql(graphqlOperation(postCreateTemplate, info));
+}
+
+export async function searchPost(info){
+    return API.graphql(graphqlOperation(postSearchTemplate, info));
+}
+
+export async function createNotification(info){
+    return API.graphql(graphqlOperation(notifCreateTemplate, info));
+}
+
+export async function deleteNotification(info){
+    return API.graphql(graphqlOperation(notifDeleteTemplate, info));
+}
+
+export async function searchNotification(info){
+    return API.graphql(graphqlOperation(notifSearchTemplate, info));
 }
 
 export default DBOps;
