@@ -398,6 +398,20 @@ class DBOps extends Component {
 
   /***** END CREATE NOTIFICATION *****/
 
+  /***** SEARCH NOTIFICATION *****/
+
+  searchNotification = async (info) => {
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(notifSearchTemplate, info));
+      return temp.data;
+    } catch (e) {
+      return e.data;
+    }
+  }
+
+  /***** END SEARCH NOTIFICATION *****/
+
   /***** DELETE NOTIFICATION *****/
 
   deleteNotification = async (info) => {
