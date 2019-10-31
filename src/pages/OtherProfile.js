@@ -7,6 +7,7 @@ import { Auth } from 'aws-amplify';
 import Navbar from '../components/Navbar.js'
 import DBOps from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
+import FollowList from '../components/FollowList.js'
 var AWS = require('aws-sdk');
 
 class OtherProfile extends Component {
@@ -126,7 +127,7 @@ class OtherProfile extends Component {
             </Col>
 
             <Col>
-                <h1>.</h1>
+                <FollowList username={username}></FollowList>
             </Col>
       </Row>
     );
