@@ -63,10 +63,15 @@ class Singlepost extends Component {
       timestamp: this.state.timestamp1,
       postAuthorId: this.state.postAuthorId1
     };
-    var temp = await new DBOps().createPost(JSON.stringify(toSend))
-      .catch((err)=>{
-        console.log(err);
-      });
+    var topics = this.state.topics1.split(",");
+    var post = await new DBOps().createPost(JSON.stringify(toSend));
+    var postid = post.id;
+    for (var i = 0; i < topics.length; i++) {
+      var topic = await new DBOps().createTopic(JSON.stringify({id: topics[i]}));
+      console.log(topic);
+      var tag_input = {tagTopicId: topics[i], tagPostId: postid};
+      var tag = await new DBOps().createTag(JSON.stringify(tag_input));
+    }
   }
 
 
