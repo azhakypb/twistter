@@ -6,6 +6,7 @@ import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
 
+
 class Profile extends Component {
 
     constructor(props){
@@ -34,7 +35,7 @@ class Profile extends Component {
         return (
         <Row>
             <Col>
-                <Navbar></Navbar>
+                <Navbar username={this.state.username}></Navbar>
             </Col>
 
             <Col
