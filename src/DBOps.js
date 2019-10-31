@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import { Component } from 'react';
+import { API, graphqlOperation } from 'aws-amplify';
 
 const userCreationTemplate = `mutation createUser($id: ID!) {
   createUser(input:{
@@ -155,14 +155,6 @@ const postSearchTemplate = `query getPost(
         id
       }
     }
-    quote{
-      id
-    }
-    quoted {
-      items {
-        id
-      }
-    }
   }
 }`
 
@@ -265,6 +257,21 @@ const searchTopicTemplate = `query searchTopic(
 }
 `
 
+const createTagTemplate = `mutation createTag(
+  $tagTopicId: ID!,
+  $tagPostId: ID!
+) {
+  createTag(input: {tagTopicId: $tagTopicId, tagPostId: $tagPostId}) {
+    id
+    post {
+      id
+    }
+    topic {
+      id
+    }
+  }
+}`
+
 class DBOps extends Component {
 
   constructor(props) {
@@ -275,8 +282,13 @@ class DBOps extends Component {
   /***** BEGIN CREATE USER FUNCTIONS *****/
 
   createUser = async (info) => {
-    var temp = await API.graphql(graphqlOperation(userCreationTemplate, info));
-    return temp.data.createUser;
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(userCreationTemplate, info));
+      return temp.data.createUser;
+    } catch (e) {
+      return e.data;
+    }
   }
 
 
@@ -285,8 +297,13 @@ class DBOps extends Component {
   /***** BEGIN SEARCH USER FUNCTIONS *****/
 
   searchUser = async (info) => {
-    var temp = await API.graphql(graphqlOperation(userSearchTemplate, info));
-    return temp.data.getUser;
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(userSearchTemplate, info));
+      return temp.data.getUser;
+    } catch (e) {
+      return e.data;
+    }
   }
 
   /***** END SEARCH USER FUNCTIONS *****/
@@ -294,8 +311,13 @@ class DBOps extends Component {
   /***** BEGIN DELETE USER FUNCTIONS *****/
 
   deleteUser = async (info) => {
-    var temp = await API.graphql(graphqlOperation(userDeletionTemplate, info));
-    return temp.data.deleteUser;
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(userDeletionTemplate, info));
+      return temp.data.deleteUser;
+    } catch (e) {
+      return e.data;
+    }
   }
 
   /***** END DELETE USER FUNCTIONS *****/
@@ -303,8 +325,13 @@ class DBOps extends Component {
   /***** BEGIN CREATE FOLLOW FUNCTIONS *****/
 
   createFollow = async (info) => {
-    var temp = await API.graphql(graphqlOperation(followCreateTemplate, info));
-    return temp.data.createFollow;
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(followCreateTemplate, info));
+      return temp.data.createFollow;
+    } catch (e) {
+      return e.data;
+    }
   }
 
   /***** END CREATE FOLLOW FUNCTIONS *****/
@@ -312,8 +339,13 @@ class DBOps extends Component {
   /***** BEGIN UNFOLLOW FUNCTIONS *****/
 
   deleteFollow = async (info) => {
-    var temp = await API.graphql(graphqlOperation(followDeleteTemplate, info));
-    return temp.data.deleteFollow;
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(followDeleteTemplate, info));
+      return temp.data.deleteFollow;
+    } catch (e) {
+      return e.data;
+    }
   }
 
   /***** END UNFOLLOW FUNCTIONS *****/
@@ -321,9 +353,13 @@ class DBOps extends Component {
   /***** BEGIN CREATE POST FUNCTIONS *****/
 
   createPost = async (info) => {
-    console.log(info);
-    var temp = await API.graphql(graphqlOperation(postCreateTemplate, info));
-    return temp.data.createPost;
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(postCreateTemplate, info));
+      return temp.data.createPost;
+    } catch (e) {
+      return e.data;
+    }
   }
 
   /***** END CREATE POST FUNCTIONS *****/
@@ -331,8 +367,13 @@ class DBOps extends Component {
   /***** BEGIN SEARCH POST FUNCTIONS *****/
 
   searchPost = async (info) => {
-    var temp = await API.graphql(graphqlOperation(postSearchTemplate, info));
-    return temp.data.getPost;
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(postSearchTemplate, info));
+      return temp.data.getPost;
+    } catch (e) {
+      return e.data;
+    }
   }
 
   /***** END SEARCH POST FUNCTIONS *****/
@@ -340,8 +381,13 @@ class DBOps extends Component {
   /***** CREATE NOTIFICATION *****/
 
   createNotification = async (info) => {
-    var temp = await API.graphql(graphqlOperation(notifCreateTemplate, info));
-    return temp.data.createNotification;
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(notifCreateTemplate, info));
+      return temp.data.createNotification;
+    } catch (e) {
+      return e.data;
+    }
   }
 
   /***** END CREATE NOTIFICATION *****/
@@ -349,21 +395,110 @@ class DBOps extends Component {
   /***** DELETE NOTIFICATION *****/
 
   deleteNotification = async (info) => {
-    var temp = await API.graphql(graphqlOperation(notifDeleteTemplate, info));
-    return temp.data.deleteNotification;
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(notifDeleteTemplate, info));
+      return temp.data.deleteNotification;
+    } catch (e) {
+      return e.data;
+    }
   }
 
   /***** END DELETE NOTIFICATION *****/
 
-  /***** SEARCH NOTIFICATION *****/
+  /***** CREATE TOPIC *****/
 
-  searchNotification = async (info) => {
-    var temp = await API.graphql(graphqlOperation(notifSearchTemplate, info));
-    return temp.data.getNotification;
+  createTopic = async (info) => {
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(createTopicTemplate, info));
+      return temp.data.createTopic;
+    } catch (e) {
+      return e.data;
+    }
   }
 
-  /***** END SEARCH NOTIFICATION *****/
+  /***** END CREATE TOPIC *****/
 
+  /***** SEARCH TOPIC *****/
+
+  searchTopic = async (info) => {
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(searchTopicTemplate, info));
+      return temp.data.getTopics;
+    } catch (e) {
+      return e.data;
+    }
+  }
+
+  /***** END SEARCH TOPIC *****/
+
+  /***** CREATE TAG *****/
+
+  createTag = async (info) => {
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(createTagTemplate, info));
+      console.log(temp);
+      return temp.data;
+    } catch (e) {
+      return e.data;
+    }
+  }
+
+  /***** END CREATE TAG *****/
+
+}
+
+export async function createUser(info){
+    return API.graphql(graphqlOperation(userCreationTemplate, info));
+}
+
+export async function searchUser(info) {
+    return API.graphql(graphqlOperation(userSearchTemplate, info));
+}
+
+export async function deleteUser(info){
+    return API.graphql(graphqlOperation(userDeletionTemplate, info));
+}
+
+export async function createFollow(info){
+    return API.graphql(graphqlOperation(followCreateTemplate, info));
+}
+
+export async function deleteFollow(info){
+    return API.graphql(graphqlOperation(followDeleteTemplate, info));
+}
+
+export async function createPost(info){
+    return API.graphql(graphqlOperation(postCreateTemplate, info));
+}
+
+export async function searchPost(info){
+    return API.graphql(graphqlOperation(postSearchTemplate, info));
+}
+
+export async function createNotification(info){
+    return API.graphql(graphqlOperation(notifCreateTemplate, info));
+}
+
+export async function deleteNotification(info){
+    return API.graphql(graphqlOperation(notifDeleteTemplate, info));
+}
+
+export async function searchNotification(info){
+    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+}
+
+export async function createTopic(info){
+    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+}
+export async function searchTopic(info){
+    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+}
+export async function createTag(info){
+    return API.graphql(graphqlOperation(notifSearchTemplate, info));
 }
 
 export default DBOps;

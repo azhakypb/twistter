@@ -1,12 +1,9 @@
 
 // react modules
 import React, { Component } from 'react';
-import { Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, Image} from 'react-bootstrap';
 import DBOps from '../DBOps.js'
+import { createUser, searchUser, deleteUser, createFollow, deleteFollow, createPost, searchPost, createNotification, searchNotification, deleteNotification } from '../DBOps.js'
 import Post from '../components/Post.js'
-
-// graphql modules
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
 
 class Test extends Component {
 
@@ -34,6 +31,7 @@ class Test extends Component {
     }
     this.createPostState = {
       text: "",
+      topics: "",
       timestamp: 0,
       postAuthorId: ""
     }
@@ -51,6 +49,16 @@ class Test extends Component {
     this.deleteNotifState = {
       id: ""
     }
+    this.searchTopicState = {
+      id: ""
+    }
+    this.createTopicState = {
+      id: ""
+    }
+    this.createTagState = {
+      tagTopicId: "",
+      tagPostId: ""
+    }
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
     this.handleFollowee = this.handleFollowee.bind(this);
@@ -59,9 +67,14 @@ class Test extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleCTPost = this.handleCTPost.bind(this);
     this.handleCAPost = this.handleCAPost.bind(this);
+    this.handleCTopPost = this.handleCTopPost.bind(this);
     this.handleSPost = this.handleSPost.bind(this);
     this.handleSNotif = this.handleSNotif.bind(this);
     this.handleDNotif = this.handleDNotif.bind(this);
+    this.handleSTopic = this.handleSTopic.bind(this);
+    this.handleCTopic = this.handleCTopic.bind(this);
+    this.handleCTTag = this.handleCTTag.bind(this);
+    this.handleCPTag = this.handleCPTag.bind(this);
   }
 
   handleDelete(event) {
@@ -122,7 +135,7 @@ class Test extends Component {
   }
 
   handleSearchUser = async () => {
-    var temp = await new DBOps().searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)})
+    var temp = await searchUser(JSON.stringify(this.searchState));
     console.log(temp);
   }
 
@@ -136,10 +149,22 @@ class Test extends Component {
     console.log("Set createPostState postAuthorId to: " + event.target.value);
   }
 
+  handleCTopPost(event) {
+    this.createPostState.topics = event.target.value;
+    console.log("Set createPostState topic to: " + event.target.value);
+  }
+
   handleCreatePost = async () => {
     this.createPostState.timestamp = 1234;
-    var temp = await new DBOps().createPost(JSON.stringify(this.createPostState));
-    console.log(temp);
+    var topics = this.createPostState.topics.split(",");
+    var post = await new DBOps().createPost(JSON.stringify(this.createPostState)); // create post
+    var postid = post.id;
+    for (var i = 0; i < topics.length; i++) {
+      var temp2 = await new DBOps().createTopic(JSON.stringify({id: topics[i]}));
+      var tag_input = {tagTopicId: topics[i], tagPostId: postid};
+      var tag_ret = await new DBOps().createTag(JSON.stringify(tag_input));
+    }
+    console.log(post);
   }
 
   handleSPost(event) {
@@ -173,11 +198,44 @@ class Test extends Component {
     console.log(temp);
   }
 
+  handleSTopic(event) {
+    this.searchTopicState.id = event.target.value;
+    console.log("Set searchTopicState id to: " + event.target.value);
+  }
+
+  searchTopic = async () => {
+    var temp = await new DBOps().searchTopic(JSON.stringify(this.searchTopicState));
+    console.log(temp);
+  }
+
+  handleCTopic(event) {
+    this.createTopicState.id = event.target.value;
+    console.log("Set createTopicState id to: " + event.target.value);
+  }
+
+  createTopic = async () => {
+    var temp = await new DBOps().createTopic(JSON.stringify(this.createTopicState));
+    console.log(temp);
+  }
+
+  handleCTTag(event) {
+    this.createTagState.tagTopicId = event.target.value;
+    console.log("Set createTagState tagTopicId to: " + event.target.value);
+  }
+
+  handleCPTag(event) {
+    this.createTagState.tagPostId = event.target.value;
+    console.log("Set createTagState tagPostId to: " + event.target.value);
+  }
+
+  createTag = async () => {
+    var temp = await new DBOps().createTag(JSON.stringify(this.createTagState));
+    console.log(temp);
+  }
 
   render() {
 
     const {id} = this.state;
-    console.log('rendering',id);
 
     return (
       <div className="App">
@@ -201,6 +259,7 @@ class Test extends Component {
         <button onClick={this.handleUnFollow}>Unfollow User</button><br/>
         Create a Post: <br/>
         Post Text: <input onChange={this.handleCTPost}/><br/>
+        Post Topics: <input onChange={this.handleCTopPost}/><br/>
         Post Author: <input onChange={this.handleCAPost}/><br/>
         <button onClick={this.handleCreatePost}>Create Post</button><br/>
         Search Post: <input onChange={this.handleSPost}/>
@@ -211,6 +270,15 @@ class Test extends Component {
         <button onClick={this.searchNotif}>Search Notification</button><br/>
         Delete Notification: <input onChange={this.handleDNotif}/>
         <button onClick={this.deleteNotif}>Delete Notification</button><br/>
+        <br/>
+        Create Topic : <input onChange={this.handleCTopic}/>
+        <button onClick={this.createTopic}>Create Topic</button><br/>
+        Search Topic : <input onChange={this.handleSTopic}/>
+        <button onClick={this.searchTopic}>Search Topic</button><br/>
+        <br/>
+        Tag Topic ID : <input onChange={this.handleCTTag}/><br/>
+        Tag Post ID : <input onChange={this.handleCPTag}/><br/>
+        <button onClick={this.createTag}>Create Tag</button><br/>
       </div>
 
     );

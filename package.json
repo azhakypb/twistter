@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "aws-amplify": "^1.2.2",
+    "aws-amplify": "^1.2.4",
     "aws-amplify-react": "^2.4.4",
     "aws-sdk": "^2.539.0",
     "bootstrap": "^4.3.1",

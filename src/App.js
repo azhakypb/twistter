@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Route, Switch }   from 'react-router-dom';
 import React, { Component }                         from 'react';
 // aws modules
 import { withAuthenticator } from 'aws-amplify-react'
-import { Auth } from 'aws-amplify';
 // pages
+import Search from './pages/Search.js'
 import Settings from './pages/Settings.js'
 import Profile from './pages/Profile.js'
 import Test from './pages/Test.js'
@@ -27,6 +27,10 @@ class App extends Component {
                     <Route
                         path="/settings"
                         component = { Settings }
+                    />
+                    <Route
+                        path="/search"
+                        component = { Search }
                     />
                     <Route
                         path="/testing"

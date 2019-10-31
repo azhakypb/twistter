@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Amplify from 'aws-amplify'
 import config from './aws-exports'
 
-console.log(Amplify.configure(config))
+console.log('initial amplify configuration',Amplify.configure(config))
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
