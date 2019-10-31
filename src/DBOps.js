@@ -153,6 +153,12 @@ const postSearchTemplate = `query getPost(
     topics {
       items {
         id
+        post {
+          id
+        }
+        topic {
+          id
+        }
       }
     }
   }
