@@ -43,7 +43,7 @@ type Tag @model(queries: {get: "getTag"}, mutations: {create: "createTag", delet
   topic: Topic! @connection(name: "topicTag")
 }
 
-type Notification @model(queries: {get: "getNotification"}, mutation: {create: "createNotification", delete: "deleteNotification"}, subscriptions: null) {
+type Notification @model(queries: {get: "getNotification"}, mutations: {create: "createNotification", delete: "deleteNotification"}, subscriptions: null) {
 	id: ID!
 	user: User! @connection(name: "notif")
 	text: String!

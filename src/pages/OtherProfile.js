@@ -7,6 +7,7 @@ import { Auth } from 'aws-amplify';
 import Navbar from '../components/Navbar.js'
 import DBOps from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
+import FollowList from '../components/FollowList.js'
 var AWS = require('aws-sdk');
 
 class OtherProfile extends Component {
@@ -18,7 +19,7 @@ class OtherProfile extends Component {
             name        : '',
             username    : '',
             url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png',
-            me          : ''       
+            me          : ''
         }
         // bind functions
         this.follow = this.follow.bind(this);
@@ -44,18 +45,18 @@ class OtherProfile extends Component {
 
                 console.log(err, err.stack); // an error occurred
             } else{
-                
+
                 this.setState({ username: window.location.href.split('/').slice(-1)[0] });
 
                 for(var i = 0; i < data.UserAttributes.length; i++ ){
-                    if( data.UserAttributes[i].Name === 'name'){ 
+                    if( data.UserAttributes[i].Name === 'name'){
                         this.setState({name:data.UserAttributes[i].Value})
                     }
-                    else if(data.UserAttributes[i].Name === 'picture'){ 
+                    else if(data.UserAttributes[i].Name === 'picture'){
                         this.setState({url:data.UserAttributes[i].Value})
                     }
                 }
-            } 
+            }
         });
     }
 

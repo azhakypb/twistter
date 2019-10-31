@@ -2,7 +2,7 @@
 // react modules
 import React, { Component } from 'react';
 import DBOps from '../DBOps.js'
-import { searchUser } from '../DBOps.js'
+import { createUser, searchUser, deleteUser, createFollow, deleteFollow, createPost, searchPost, createNotification, searchNotification, deleteNotification } from '../DBOps.js'
 import Post from '../components/Post.js'
 
 class Test extends Component {
@@ -31,11 +31,33 @@ class Test extends Component {
     }
     this.createPostState = {
       text: "",
+      topics: "",
       timestamp: 0,
       postAuthorId: ""
     }
     this.searchPostState = {
       id: ""
+    }
+    this.createNotification = {
+      userid: "",
+      text: "",
+      time: 0
+    }
+    this.searchNotifState = {
+      id: ""
+    }
+    this.deleteNotifState = {
+      id: ""
+    }
+    this.searchTopicState = {
+      id: ""
+    }
+    this.createTopicState = {
+      id: ""
+    }
+    this.createTagState = {
+      tagTopicId: "",
+      tagPostId: ""
     }
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
@@ -45,7 +67,14 @@ class Test extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleCTPost = this.handleCTPost.bind(this);
     this.handleCAPost = this.handleCAPost.bind(this);
+    this.handleCTopPost = this.handleCTopPost.bind(this);
     this.handleSPost = this.handleSPost.bind(this);
+    this.handleSNotif = this.handleSNotif.bind(this);
+    this.handleDNotif = this.handleDNotif.bind(this);
+    this.handleSTopic = this.handleSTopic.bind(this);
+    this.handleCTopic = this.handleCTopic.bind(this);
+    this.handleCTTag = this.handleCTTag.bind(this);
+    this.handleCPTag = this.handleCPTag.bind(this);
   }
 
   handleDelete(event) {
@@ -81,7 +110,12 @@ class Test extends Component {
   handleFollow = async () => {
     this.followState.id = this.followState.followFollowerId + "-" + this.followState.followFolloweeId;
     console.log("Set followState id to: " + this.followState.id);
-   var temp = await new DBOps().createFollow(JSON.stringify(this.followState));
+    this.createNotification.userid = this.followState.followFolloweeId;
+    this.createNotification.text = "You have been followed by " + this.followState.followFollowerId;
+    this.createNotification.time = 1234;
+    var ret = await new DBOps().createNotification(JSON.stringify(this.createNotification));
+    console.log("Created Notification for: " + this.followState.followFolloweeId);
+    var temp = await new DBOps().createFollow(JSON.stringify(this.followState));
     console.log(temp);
   }
 
@@ -101,7 +135,7 @@ class Test extends Component {
   }
 
   handleSearchUser = async () => {
-    var temp = await searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)})
+    var temp = await searchUser(JSON.stringify(this.searchState));
     console.log(temp);
   }
 
@@ -115,10 +149,22 @@ class Test extends Component {
     console.log("Set createPostState postAuthorId to: " + event.target.value);
   }
 
+  handleCTopPost(event) {
+    this.createPostState.topics = event.target.value;
+    console.log("Set createPostState topic to: " + event.target.value);
+  }
+
   handleCreatePost = async () => {
     this.createPostState.timestamp = 1234;
-    var temp = await new DBOps().createPost(JSON.stringify(this.createPostState));
-    console.log(temp);
+    var topics = this.createPostState.topics.split(",");
+    var post = await new DBOps().createPost(JSON.stringify(this.createPostState)); // create post
+    var postid = post.id;
+    for (var i = 0; i < topics.length; i++) {
+      var temp2 = await new DBOps().createTopic(JSON.stringify({id: topics[i]}));
+      var tag_input = {tagTopicId: topics[i], tagPostId: postid};
+      var tag_ret = await new DBOps().createTag(JSON.stringify(tag_input));
+    }
+    console.log(post);
   }
 
   handleSPost(event) {
@@ -128,7 +174,63 @@ class Test extends Component {
 
   handleSearchPost = async () => {
     console.log('searching posts',this.searchPostState);
-    this.setState({id:this.searchPostState.id});
+    var temp = await new DBOps().searchPost(JSON.stringify(this.searchPostState));
+    console.log(temp)
+  }
+
+  handleSNotif(event) {
+    this.searchNotifState.id = event.target.value;
+    console.log("Set searchNotifState id to: " + event.target.value);
+  }
+
+  searchNotif = async () => {
+    var temp = await new DBOps().searchNotification(JSON.stringify(this.searchNotifState));
+    console.log(temp);
+  }
+
+  handleDNotif(event) {
+    this.deleteNotifState.id = event.target.value;
+    console.log("Set searchPostState id to: " + event.target.value);
+  }
+
+  deleteNotif = async () => {
+    var temp = await new DBOps().deleteNotification(JSON.stringify(this.deleteNotifState));
+    console.log(temp);
+  }
+
+  handleSTopic(event) {
+    this.searchTopicState.id = event.target.value;
+    console.log("Set searchTopicState id to: " + event.target.value);
+  }
+
+  searchTopic = async () => {
+    var temp = await new DBOps().searchTopic(JSON.stringify(this.searchTopicState));
+    console.log(temp);
+  }
+
+  handleCTopic(event) {
+    this.createTopicState.id = event.target.value;
+    console.log("Set createTopicState id to: " + event.target.value);
+  }
+
+  createTopic = async () => {
+    var temp = await new DBOps().createTopic(JSON.stringify(this.createTopicState));
+    console.log(temp);
+  }
+
+  handleCTTag(event) {
+    this.createTagState.tagTopicId = event.target.value;
+    console.log("Set createTagState tagTopicId to: " + event.target.value);
+  }
+
+  handleCPTag(event) {
+    this.createTagState.tagPostId = event.target.value;
+    console.log("Set createTagState tagPostId to: " + event.target.value);
+  }
+
+  createTag = async () => {
+    var temp = await new DBOps().createTag(JSON.stringify(this.createTagState));
+    console.log(temp);
   }
 
   render() {
@@ -145,7 +247,7 @@ class Test extends Component {
         <button onClick={this.handleSearchUser}>Search User</button>
         <br/>
         Delete user: <input onChange={this.handleDelete}/>
-        <button onClick={this.handleDeleteUser}>Search User</button>
+        <button onClick={this.handleDeleteUser}>Delete User</button>
         <br/>
         Follow A User: <br/>
         Enter Follower: <input onChange={this.handleFollower}/>
@@ -157,11 +259,26 @@ class Test extends Component {
         <button onClick={this.handleUnFollow}>Unfollow User</button><br/>
         Create a Post: <br/>
         Post Text: <input onChange={this.handleCTPost}/><br/>
+        Post Topics: <input onChange={this.handleCTopPost}/><br/>
         Post Author: <input onChange={this.handleCAPost}/><br/>
         <button onClick={this.handleCreatePost}>Create Post</button><br/>
         Search Post: <input onChange={this.handleSPost}/>
         <button onClick={this.handleSearchPost}>Search Post</button>
-        <Post id={id}></Post>
+        <Post id={id}></Post><br/>
+        <br/>
+        Search Notification: <input onChange={this.handleSNotif}/>
+        <button onClick={this.searchNotif}>Search Notification</button><br/>
+        Delete Notification: <input onChange={this.handleDNotif}/>
+        <button onClick={this.deleteNotif}>Delete Notification</button><br/>
+        <br/>
+        Create Topic : <input onChange={this.handleCTopic}/>
+        <button onClick={this.createTopic}>Create Topic</button><br/>
+        Search Topic : <input onChange={this.handleSTopic}/>
+        <button onClick={this.searchTopic}>Search Topic</button><br/>
+        <br/>
+        Tag Topic ID : <input onChange={this.handleCTTag}/><br/>
+        Tag Post ID : <input onChange={this.handleCPTag}/><br/>
+        <button onClick={this.createTag}>Create Tag</button><br/>
       </div>
 
     );
