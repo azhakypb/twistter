@@ -1,4 +1,5 @@
-mport React, { Component } from 'react';
+// react modules
+import React, { Component } from 'react';
 import {Button, Card, Col, Container, Jumbotron, Row, Image} from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify';
