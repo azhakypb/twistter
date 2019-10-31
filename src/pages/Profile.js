@@ -1,12 +1,9 @@
-// react modules
-import React, { Component } from 'react';
-import {Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, Image} from 'react-bootstrap';
+mport React, { Component } from 'react';
+import { Card, Col, Container,  Jumbotron, Row, Image } from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
-import Post from '../components/Post.js'
-import FollowList from '../components/FollowList.js'
 
 class Profile extends Component {
 
@@ -68,7 +65,6 @@ class Profile extends Component {
             </Col>
 
             <Col>
-              <FollowList username={username}></FollowList>
             </Col>
       </Row>
     );

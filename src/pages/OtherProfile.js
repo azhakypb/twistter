@@ -1,11 +1,9 @@
-// react modules
-import React, { Component } from 'react';
-import {Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, Image} from 'react-bootstrap';
+mport React, { Component } from 'react';
+import {Button, Card, Col, Container, Jumbotron, Row, Image} from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
-import FollowList from '../components/FollowList.js'
 import DBOps from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
 var AWS = require('aws-sdk');
@@ -49,10 +47,10 @@ class OtherProfile extends Component {
                 this.setState({ username: window.location.href.split('/').slice(-1)[0] });
 
                 for(var i = 0; i < data.UserAttributes.length; i++ ){
-                    if( data.UserAttributes[i].Name == 'name'){ 
+                    if( data.UserAttributes[i].Name === 'name'){ 
                         this.setState({name:data.UserAttributes[i].Value})
                     }
-                    else if(data.UserAttributes[i].Name == 'picture'){ 
+                    else if(data.UserAttributes[i].Name === 'picture'){ 
                         this.setState({url:data.UserAttributes[i].Value})
                     }
                 }
@@ -127,7 +125,7 @@ class OtherProfile extends Component {
             </Col>
 
             <Col>
-                <FollowList username={username}></FollowList>
+                <h1>.</h1>
             </Col>
       </Row>
     );
