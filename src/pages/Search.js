@@ -16,15 +16,6 @@ class Search extends Component {
             search      : '',
             showResults : false,
             posts       : [
-<<<<<<< HEAD
-                //<Post key='0'></Post>,
-                //<Post key='0'></Post>,
-                //<Post key='0'></Post>,
-                //<Post key='0'></Post>,
-                //<Post key='0'></Post>,
-                //<Post key='0'></Post>,
-=======
->>>>>>> dev
                 <Post id='679c4672-6714-4e01-9784-3b0f886253dc' key='1'></Post>,
                 <Post id='a98d0365-a8fa-4c5d-a71a-9d41866af52e' key='2'></Post>,
                 <Post id='aa1d30c4-738c-4195-a5f1-07480529cb7e' key='3'></Post>,

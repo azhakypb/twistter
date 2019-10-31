@@ -308,9 +308,6 @@ class DBOps extends Component {
 
 }
 
-<<<<<<< HEAD
-export default DBOps;
-=======
 export async function createUser(info){
     return API.graphql(graphqlOperation(userCreationTemplate, info));
 }
@@ -352,4 +349,3 @@ export async function searchNotification(info){
 }
 
 export default DBOps;
->>>>>>> dev
