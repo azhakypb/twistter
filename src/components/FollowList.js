@@ -1,39 +1,47 @@
+// import react modules
 import React, { Component, } from 'react';
 import { Button,  ListGroup } from 'react-bootstrap';
+// import custom modules
 import DBOps from '../DBOps.js';
 
 class FollowList extends Component {
+  // used to pull the followers and following names from the database
   async dataPull(){
     this.searchState = {id: this.props.username};
     console.log(this.searchState);
     var request = await new DBOps().searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)});
     console.log(request.followers.items);
     
-    var i = 0;
-    var tempList = [];
+    var i = 0; // counter to populate list of usernames
+    var tempList = []; // temporary array to push to
+    var usernameLen = this.props.username.length;
 
     if(this.state.type == 'follower'){
       while(request.followers.items[i] != undefined){
-        console.log(i);
-        tempList.push(request.followers.items[i].id);
+        // string must be manipulated to only show the follower
+        var followerTemp = request.followers.items[i].id; 
+        tempList.push(followerTemp.substring(0, followerTemp.length - usernameLen));
         i++;
       }
-      console.log(tempList);
+      // sets the current number of followers in case of change
       this.setState({
               'numFollowers' : i
               });
     }
     else if(this.state.type == 'following'){
       while(request.following.items[i] != undefined){
-       tempList.push(request.following.items[i].id);
+       // string manipulation to only show the following user
+       var followingTemp = request.following.items[i].id;
+       tempList.push(followingTemp.substring(usernameLen, followingTemp.length));
         i++;
       }
-       console.log(tempList);
-       this.setState({
+      // set the current num of following in case of change 
+      this.setState({
                'numFollowing' : i
                });
     }     
  
+    // populates the list state with contents of tempList
     this.setState(state => {
             const list = state.list.concat(tempList);
             return {
@@ -43,29 +51,57 @@ class FollowList extends Component {
  
     console.log(this.state.list);
     
-}
+  }
+
+  // pulls the num of followers and following on first render of component
+  async initialPull() {
+    this.searchState = {id: this.props.username};
+    console.log(this.searchState);
+    var request = await new DBOps().searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)});
+    var followNum = 0;
+    var followingNum = 0;
+    while(request.followers.items[followNum] != undefined){
+      followNum++;
+    }
+    while(request.following.items[followingNum] != undefined){
+      followingNum++;
+    }
+
+    // sets the states for num of followers and following and resets type so it doesn't get called again
+    this.setState({
+            'numFollowers': followNum,
+            'numFollowing' : followingNum,
+            'type' : ''
+            });
+  }
+
   constructor(props){
     super(props)
     this.state = {
       isHidden : true,
-      'id' : this.props.username,
       'type' : 'initial',
       'numFollowers' : '',
       'numFollowing' : '',
       'list' : []
     }
+    // searchState for database
     this.searchState = {
       id: ""
     }
+   
+    // bind functions
     this.dataPull = this.dataPull.bind(this);
+    this.initialPull = this.initialPull.bind(this);
     this.handleFollowerClick = this.handleFollowerClick.bind(this);
     this.handleFollowingClick = this.handleFollowingClick.bind(this);
-    console.log(this.props.username);
   } 
  
+  // handler for clicking the follower button
   handleFollowerClick(){
     console.log('Handle follower button click');
+  
     if(this.state.isHidden || this.state.type != 'follower') {
+      // cases of no list being rendered or following list rendered
       this.setState({
               'type' : 'follower',
               isHidden : false,
@@ -74,6 +110,7 @@ class FollowList extends Component {
       this.dataPull();
     }
     else {
+      // case of followers already rendered, so hide the list
       this.setState({
            'type' : '',
            isHidden : true,
@@ -82,9 +119,12 @@ class FollowList extends Component {
     }
   }
 
+  // handler for clicking the following buton
   handleFollowingClick(){
     console.log('Handle following button click');
+
     if(this.state.isHidden || this.state.type != 'following') {
+      // cases of no list being rendered or follower list rendered
       this.setState({
               'type' : 'following',
               isHidden : false,
@@ -93,6 +133,7 @@ class FollowList extends Component {
       this.dataPull();
     }
     else {
+      // case of following already rendered, so hide the list
       this.setState({
               'type' : '',
               isHidden : true,
@@ -102,16 +143,32 @@ class FollowList extends Component {
   }
 
   render(){
-    const {isHidden, type, list, followers, following } = this.state;
+    const {isHidden, type, list, numFollowers, numFollowing } = this.state;
+    // initial call to pull num followers and following
+    if(type == 'initial' && this.props.username){
+      console.log(this.props.username);
+      this.initialPull();
+    }
+    // setup header for when a list is displayed
+    var header;
+    if(type == 'follower'){
+      header = numFollowers + " Followers";
+    }
+    else if(type == 'following'){
+      header = numFollowing + " Following";
+    }
     return(
       <div>
-      <Button onClick={this.handleFollowerClick}>{this.state.numFollowers} Followers</Button>
+      <Button onClick={this.handleFollowerClick}>{numFollowers} Followers</Button>
       <br />
-      <Button onClick ={this.handleFollowingClick}>{this.state.numFollowing} Following</Button>
       <br />
+      <Button onClick ={this.handleFollowingClick}>{numFollowing} Following</Button>
+      <br />
+      <br />
+      <h5>{header}</h5>
       <ListGroup>
         {list.map(item => (
-          <ListGroup.Item key={item}>{item}</ListGroup.Item>
+          <ListGroup.Item href={'/otherprofile/'+item} action key={item}>{item}</ListGroup.Item>
         ))}
       </ListGroup>
       </div>
