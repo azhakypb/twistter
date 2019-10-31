@@ -1,6 +1,6 @@
 // react modules
 import React, { Component } from 'react';
-import {Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, Image} from 'react-bootstrap';
+import {Button, Card, Col, Container, Jumbotron, Row, Image} from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
@@ -48,10 +48,10 @@ class OtherProfile extends Component {
                 this.setState({ username: window.location.href.split('/').slice(-1)[0] });
 
                 for(var i = 0; i < data.UserAttributes.length; i++ ){
-                    if( data.UserAttributes[i].Name == 'name'){ 
+                    if( data.UserAttributes[i].Name === 'name'){ 
                         this.setState({name:data.UserAttributes[i].Value})
                     }
-                    else if(data.UserAttributes[i].Name == 'picture'){ 
+                    else if(data.UserAttributes[i].Name === 'picture'){ 
                         this.setState({url:data.UserAttributes[i].Value})
                     }
                 }

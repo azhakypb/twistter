@@ -1,10 +1,22 @@
 // react modules
+<<<<<<< HEAD
 import React, { Component, } from 'react';
+=======
+import React, { Component } from 'react';
+>>>>>>> dev
 import { Badge, Button, Row, Toast } from 'react-bootstrap';
 // aws modules
 // custom modules
-import DBOps from '../DBOps.js';
+import { searchPost } from '../DBOps.js';
 // globals
+
+function TopicList(props){
+	const topics = props.topics;
+	const items = topics.map((topic)=>
+		<Badge variant="primary" key={topic}>{topic}</Badge>
+	);
+	return <div>{items}</div>;
+}
 
 class Post extends Component {
 
@@ -23,6 +35,7 @@ class Post extends Component {
 	async pull(){
 
 		var info = JSON.stringify({id: this.state.id});
+<<<<<<< HEAD
 		console.log('pull info',info);
 
 		this.DBOps.searchPost(info).then((res) => {
@@ -45,6 +58,19 @@ class Post extends Component {
 
 				});
 
+=======
+
+		searchPost(info).then((res) => {
+
+			res 		= res.data.getPost;
+			res.author 	= res.author.id
+
+			this.setState({
+				username: 		res.author,
+				timestamp: 		res.timestamp,
+				text: 			res.text,
+				topics: 		['Topic 1']
+>>>>>>> dev
 			});
 
 
@@ -69,6 +95,7 @@ class Post extends Component {
 			'q_text'		: '',
 			'topics'		: []
 		}
+<<<<<<< HEAD
 		this.clearState = {
 			'username'		: '',
 			'q_username'	: '',
@@ -77,6 +104,11 @@ class Post extends Component {
 			'text'			: '',
 			'q_text'		: '',
 			'topics'		: []
+=======
+
+		if( 'id' in this.props && !(this.props.id === '') ){
+			this.state.id = this.props.id;
+>>>>>>> dev
 		}
 
 		this.DBOps = new DBOps();
@@ -91,15 +123,24 @@ class Post extends Component {
 	}
 
 	async componentDidMount(){
+<<<<<<< HEAD
 		this.pull();
+=======
+		
+		if( this.state.id !== '' ){ this.pull(); }
+>>>>>>> dev
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot){
 
+<<<<<<< HEAD
 		console.log('componentDidUpdate',this.state);
 		if( this.state.id != prevState.id ){
 			this.pull();
 		}
+=======
+		if( this.state.id !== prevState.id ){ this.pull(); }
+>>>>>>> dev
 	}
 
 	render(){
@@ -111,7 +152,7 @@ class Post extends Component {
 			q_timestamp,
 			text,
 			q_text,
-			topics,
+			topics
 		} = this.state;
 
 		if( q_username === '' ){
@@ -132,9 +173,7 @@ class Post extends Component {
 							{text}
 						</Row>
 						<Row>
-							{topics.map(topic => (
-								<Badge variant="primary" key={topic}>{topic}</Badge>
-							))}
+							<TopicList topics={topics}/>
 						</Row>
 						<Row>
 							<Button variant="primary">
@@ -183,9 +222,7 @@ class Post extends Component {
 							{text}
 						</Row>
 						<Row style={{ paddingBottom: 5}}>
-							{topics.map(topic => (
-								<Badge variant="primary" key={topic}>{topic}</Badge>
-							))}
+							<TopicList topics={topics}/>
 						</Row>
 						<Row>
 							<Button size="sm"variant="primary">

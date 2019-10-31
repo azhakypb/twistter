@@ -1,32 +1,9 @@
 
 // react modules
 import React, { Component } from 'react';
-import { Button, Card, Col, Container, FormControl, InputGroup, Jumbotron, Row, Image} from 'react-bootstrap';
 import DBOps from '../DBOps.js'
+import { searchUser } from '../DBOps.js'
 import Post from '../components/Post.js'
-
-// graphql modules
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
-
-const userCreation = `mutation createUser($id: ID!) {
-  createUser(input:{
-    id: $id
-  }) {
-    id
-  }
-}`
-
-const searchUser = `query getUser($id: ID!) {
-  getUser(
-    id: $id
-  ) {
-    id
-  }
-}`
-
-const userInfo = {
-  id: "this is dsada tdest"
-}
 
 class Test extends Component {
 
@@ -124,7 +101,7 @@ class Test extends Component {
   }
 
   handleSearchUser = async () => {
-    var temp = await new DBOps().searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)})
+    var temp = await searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)})
     console.log(temp);
   }
 
@@ -157,7 +134,6 @@ class Test extends Component {
   render() {
 
     const {id} = this.state;
-    console.log('rendering',id);
 
     return (
       <div className="App">

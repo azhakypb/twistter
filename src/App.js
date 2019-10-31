@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch }   from 'react-router-dom';
 import React, { Component }                         from 'react';
 // aws modules
 import { withAuthenticator } from 'aws-amplify-react'
-import { Auth } from 'aws-amplify';
 // pages
 import Search from './pages/Search.js'
 import Settings from './pages/Settings.js'

@@ -1,13 +1,22 @@
 // react modules
 import React, { Component } from 'react';
 import { Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-bootstrap';
-import { useHistory } from "react-router"
 // aws modules
 import { Auth } from 'aws-amplify' 
 // components
 import Navbar from '../components/Navbar.js'
-import Userlist from '../components/Userlist.js'
 
+async function changeEmail(email){
+
+    Auth.currentAuthenticatedUser({ bypassCache: true })
+        .catch((err)=>{console.log('error getting user',err);})
+        .then((user)=>{
+            var req = {email: email};
+            Auth.updateUserAttributes(user,req)
+                .catch((err)=>{console.log('error updating email',err)})
+                .then((res)=>{console.log('successfully updated email',res)});
+        });
+}
 
 class Settings extends Component {
 
@@ -23,17 +32,16 @@ class Settings extends Component {
             url             : ''
         };
         // bind functions
-        this.handleChangeEmail        = this.handleChangeEmail          .bind(this);
-        this.handleChangeName         = this.handleChangeName           .bind(this);
-        this.handleChangeNewPassword  = this.handleChangeNewPassword    .bind(this);
-        this.handleChangeOldPassword  = this.handleChangeOldPassword    .bind(this);
-        this.handleChangePhoneNumber  = this.handleChangePhoneNumber    .bind(this);
-        this.handleChangeUrl          = this.handleChangeUrl            .bind(this);
-        this.handleSubmitEmail        = this.handleSubmitEmail          .bind(this);
-        this.handleSubmitName         = this.handleSubmitName           .bind(this);
-        this.handleSubmitNewPassword  = this.handleSubmitNewPassword    .bind(this);
-        this.handleSubmitPhoneNumber  = this.handleSubmitPhoneNumber    .bind(this);
-        this.handleSubmitUrl          = this.handleSubmitUrl            .bind(this);
+        this.handleChangeEmail        = this.handleChangeEmail.bind(this);
+        this.handleChangeName         = this.handleChangeName.bind(this);
+        this.handleChangeNewPassword  = this.handleChangeNewPassword.bind(this);
+        this.handleChangeOldPassword  = this.handleChangeOldPassword.bind(this);
+        this.handleChangePhoneNumber  = this.handleChangePhoneNumber.bind(this);
+        this.handleChangeUrl          = this.handleChangeUrl.bind(this);
+        this.handleSubmitName         = this.handleSubmitName.bind(this);
+        this.handleSubmitNewPassword  = this.handleSubmitNewPassword.bind(this);
+        this.handleSubmitPhoneNumber  = this.handleSubmitPhoneNumber.bind(this);
+        this.handleSubmitUrl          = this.handleSubmitUrl.bind(this);
 
         console.log(Auth.currentAuthenticatedUser());
     }
@@ -45,14 +53,6 @@ class Settings extends Component {
     handleChangePhoneNumber (event){this.setState({ phone_number:   event.target.value });}
     handleChangeUrl         (event){this.setState({ url:            event.target.value });}
     // submission field handlers
-    async handleSubmitEmail(event){
-        console.log('updating user email');
-        var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
-                                    .catch((err) => { console.error(err); });
-        var res     = await Auth.updateUserAttributes(user,{email: this.state.email})
-                                    .catch((err) => { console.error(err); });
-        console.log(res);
-    }
     async handleSubmitPhoneNumber(event){
         console.log('updating user phone no');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
@@ -108,7 +108,7 @@ class Settings extends Component {
                             <InputGroup.Append>
                                 <Button 
                                     variant="outline-secondary" 
-                                    onClick={this.handleSubmitEmail}>
+                                    onClick={()=>{changeEmail(this.state.email)}}>
                                     Change Your Email
                                 </Button>
                             </InputGroup.Append>
