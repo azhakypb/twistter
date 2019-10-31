@@ -159,14 +159,14 @@ const postSearchTemplate = `query getPost(
 }`
 
 const notifCreateTemplate = `mutation createNotification(
-  $notificationAuthorID: ID!,
-  text: String!,
-  timestamp: Int!
+  $userid: ID!,
+  $text: String!,
+  $time: Int!
 ) {
   createNotification(input: {
-    notificationAuthorID: $notificationAuthorID,
+    notificationUserId: $userid,
     text: $text,
-    timestamp: $timestamp
+    timestamp: $time
   }) {
     id
     user {
@@ -180,7 +180,7 @@ const notifCreateTemplate = `mutation createNotification(
 const notifDeleteTemplate = `mutation deleteNotification(
   $id: ID!
 ) {
-  deleteNotification(
+  deleteNotification(input: {
     id: $id
   }) {
     id
@@ -197,7 +197,7 @@ const notifSearchTemplate = `query getNotification(
 ) {
   getNotification(
     id: $id
-  }) {
+  ) {
     id
     user {
       id
@@ -206,6 +206,56 @@ const notifSearchTemplate = `query getNotification(
     timestamp
   }
 }`
+
+const createTopicTemplate = `mutation createTopic(
+  $id: ID!
+) {
+  createTopic(input: {
+    id: $id
+  }) {
+    id
+  }
+}
+`
+
+const searchTopicTemplate = `query searchTopic(
+  $id: ID!
+) {
+  getTopics(id: $id) {
+    id
+    posts {
+      items {
+        post {
+          id,
+          text,
+          timestamp,
+          author {
+            id
+          }
+          likes {
+            items {
+              id
+            }
+          }
+          topics {
+            items {
+              id
+            }
+          }
+          quote{
+            id
+          }
+          quoted {
+            items {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`
 
 class DBOps extends Component {
 
