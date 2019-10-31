@@ -1,6 +1,6 @@
 // react modules
 import React, { Component } from 'react';
-import { Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-bootstrap';
+import { Alert, Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify' 
 // components
@@ -29,7 +29,12 @@ class Settings extends Component {
             old_password    : '', 
             new_password    : '', 
             name            : '',
-            url             : ''
+            url             : '',
+            visibleEmail    : false,
+            visiblePhone    : false,
+            visiblePW       : false,
+            visibleName     : false,
+            visibleURL      : false
         };
         // bind functions
         this.handleChangeEmail        = this.handleChangeEmail.bind(this);
@@ -60,6 +65,7 @@ class Settings extends Component {
         var res     = await Auth.updateUserAttributes(user, {phone_number:this.state.phone_number})
                                     .catch((err) => { console.error(err); });
         console.log(res);
+	this.showAlertPhone();
     }
     async handleSubmitNewPassword(event){
         console.log('updating user password');
@@ -68,6 +74,7 @@ class Settings extends Component {
         var res     = await Auth.changePassword(user, this.state.old_password, this.state.new_password)
                                     .catch((err) => { console.error(err); });
         console.log(res);
+	this.showAlertPW();
     }
     async handleSubmitName(event){
         console.log('updating user name');
@@ -76,6 +83,7 @@ class Settings extends Component {
         var res     = await Auth.updateUserAttributes(user, {name:this.state.name})
                                     .catch((err) => { console.error(err); });
         console.log(res);
+	this.showAlertName();
     }
     async handleSubmitUrl(event){
         console.log('updating user picture');
@@ -84,10 +92,30 @@ class Settings extends Component {
         var res     = await Auth.updateUserAttributes(user,{picture: this.state.url})
                                     .catch((err) => { console.error(err); });
         console.log(res);
+	this.showAlertURL();
     }
+
+    //  alert display control functions
+    showAlertEmail() {  this.setState({ visibleEmail: true });  }
+    closeAlertEmail() {  this.setState({ visibleEmail: false });  }
+    showAlertPhone() {  this.setState({ visiblePhone: true });  }
+    closeAlertPhone() {  this.setState({ visiblePhone: false });  }
+    showAlertPW() {  this.setState({ visiblePW: true });  }
+    closeAlertPW() {  this.setState({ visiblePW: false });  }
+    showAlertName() {  this.setState({ visibleName: true });  }
+    closeAlertName() {  this.setState({ visibleName: false });  }
+    showAlertURL() {  this.setState({ visibleURL: true });  }
+    closeAlertURL() {  this.setState({ visibleURL: false });  }
 
     render() {
         return (
+	  <div>
+    	    <Alert variant="success" show={this.state.visibleEmail} onClose={this.closeAlertEmail.bind(this)} dismissible>Email successfully updated.</Alert>
+    	    <Alert variant="success" show={this.state.visiblePhone} onClose={this.closeAlertPhone.bind(this)} dismissible>Phone # successfully updated.</Alert>
+    	    <Alert variant="success" show={this.state.visiblePW} onClose={this.closeAlertPW.bind(this)} dismissible>Password successfully updated.</Alert>
+    	    <Alert variant="success" show={this.state.visibleName} onClose={this.closeAlertName.bind(this)} dismissible>Name successfully updated.</Alert>
+    	    <Alert variant="success" show={this.state.visibleURL} onClose={this.closeAlertURL.bind(this)} dismissible>Image URL successfully updated.</Alert>
+
             <Row>
                 <Col>
                     <Navbar></Navbar>
@@ -198,6 +226,8 @@ class Settings extends Component {
                     <p>.</p>
                 </Col>
             </Row>
+	  </div>
+
         );
     }
 }
