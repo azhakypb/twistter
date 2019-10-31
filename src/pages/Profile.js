@@ -34,7 +34,7 @@ class Profile extends Component {
         return (
         <Row>
             <Col>
-                <Navbar></Navbar>
+                <Navbar username={this.state.username}></Navbar>
             </Col>
 
             <Col
@@ -66,7 +66,10 @@ class Profile extends Component {
             </Col>
 
             <Col>
+<<<<<<< HEAD
             <FollowList username={username}></FollowList>
+=======
+>>>>>>> dev-adil
             </Col>
       </Row>
     );

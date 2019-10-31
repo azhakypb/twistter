@@ -1,11 +1,12 @@
 // react modules
 import React, { Component, } from 'react';
-import { Button, Jumbotron } from 'react-bootstrap';
+import { Button, Jumbotron, Container, Row, Col} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 // aws modules
 import { Auth } from 'aws-amplify';
 
 import DBOps from '../DBOps.js'
+import Postwrite from '../components/Postwrite.js'
 
 class Navbar extends Component {
 
@@ -48,53 +49,59 @@ class Navbar extends Component {
 	render() {
 
     	return(
-    		<Jumbotron>
-    			<h2>Navbar</h2>
-    			<Link
-    				to= '/'>
+				<div>
+	    		<Jumbotron>
+	    			<h2>Navbar</h2>
+	    			<Link
+	    				to= '/'
+	    				paddingTop="50px">
+		  				<Button
+		  					variant="secondary"
+		  					size="md"
+		  					block>
+		    				Profile
+		  				</Button>
+	    			</Link>
+						<Link
+						to= '/search'>
+						<Button
+							variant="secondary"
+							size="md"
+							block>
+							Search
+							</Button>
+						</Link>
+	    			<Link
+	    				to= '/settings'
+	    				paddingTop="50px">
+		  				<Button
+		  					variant="secondary"
+		  					size="md"
+		  					block>
+		    				Settings
+		  				</Button>
+	  				</Link>
+	          <Link
+	            to= '/'
+	            paddingTop="50px">
+	            <Button
+	              variant="secondary"
+	              size="md"
+	              onClick={(e) => Auth.signOut()}
+	              block>
+	              Log Out
+	            </Button>
+	          </Link>
 	  				<Button
 	  					variant="secondary"
 	  					size="md"
+	  					onClick ={this.deleteUser}
 	  					block>
-	    				Profile
+	    				Delete User
 	  				</Button>
-    			</Link>
-				<Link
-					to= '/search'>
-					<Button
-						variant="secondary"
-						size="md"
-						block>
-						Search
-					</Button>
-				</Link>
-    			<Link
-    				to= '/settings'>
-	  				<Button
-	  					variant="secondary"
-	  					size="md"
-	  					block>
-	    				Settings
-	  				</Button>
-  				</Link>
-				<Link
-					to= '/'>
-					<Button
-						variant="secondary"
-						size="md"
-						onClick={(e) => Auth.signOut()}
-						block>
-						Log Out
-					</Button>
-				</Link>
-  					<Button
-						variant="secondary"
-						size="md"
-						onClick ={this.deleteUser}
-						block>
-						Delete User
-					</Button>
-    		</Jumbotron>
+	    		</Jumbotron>
+					<Postwrite username={this.props.username}></Postwrite>
+				</div>
     	);
   	}
 }
