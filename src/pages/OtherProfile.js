@@ -5,6 +5,7 @@ import {Button, Card, Col, Container, Jumbotron, Row, Image} from 'react-bootstr
 import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
+import FollowList from '../components/FollowList.js'
 import DBOps from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
 var AWS = require('aws-sdk');
@@ -126,7 +127,7 @@ class OtherProfile extends Component {
             </Col>
 
             <Col>
-                <h1>.</h1>
+                <FollowList username={username}></FollowList>
             </Col>
       </Row>
     );
