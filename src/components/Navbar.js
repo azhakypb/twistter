@@ -62,6 +62,15 @@ class Navbar extends Component {
 		    				Profile
 		  				</Button>
 	    			</Link>
+						<Link
+						to= '/search'>
+						<Button
+							variant="secondary"
+							size="md"
+							block>
+							Search
+							</Button>
+						</Link>
 	    			<Link
 	    				to= '/settings'
 	    				paddingTop="50px">

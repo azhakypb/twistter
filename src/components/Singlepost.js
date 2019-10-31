@@ -14,7 +14,7 @@ class Singlepost extends Component {
       text1: '',
       topics1: '',
       postAuthorId1: this.props.username,
-      timestamp1: today
+      timestamp1: 132
     }
     //bind functions
     this.handleAddPost      = this.handleAddPost.bind(this);
@@ -40,7 +40,7 @@ class Singlepost extends Component {
   handleTopicNum(topics1) {
     var topicNum = 0;
     for(var i = 0; i < topics1.length; i++){
-      if (topics1[i] == ' ') topicNum++;
+      if (topics1[i] == ',') topicNum++;
     }
     if(topicNum >= 5) {
       console.log('Topic Limit is Exceeded');
@@ -63,8 +63,10 @@ class Singlepost extends Component {
       timestamp: this.state.timestamp1,
       postAuthorId: this.state.postAuthorId1
     };
-    var temp = await new DBOps().createPost(JSON.stringify(toSend));
-    //console.log(temp);
+    var temp = await new DBOps().createPost(JSON.stringify(toSend))
+      .catch((err)=>{
+        console.log(err);
+      });
   }
 
 
