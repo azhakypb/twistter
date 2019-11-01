@@ -38,6 +38,7 @@ class Singlepost extends Component {
     );
   }
   handleTopicNum(topics1) {
+    console.log('called');
     var topicNum = 0;
     for(var i = 0; i < topics1.length; i++){
       if (topics1[i] == ',') topicNum++;
@@ -82,37 +83,39 @@ class Singlepost extends Component {
     let buttonColor = enabled ? "primary" : "secondary"
 
     return (
-      <Form onSubmit={this.props.action}>
-        <InputGroup>
-            <textarea
-              rows="10"
-              cols="62"
-              placeholder="Write something here before submitting"
-              maxlength="307"
-              value={this.state.text1}
-              onChange={this.handleAddPost}
-              >
-              </textarea>
-              <textarea
-              rows="2"
-              cols="62"
-              placeholder= "Add one to five topics, separate with space if necessary"
-              maxlength="50"
-              value={this.state.topics1}
-              onChange={this.handleAddTopic}
-              >
-              </textarea>
-              <Button
-                variant={buttonColor}
-                size="md"
-                disabled={!enabled}
-                type="submit"
-                onClick={this.handleCreatePost}
-                block>
-                Submit
-              </Button>
-        </InputGroup>
-      </Form>
+        <Form onSubmit={this.props.action}>
+            <InputGroup>
+                <InputGroup
+                    value={this.state.text1} 
+                    onChange={this.handleAddPost}>
+                    <FormControl 
+                        rows='5'
+                        placeholder="Write something here before submitting"
+                        as="textarea"
+                        aria-label="With textarea"
+                    />
+                </InputGroup>
+                <InputGroup
+                    value={this.state.topics1}
+                    onChange={this.handleAddTopic}>
+                    <FormControl
+                        rows='1'
+                        placeholder="Add one to five topics, separate with space if necessary"
+                        as="textarea" 
+                        aria-label="With textarea" 
+                    />
+                </InputGroup>
+                <Button
+                    variant={buttonColor}
+                    size="md"
+                    disabled={!enabled}
+                    type="submit"
+                    onClick={this.handleCreatePost}
+                    block>
+                    Submit
+                </Button>
+            </InputGroup>
+        </Form>
     )
   }
 }
