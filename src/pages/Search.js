@@ -5,6 +5,7 @@ import { Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-boot
 // components
 import Navbar from '../components/Navbar.js'
 import Post from '../components/Post.js'
+import DBOps from '../DBOps.js'
 
 class Search extends Component {
 
@@ -57,6 +58,19 @@ class Search extends Component {
         if (!Object.is(this.state.text, '')) {
             this.setState({ search: this.state.text });
             console.log("Set search state to: " + this.state.text);
+
+            new DBOps().searchTopic(JSON.stringify({id: this.state.text}))
+                .catch((err)=>{
+                    console.log('search topic error', err);
+                })
+                .then((res)=>{
+                    console.log('search topic success',res);
+                    this.setState({
+                        posts: res.getTopics.posts.items.map(
+                            post => <Post id={post.post.id}/>
+                        )
+                    });
+                });
 
             //this.setState({id: this.state.text});
             //console.log("Searching posts",this.searchState);
