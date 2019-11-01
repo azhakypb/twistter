@@ -306,7 +306,7 @@ class DBOps extends Component {
     var temp;
     try {
       temp = await API.graphql(graphqlOperation(userSearchTemplate, info));
-      return temp.data.getUser;
+      return temp.data;
     } catch (e) {
       return e.data;
     }
