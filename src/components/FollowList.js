@@ -10,17 +10,17 @@ class FollowList extends Component {
     this.searchState = {id: this.props.username};
     console.log(this.searchState);
     var request = await new DBOps().searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)});
-    console.log(request.followers.items);
-    
+    console.log(request);
+
     var i = 0; // counter to populate list of usernames
     var tempList = []; // temporary array to push to
     var usernameLen = this.props.username.length;
 
     if(this.state.type == 'follower'){
-      while(request.followers.items[i] != undefined){
+      while(request.getUser.followers.items[i] != undefined){
         // string must be manipulated to only show the follower
-        var followerTemp = request.followers.items[i].id; 
-        tempList.push(followerTemp.substring(0, followerTemp.length - usernameLen));
+        var followerTemp = request.getUser.followers.items[i].id;
+        tempList.push(followerTemp.substring(0, followerTemp.length - (usernameLen) ));
         i++;
       }
       // sets the current number of followers in case of change
@@ -29,18 +29,18 @@ class FollowList extends Component {
               });
     }
     else if(this.state.type == 'following'){
-      while(request.following.items[i] != undefined){
+      while(request.getUser.following.items[i] != undefined){
        // string manipulation to only show the following user
-       var followingTemp = request.following.items[i].id;
-       tempList.push(followingTemp.substring(usernameLen, followingTemp.length));
+       var followingTemp = request.getUser.following.items[i].id;
+       tempList.push(followingTemp.substring((usernameLen), followingTemp.length));
         i++;
       }
-      // set the current num of following in case of change 
+      // set the current num of following in case of change
       this.setState({
                'numFollowing' : i
                });
-    }     
- 
+    }
+
     // populates the list state with contents of tempList
     this.setState(state => {
             const list = state.list.concat(tempList);
@@ -48,31 +48,33 @@ class FollowList extends Component {
               list
                    };
             });
- 
+
     console.log(this.state.list);
-    
+
   }
 
   // pulls the num of followers and following on first render of component
   async initialPull() {
     this.searchState = {id: this.props.username};
-    console.log(this.searchState);
-    var request = await new DBOps().searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)});
-    var followNum = 0;
-    var followingNum = 0;
-    while(request.followers.items[followNum] != undefined){
-      followNum++;
-    }
-    while(request.following.items[followingNum] != undefined){
-      followingNum++;
-    }
-
-    // sets the states for num of followers and following and resets type so it doesn't get called again
-    this.setState({
-            'numFollowers': followNum,
-            'numFollowing' : followingNum,
-            'type' : ''
-            });
+    new DBOps().searchUser(JSON.stringify(this.searchState))
+      .catch((err)=>{
+        console.log('follow list, initial pull, error',err);
+      })
+      .then((res)=>{
+        var followNum = 0;
+        var followingNum = 0;
+        while(res.getUser.followers.items[followNum] != undefined){
+          followNum++;
+        }
+        while(res.getUser.following.items[followingNum] != undefined){
+          followingNum++;
+        }
+        this.setState({
+          'numFollowers': followNum,
+          'numFollowing' : followingNum,
+          'type' : ''
+        });
+      });
   }
 
   constructor(props){
@@ -88,18 +90,18 @@ class FollowList extends Component {
     this.searchState = {
       id: ""
     }
-   
+
     // bind functions
     this.dataPull = this.dataPull.bind(this);
     this.initialPull = this.initialPull.bind(this);
     this.handleFollowerClick = this.handleFollowerClick.bind(this);
     this.handleFollowingClick = this.handleFollowingClick.bind(this);
-  } 
- 
+  }
+
   // handler for clicking the follower button
   handleFollowerClick(){
     console.log('Handle follower button click');
-  
+
     if(this.state.isHidden || this.state.type != 'follower') {
       // cases of no list being rendered or following list rendered
       this.setState({
