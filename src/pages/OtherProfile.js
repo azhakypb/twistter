@@ -127,7 +127,7 @@ class OtherProfile extends Component {
             </Col>
 
             <Col>
-                <h1>.</h1>
+                <FollowList username={username}></FollowList>
             </Col>
       </Row>
     );
