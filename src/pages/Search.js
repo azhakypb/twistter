@@ -65,11 +65,13 @@ class Search extends Component {
                 })
                 .then((res)=>{
                     console.log('search topic success',res);
-                    this.setState({
-                        posts: res.getTopics.posts.items.map(
-                            post => <Post id={post.post.id}/>
-                        )
-                    });
+                    if('items' in res.getTopics.posts){
+                        this.setState({
+                            posts: res.getTopics.posts.items.map(
+                                post => <Post id={post.post.id}/>
+                            )
+                        });
+                    }
                 });
 
             //this.setState({id: this.state.text});

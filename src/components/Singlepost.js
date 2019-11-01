@@ -1,6 +1,7 @@
 import React, { Component, } from 'react';
 import { Button, InputGroup, FormControl, Form} from 'react-bootstrap';
 import DBOps from '../DBOps.js'
+import { Auth } from 'aws-amplify'
 
 class Singlepost extends Component {
 
@@ -34,8 +35,7 @@ class Singlepost extends Component {
     );
   }
   handleAddTopic (event){
-    this.setState({ topics1:   event.target.value}
-    );
+    this.setState({ topics1:   event.target.value.split(",")});
   }
   handleTopicNum(topics1) {
     console.log('called');
@@ -59,13 +59,41 @@ class Singlepost extends Component {
   }
 
   handleCreatePost = async () => {
-    var toSend = {
-      text: this.state.text1,
-      timestamp: this.state.timestamp1,
-      postAuthorId: this.state.postAuthorId1
-    };
+    Auth.currentAuthenticatedUser({ bypassCache: true })
+        .catch((err)=>{console.log('error getting user',err);})
+        .then((user)=>{
+            var username = user.username;
+            var toSend = {
+                text: this.state.text1,
+                timestamp: 132,
+                postAuthorId: username
+            };
+            new DBOps().createPost(JSON.stringify(toSend))
+                .then((post)=>{
+                    const topics = this.state.topics1;
+                    console.log(topics);
+                    for (var i = 0; i < topics.length; i++) {
+                        const topic = topics[i];
+                        new DBOps().createTopic(JSON.stringify({id: topic}))
+                        .finally(()=>{
+                            var tag_input = {tagTopicId: topic, tagPostId: post.id};
+                            new DBOps().createTag(JSON.stringify(tag_input))
+                                .catch((err)=>{
+                                    console.log('create tag error',err);
+                                })
+                                .then((res)=>{
+                                    console.log('create tag success',res);
+                                });
+                        })
+                    }
+                });
+        });
+
+    /*
+    console.log(toSend);
     var topics = this.state.topics1.split(",");
     var post = await new DBOps().createPost(JSON.stringify(toSend));
+    console.log(post);
     var postid = post.id;
     for (var i = 0; i < topics.length; i++) {
       var topic = await new DBOps().createTopic(JSON.stringify({id: topics[i]}));
@@ -73,6 +101,7 @@ class Singlepost extends Component {
       var tag_input = {tagTopicId: topics[i], tagPostId: postid};
       var tag = await new DBOps().createTag(JSON.stringify(tag_input));
     }
+    */
   }
 
 

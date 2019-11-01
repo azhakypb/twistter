@@ -463,7 +463,7 @@ class DBOps extends Component {
       console.log(temp);
       return temp.data;
     } catch (e) {
-      return e.data;
+      return e;
     }
   }
 
