@@ -33,11 +33,19 @@ class OtherProfile extends Component {
                                                                                         accessKeyId: "AKIA6PTGMIK45Y2CRIYF",
                                                                                         secretAccessKey: "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"
                                                                                     });
+        
 
         this.params = {
             UserPoolId: awsmobile.aws_user_pools_id, /* required */
             Username: window.location.href.split('/').slice(-1)[0] /* required */
         };
+        var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+        
+        // redirect if viewing own profile
+	if(this.params.Username == user.username){
+          document.location.href = "/";
+	}
+       
 
         cognitoidentityserviceprovider.adminGetUser(this.params, (err, data) => {
 
@@ -55,9 +63,12 @@ class OtherProfile extends Component {
                     else if(data.UserAttributes[i].Name === 'picture'){
                         this.setState({url:data.UserAttributes[i].Value})
                     }
+                 
                 }
+
             }
         });
+       
     }
 
     async follow(){
