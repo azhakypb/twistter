@@ -15,7 +15,7 @@ class Singlepost extends Component {
       text1: '',
       topics1: '',
       postAuthorId1: this.props.username,
-      timestamp1: 132
+      timestamp1: 11012019
     }
     //bind functions
     this.handleAddPost      = this.handleAddPost.bind(this);
@@ -115,9 +115,9 @@ class Singlepost extends Component {
         <Form onSubmit={this.props.action}>
             <InputGroup>
                 <InputGroup
-                    value={this.state.text1} 
+                    value={this.state.text1}
                     onChange={this.handleAddPost}>
-                    <FormControl 
+                    <FormControl
                         rows='5'
                         placeholder="Write something here before submitting"
                         as="textarea"
@@ -128,10 +128,10 @@ class Singlepost extends Component {
                     value={this.state.topics1}
                     onChange={this.handleAddTopic}>
                     <FormControl
-                        rows='1'
-                        placeholder="Add one to five topics, separate with space if necessary"
-                        as="textarea" 
-                        aria-label="With textarea" 
+                        rows='2'
+                        placeholder="Add one to five topics, separate with comma if necessary"
+                        as="textarea"
+                        aria-label="With textarea"
                     />
                 </InputGroup>
                 <Button
