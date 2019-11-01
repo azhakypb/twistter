@@ -83,8 +83,6 @@ class Navbar extends Component {
 	render() {
 
     	return(
-<<<<<<< HEAD
-
 	    <div>
 		<Modal show={this.state.visibleDeletePrompt} onHide={this.closeDeletePromptNo.bind(this)}>
 		  <Modal.Header></Modal.Header>
@@ -111,12 +109,6 @@ class Navbar extends Component {
       		  </Modal.Footer>
     		</Modal>
 
-    		<Jumbotron>
-    			<h2>Navbar</h2>
-    			<Link
-    				to= '/'>
-=======
-				<div>
 	    		<Jumbotron>
 	    			<h2>Navbar</h2>
 	    			<Link
@@ -129,46 +121,7 @@ class Navbar extends Component {
 		    				Profile
 		  				</Button>
 	    			</Link>
-						<Link
-						to= '/search'>
-						<Button
-							variant="secondary"
-							size="md"
-							block>
-							Search
-							</Button>
-						</Link>
-	    			<Link
-	    				to= '/settings'
-	    				paddingTop="50px">
-		  				<Button
-		  					variant="secondary"
-		  					size="md"
-		  					block>
-		    				Settings
-		  				</Button>
-	  				</Link>
-	          <Link
-	            to= '/'
-	            paddingTop="50px">
-	            <Button
-	              variant="secondary"
-	              size="md"
-	              onClick={(e) => Auth.signOut()}
-	              block>
-	              Log Out
-	            </Button>
-	          </Link>
->>>>>>> dev
-	  				<Button
-	  					variant="secondary"
-	  					size="md"
-	  					onClick ={this.deleteUser}
-	  					block>
-	    				Delete User
-	  				</Button>
-<<<<<<< HEAD
-    			</Link>
+
 				<Link
 					to= '/search'>
 					<Button
@@ -204,15 +157,13 @@ class Navbar extends Component {
 						block>
 						Delete User
 					</Button>
-    		</Jumbotron>
-	    </div>
 
-=======
+
 	    		</Jumbotron>
 					<Postwrite username={this.props.username}></Postwrite>
 				</div>
->>>>>>> dev
-    	);
+
+   	);
   	}
 }
 
