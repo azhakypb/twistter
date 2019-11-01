@@ -9,13 +9,13 @@ class Singlepost extends Component {
   constructor(props) {
 
     super(props);
-    var today = new Date();
+  //  var today = new Date();
     this.state = {
       submitable    : false,
       text1: '',
       topics1: '',
       postAuthorId1: this.props.username,
-      timestamp1: 11012019
+      timestamp1: 0
     }
     //bind functions
     this.handleAddPost      = this.handleAddPost.bind(this);
@@ -24,9 +24,29 @@ class Singlepost extends Component {
     this.handleTopicNum     = this.handleTopicNum.bind(this);
     this.handleLength       = this.handleLength.bind(this);
     this.handleCreatePost   = this.handleCreatePost.bind(this);
+    this.handleTime         = this.handleTime.bind(this);
+    this.handleDouble       = this.handleDouble.bind(this);
   }
 
   //handlers
+  handleDouble() {
+    this.handleTime();
+    this.handleCreatePost();
+  }
+  handleTime() {
+    var month, day, year;
+    var today = new Date();
+    month  = today.getMonth();
+    day    = today.getDate();
+    year   = today.getFullYear();
+
+    var monthNum = 1 + parseInt(month, 10);
+    var dayNum = parseInt(day, 10);
+    var yearNum = parseInt(year, 10);
+
+    var res = monthNum * 1000000 + dayNum * 10000 + yearNum;
+    this.setState({ timestamp1:     res});
+  }
   handleSubmitable(){
     const {post, topics} = this.state;
   }
@@ -65,7 +85,7 @@ class Singlepost extends Component {
             var username = user.username;
             var toSend = {
                 text: this.state.text1,
-                timestamp: 132,
+                timestamp: this.state.timestamp1,
                 postAuthorId: username
             };
             new DBOps().createPost(JSON.stringify(toSend))
@@ -139,7 +159,7 @@ class Singlepost extends Component {
                     size="md"
                     disabled={!enabled}
                     type="submit"
-                    onClick={this.handleCreatePost}
+                    onClick={this.handleDouble}
                     block>
                     Submit
                 </Button>
