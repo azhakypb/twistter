@@ -20,7 +20,7 @@ class FollowList extends Component {
       while(request.getUser.followers.items[i] != undefined){
         // string must be manipulated to only show the follower
         var followerTemp = request.getUser.followers.items[i].id; 
-        tempList.push(followerTemp.substring(0, followerTemp.length - (++usernameLen) ));
+        tempList.push(followerTemp.substring(0, followerTemp.length - (usernameLen+1) ));
         i++;
       }
       // sets the current number of followers in case of change
