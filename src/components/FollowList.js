@@ -10,17 +10,17 @@ class FollowList extends Component {
     this.searchState = {id: this.props.username};
     console.log(this.searchState);
     var request = await new DBOps().searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)});
-    console.log(request.followers.items);
+    console.log(request);
     
     var i = 0; // counter to populate list of usernames
     var tempList = []; // temporary array to push to
     var usernameLen = this.props.username.length;
 
     if(this.state.type == 'follower'){
-      while(request.followers.items[i] != undefined){
+      while(request.getUser.followers.items[i] != undefined){
         // string must be manipulated to only show the follower
-        var followerTemp = request.followers.items[i].id; 
-        tempList.push(followerTemp.substring(0, followerTemp.length - usernameLen));
+        var followerTemp = request.getUser.followers.items[i].id; 
+        tempList.push(followerTemp.substring(0, followerTemp.length - (++usernameLen) ));
         i++;
       }
       // sets the current number of followers in case of change
@@ -29,9 +29,9 @@ class FollowList extends Component {
               });
     }
     else if(this.state.type == 'following'){
-      while(request.following.items[i] != undefined){
+      while(request.getUser.following.items[i] != undefined){
        // string manipulation to only show the following user
-       var followingTemp = request.following.items[i].id;
+       var followingTemp = request.getUser.following.items[i].id;
        tempList.push(followingTemp.substring(usernameLen, followingTemp.length));
         i++;
       }
