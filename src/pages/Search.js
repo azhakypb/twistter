@@ -16,12 +16,7 @@ class Search extends Component {
             text        : '',
             search      : '',
             showResults : true,
-            posts       : [
-                <Post id='679c4672-6714-4e01-9784-3b0f886253dc' key='1'></Post>,
-                <Post id='a98d0365-a8fa-4c5d-a71a-9d41866af52e' key='2'></Post>,
-                <Post id='aa1d30c4-738c-4195-a5f1-07480529cb7e' key='3'></Post>,
-                <Post id='fc8c9968-31f0-4052-9e08-b46a9044b594' key='4'></Post>
-            ]
+            posts       : []
         };
 
         this.searchState = {
@@ -60,17 +55,15 @@ class Search extends Component {
             console.log("Set search state to: " + this.state.text);
 
             new DBOps().searchTopic(JSON.stringify({id: this.state.text}))
-                .catch((err)=>{
-                    console.log('search topic error', err);
-                })
                 .then((res)=>{
-                    console.log('search topic success',res);
-                    if('items' in res.getTopics.posts){
-                        this.setState({
-                            posts: res.getTopics.posts.items.map(
-                                post => <Post id={post.post.id}/>
-                            )
-                        });
+                    console.log('search topic result',res);
+                    if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
+                        this.setState({posts:[]},()=>{
+                                this.setState({ posts: res.getTopics.posts.items.map( post => <Post id={post.post.id}/>)});
+                            });
+                    }
+                    else{
+                        this.setState({posts:[]});
                     }
                 });
 

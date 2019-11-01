@@ -432,7 +432,7 @@ class DBOps extends Component {
     var temp;
     try {
       temp = await API.graphql(graphqlOperation(createTopicTemplate, info));
-      return temp.data.createTopic;
+      return temp.data;
     } catch (e) {
       return e.data;
     }
@@ -446,7 +446,7 @@ class DBOps extends Component {
     var temp;
     try {
       temp = await API.graphql(graphqlOperation(searchTopicTemplate, info));
-      return temp.data.getTopics;
+      return temp.data;
     } catch (e) {
       return e.data;
     }
