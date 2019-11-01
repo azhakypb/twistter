@@ -34,6 +34,7 @@ class Post extends Component {
 
 		searchPost(info).then((res) => {
 
+			console.log(res);
 			res 		= res.data.getPost;
 			res.author 	= res.author.id
 
@@ -41,7 +42,7 @@ class Post extends Component {
 				username: 		res.author,
 				timestamp: 		res.timestamp,
 				text: 			res.text,
-				topics: 		['Topic 1']
+				topics: 		res.topics.items.map((topic)=>topic.topic.id)
 			});
 
 
