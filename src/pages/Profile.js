@@ -66,10 +66,7 @@ class Profile extends Component {
             </Col>
 
             <Col>
-<<<<<<< HEAD
             <FollowList username={username}></FollowList>
-=======
->>>>>>> dev-adil
             </Col>
       </Row>
     );
