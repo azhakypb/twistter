@@ -566,13 +566,20 @@ export async function searchNotification(info){
 }
 
 export async function createTopic(info){
-    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+    return API.graphql(graphqlOperation(createTopicTemplate, info));
 }
 export async function searchTopic(info){
-    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+    return API.graphql(graphqlOperation(searchTopicTemplate, info));
 }
 export async function createTag(info){
-    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+    return API.graphql(graphqlOperation(createTagTemplate, info));
 }
+export async function createLike(info){
+    return API.graphql(graphqlOperation(createLikeTemplate, info));
+}
+export async function deleteLike(info){
+    return API.graphql(graphqlOperation(deleteLikeTemplate, info));
+}
+
 
 export default DBOps;

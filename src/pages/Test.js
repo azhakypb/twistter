@@ -255,7 +255,7 @@ class Test extends Component {
   }
 
   createLike = async () => {
-    this.createLikeState.id = this.createLikeState.user + this.createLikeState.post;
+    this.createLikeState.id = this.createLikeState.user + "-" + this.createLikeState.post;
     var temp = await new DBOps().createLike(JSON.stringify(this.createLikeState));
     console.log(temp);
   }
