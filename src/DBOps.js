@@ -278,6 +278,30 @@ const createTagTemplate = `mutation createTag(
   }
 }`
 
+const createLikeTemplate = `mutation createLike(
+  $id: ID!,
+  $user: ID!,
+  $post: ID!
+) {
+  createLike(input: {
+    id: $id,
+    likeLikerId: $user,
+    likeLikeeId: $post
+  }) {
+    id
+  }
+}`
+
+const deleteLikeTemplate = `mutation deleteLike(
+  $id: ID!
+) {
+  deleteLike(input: {
+    id: $id
+  }) {
+    id
+  }
+}`
+
 class DBOps extends Component {
 
   constructor(props) {
@@ -468,6 +492,36 @@ class DBOps extends Component {
   }
 
   /***** END CREATE TAG *****/
+
+  /***** CREATE LIKE *****/
+
+  createLike = async (info) => {
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(createLikeTemplate, info));
+      console.log(temp);
+      return temp.data;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  /***** END CREATE LIKE *****/
+
+  /***** DELETE LIKE *****/
+
+  deleteLike = async (info) => {
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(deleteLikeTemplate, info));
+      console.log(temp);
+      return temp.data;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  /***** END CREATE LIKE *****/
 
 }
 

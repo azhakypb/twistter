@@ -59,6 +59,14 @@ class Test extends Component {
       tagTopicId: "",
       tagPostId: ""
     }
+    this.createLikeState = {
+      id: "",
+      user: "",
+      post: ""
+    }
+    this.deleteLikeState = {
+      id: ""
+    }
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
     this.handleFollowee = this.handleFollowee.bind(this);
@@ -75,6 +83,9 @@ class Test extends Component {
     this.handleCTopic = this.handleCTopic.bind(this);
     this.handleCTTag = this.handleCTTag.bind(this);
     this.handleCPTag = this.handleCPTag.bind(this);
+    this.handleCULike = this.handleCULike.bind(this);
+    this.handleCPLike = this.handleCPLike.bind(this);
+    this.handleDLike = this.handleDLike.bind(this);
   }
 
   handleDelete(event) {
@@ -233,6 +244,32 @@ class Test extends Component {
     console.log(temp);
   }
 
+  handleCULike(event) {
+    this.createLikeState.user = event.target.value;
+    console.log("Set createLikeState user to: " + this.createLikeState.user);
+  }
+
+  handleCPLike(event) {
+    this.createLikeState.post = event.target.value;
+    console.log("Set createLikeState post to: " + this.createLikeState.post);
+  }
+
+  createLike = async () => {
+    this.createLikeState.id = this.createLikeState.user + this.createLikeState.post;
+    var temp = await new DBOps().createLike(JSON.stringify(this.createLikeState));
+    console.log(temp);
+  }
+
+  handleDLike(event) {
+    this.deleteLikeState.id = event.target.value;
+    console.log("Set deleteLikeState id to: " + this.deleteLikeState.id);
+  }
+
+  deleteLike = async () => {
+    var temp = await new DBOps().deleteLike(JSON.stringify(this.deleteLikeState));
+    console.log(temp);
+  }
+
   render() {
 
     const {id} = this.state;
@@ -279,6 +316,14 @@ class Test extends Component {
         Tag Topic ID : <input onChange={this.handleCTTag}/><br/>
         Tag Post ID : <input onChange={this.handleCPTag}/><br/>
         <button onClick={this.createTag}>Create Tag</button><br/>
+        <br/>
+        User: <input onChange={this.handleCULike}/><br/>
+        Post: <input onChange={this.handleCPLike}/><br/>
+        <button onClick={this.createLike}>Create Like</button><br/>
+        <br/>
+        Like Id: <input onChange={this.handleDLike}/><br/>
+        <button onClick={this.deleteLike}>Delete Like</button><br/>
+        <br/>
       </div>
 
     );
