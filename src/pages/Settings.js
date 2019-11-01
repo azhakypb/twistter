@@ -6,18 +6,6 @@ import { Auth } from 'aws-amplify'
 // components
 import Navbar from '../components/Navbar.js'
 
-async function changeEmail(email){
-
-    Auth.currentAuthenticatedUser({ bypassCache: true })
-        .catch((err)=>{console.log('error getting user',err);})
-        .then((user)=>{
-            var req = {email: email};
-            Auth.updateUserAttributes(user,req)
-                .catch((err)=>{console.log('error updating email',err)})
-                .then((res)=>{console.log('successfully updated email',res)});
-        });
-}
-
 class Settings extends Component {
 
     constructor(props){
@@ -61,6 +49,7 @@ class Settings extends Component {
     handleChangeUrl         (event){this.setState({ url:            event.target.value });}
     // submission field handlers
     async handleSubmitEmail(email){
+	if(this.state.email=='') {this.showAlertEmpty(); }
         Auth.currentAuthenticatedUser({ bypassCache: true })
             .catch((err)=>{console.log('error getting user',err);})
             .then((user)=>{
