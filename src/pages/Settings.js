@@ -50,7 +50,8 @@ class Settings extends Component {
     // submission field handlers
     async handleSubmitEmail(email){
 	if(this.state.email=='') {this.showAlertEmpty(); }
-        Auth.currentAuthenticatedUser({ bypassCache: true })
+        else {
+	Auth.currentAuthenticatedUser({ bypassCache: true })
             .catch((err)=>{console.log('error getting user',err);})
             .then((user)=>{
                 var req = {email: email};
@@ -59,6 +60,7 @@ class Settings extends Component {
                     .then((res)=>{console.log('successfully updated email',res)});
             });
 	this.showAlertEmail();
+	}
     }
     async handleSubmitPhoneNumber(event){
         if(this.state.phone_number=='') {this.showAlertEmpty();}
@@ -73,7 +75,7 @@ class Settings extends Component {
         }
     }
     async handleSubmitNewPassword(event){
-	if(this.state.new_password=='') {this.showAlertEmpty();}
+	if(this.state.new_password=='' || this.state.old_password=='') {this.showAlertEmpty();}
 	else {
         console.log('updating user password');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
