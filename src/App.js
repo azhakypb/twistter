@@ -8,6 +8,7 @@ import Search from './pages/Search.js'
 import Settings from './pages/Settings.js'
 import Profile from './pages/Profile.js'
 import Test from './pages/Test.js'
+import Notifications from './pages/Notifications.js'
 import OtherProfile from './pages/OtherProfile.js'
 // style sheet
 import './App.css';
@@ -35,6 +36,10 @@ class App extends Component {
                     <Route
                         path="/testing"
                         component = { Test }
+                    />
+                    <Route
+                        path="/notifications"
+                        component = { Notifications }
                     />
                     <Route path="/otherprofile/:id" component={ OtherProfile } />
                 </Switch>
