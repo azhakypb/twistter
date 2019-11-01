@@ -6,7 +6,6 @@ import { Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-boot
 import Navbar from '../components/Navbar.js'
 import DBOps from '../DBOps.js'
 import Post from '../components/Post.js'
-import DBOps from '../DBOps.js'
 
 class Search extends Component {
 
