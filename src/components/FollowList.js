@@ -56,23 +56,25 @@ class FollowList extends Component {
   // pulls the num of followers and following on first render of component
   async initialPull() {
     this.searchState = {id: this.props.username};
-    console.log(this.searchState);
-    var request = await new DBOps().searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)});
-    var followNum = 0;
-    var followingNum = 0;
-    while(request.followers.items[followNum] != undefined){
-      followNum++;
-    }
-    while(request.following.items[followingNum] != undefined){
-      followingNum++;
-    }
-
-    // sets the states for num of followers and following and resets type so it doesn't get called again
-    this.setState({
-            'numFollowers': followNum,
-            'numFollowing' : followingNum,
-            'type' : ''
-            });
+    new DBOps().searchUser(JSON.stringify(this.searchState))
+      .catch((err)=>{
+        console.log('follow list, initial pull, error',err);
+      })
+      .then((res)=>{
+        var followNum = 0;
+        var followingNum = 0;
+        while(res.getUser.followers.items[followNum] != undefined){
+          followNum++;
+        }
+        while(res.getUser.following.items[followingNum] != undefined){
+          followingNum++;
+        }
+        this.setState({
+          'numFollowers': followNum,
+          'numFollowing' : followingNum,
+          'type' : ''
+        });
+      });
   }
 
   constructor(props){
