@@ -120,6 +120,7 @@ const postCreateTemplate = `mutation createPost(
     $text: String!,
     $timestamp: Int!,
     $postAuthorId: ID!
+    $postQuoteId: ID!
   ) {
   createPost (input:{
     text: $text,
