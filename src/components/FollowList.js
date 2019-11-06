@@ -74,10 +74,9 @@ class FollowList extends Component {
             });
         }
   }
-
-  // handler for clicking the following buton
-  handleFollowingClick(){
-    console.log('follow list','handle following click','called');
+  	// handler for clicking the following buton
+  	handleFollowingClick(){
+    	console.log('FollowList.js','handleFollowingClick()','called');
 
     if(this.state.isHidden || this.state.type !== 'following') {
       // cases of no list being rendered or follower list rendered

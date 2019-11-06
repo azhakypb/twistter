@@ -14,7 +14,7 @@ class Navbar extends Component {
 		// props and states
     	super(props);
     	// bind functions
-	  //  this.displayUserAttributes 	=	this.displayUserAttributes	.bind(this);
+		//  this.displayUserAttributes 	=	this.displayUserAttributes	.bind(this);
 	    this.deleteUser				=	this.deleteUser.bind(this);
   	}
 
@@ -49,7 +49,7 @@ class Navbar extends Component {
 	render() {
 
     	return(
-				<div>
+			<div>
 	    		<Jumbotron>
 	    			<h2>Navbar</h2>
 	    			<Link
@@ -62,7 +62,7 @@ class Navbar extends Component {
 		    				Profile
 		  				</Button>
 	    			</Link>
-						<Link
+					<Link
 						to= '/search'>
 						<Button
 							variant="secondary"
@@ -70,7 +70,7 @@ class Navbar extends Component {
 							block>
 							Search
 							</Button>
-						</Link>
+					</Link>
 	    			<Link
 	    				to= '/settings'
 	    				paddingtop="50px">
@@ -81,17 +81,17 @@ class Navbar extends Component {
 		    				Settings
 		  				</Button>
 	  				</Link>
-	          <Link
-	            to= '/'
-	            paddingtop="50px">
-	            <Button
-	              variant="secondary"
-	              size="md"
-	              onClick={(e) => Auth.signOut()}
-	              block>
-	              Log Out
-	            </Button>
-	          </Link>
+	          		<Link
+	            		to= '/'
+	            		paddingtop="50px">
+	            		<Button
+	              			variant="secondary"
+	              			size="md"
+	              			onClick={(e) => Auth.signOut()}
+	              			block>
+	              			Log Out
+	            		</Button>
+	          		</Link>
 	  				<Button
 	  					variant="secondary"
 	  					size="md"
@@ -101,7 +101,7 @@ class Navbar extends Component {
 	  				</Button>
 	  				<Postwrite username={this.props.username}></Postwrite>
 	    		</Jumbotron>
-				</div>
+			</div>
     	);
   	}
 }
