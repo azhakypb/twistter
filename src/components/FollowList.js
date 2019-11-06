@@ -11,7 +11,7 @@ class FollowList extends Component {
     console.log(this.searchState);
     var request = await new DBOps().searchUser(JSON.stringify(this.searchState)).catch((err)=>{console.log(err)});
     console.log(request);
-    
+
     var i = 0; // counter to populate list of usernames
     var tempList = []; // temporary array to push to
     var usernameLen = this.props.username.length;
@@ -19,7 +19,7 @@ class FollowList extends Component {
     if(this.state.type == 'follower'){
       while(request.getUser.followers.items[i] != undefined){
         // string must be manipulated to only show the follower
-        var followerTemp = request.getUser.followers.items[i].id; 
+        var followerTemp = request.getUser.followers.items[i].id;
         tempList.push(followerTemp.substring(0, followerTemp.length - (usernameLen) ));
         i++;
       }
@@ -35,12 +35,12 @@ class FollowList extends Component {
        tempList.push(followingTemp.substring((usernameLen), followingTemp.length));
         i++;
       }
-      // set the current num of following in case of change 
+      // set the current num of following in case of change
       this.setState({
                'numFollowing' : i
                });
-    }     
- 
+    }
+
     // populates the list state with contents of tempList
     this.setState(state => {
             const list = state.list.concat(tempList);
@@ -48,9 +48,9 @@ class FollowList extends Component {
               list
                    };
             });
- 
+
     console.log(this.state.list);
-    
+
   }
 
   // pulls the num of followers and following on first render of component
@@ -58,9 +58,10 @@ class FollowList extends Component {
     this.searchState = {id: this.props.username};
     new DBOps().searchUser(JSON.stringify(this.searchState))
       .catch((err)=>{
-        console.log('follow list, initial pull, error',err);
+        console.log('follow list','initial pull','error',err);
       })
       .then((res)=>{
+        console.log('follow list','initial pull',res);
         var followNum = 0;
         var followingNum = 0;
         while(res.getUser.followers.items[followNum] != undefined){
@@ -90,18 +91,18 @@ class FollowList extends Component {
     this.searchState = {
       id: ""
     }
-   
+
     // bind functions
     this.dataPull = this.dataPull.bind(this);
     this.initialPull = this.initialPull.bind(this);
     this.handleFollowerClick = this.handleFollowerClick.bind(this);
     this.handleFollowingClick = this.handleFollowingClick.bind(this);
-  } 
- 
+  }
+
   // handler for clicking the follower button
   handleFollowerClick(){
     console.log('Handle follower button click');
-  
+
     if(this.state.isHidden || this.state.type != 'follower') {
       // cases of no list being rendered or following list rendered
       this.setState({
@@ -123,7 +124,7 @@ class FollowList extends Component {
 
   // handler for clicking the following buton
   handleFollowingClick(){
-    console.log('Handle following button click');
+    console.log('follow list','handle following click','called');
 
     if(this.state.isHidden || this.state.type != 'following') {
       // cases of no list being rendered or follower list rendered

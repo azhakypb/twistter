@@ -21,6 +21,11 @@ class OtherProfile extends Component {
             url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png',
             me          : ''
         }
+        this.notifState = {
+          userid: "",
+          text: "",
+          time: 0
+        }
         // bind functions
         this.follow = this.follow.bind(this);
         this.unfollow = this.unfollow.bind(this);
@@ -34,10 +39,18 @@ class OtherProfile extends Component {
                                                                                         secretAccessKey: "EF91M3uk4Pukgh3eho+d2kZBxZ77+ZG8WGz3n85Q"
                                                                                     });
 
+
         this.params = {
             UserPoolId: awsmobile.aws_user_pools_id, /* required */
             Username: window.location.href.split('/').slice(-1)[0] /* required */
         };
+        var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+
+        // redirect if viewing own profile
+	if(this.params.Username == user.username){
+          document.location.href = "/";
+	}
+
 
         cognitoidentityserviceprovider.adminGetUser(this.params, (err, data) => {
 
@@ -55,9 +68,12 @@ class OtherProfile extends Component {
                     else if(data.UserAttributes[i].Name === 'picture'){
                         this.setState({url:data.UserAttributes[i].Value})
                     }
+
                 }
+
             }
         });
+
     }
 
     async follow(){
@@ -70,7 +86,13 @@ class OtherProfile extends Component {
             followFollowerId: username,
             followFolloweeId: this.state.username
         }
+        this.notifState.userid = this.followState.followFolloweeId;
+        this.notifState.text = "You have been followed by " + username;
+        this.notifState.timestamp = 1234;
+        var ret = await new DBOps().createNotification(JSON.stringify(this.notifState));
+        console.log("Created Notification for: " + this.followState.followFolloweeId);
         var res =  await new DBOps().createFollow(JSON.stringify(this.followState));
+        console.log(ret);
         console.log(res);
     }
 
