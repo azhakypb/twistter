@@ -6,6 +6,7 @@ import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
 import DBOps from '../DBOps.js'
+import { createFollow } from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
 import FollowList from '../components/FollowList.js'
 var AWS = require('aws-sdk');
@@ -91,9 +92,10 @@ class OtherProfile extends Component {
         this.notifState.timestamp = 1234;
         var ret = await new DBOps().createNotification(JSON.stringify(this.notifState));
         console.log("Created Notification for: " + this.followState.followFolloweeId);
-        var res =  await new DBOps().createFollow(JSON.stringify(this.followState));
-        console.log(ret);
-        console.log(res);
+        createFollow(username,this.state.username)
+            .then((res)=>{
+                console.log(res);
+            })
     }
 
     async unfollow(){
