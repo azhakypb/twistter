@@ -69,7 +69,7 @@ class Singlepost extends Component {
   handleLength(text1, topics1) {
     if(text1.length > 0 && topics1.length > 0) {
       return true;
-    }else {
+    } else {
       console.log('Post and Topic Forms Require a text');
       return false
     }
@@ -79,10 +79,10 @@ class Singlepost extends Component {
     Auth.currentAuthenticatedUser({ bypassCache: true })
         .catch((err)=>{console.log('error getting user',err);})
         .then((user)=>{
-            var username = user.username;
-            var toSend = {
-                text: this.state.text1,
-                timestamp: this.state.timestamp1,
+            var username    = user.username;
+            var toSend      = {
+                text        : this.state.text1,
+                timestamp   : this.state.timestamp1,
                 postAuthorId: username
             };
             new DBOps().createPost(JSON.stringify(toSend))
@@ -105,28 +105,14 @@ class Singlepost extends Component {
                     }
                 });
         });
-
-    /*
-    console.log(toSend);
-    var topics = this.state.topics1.split(",");
-    var post = await new DBOps().createPost(JSON.stringify(toSend));
-    console.log(post);
-    var postid = post.id;
-    for (var i = 0; i < topics.length; i++) {
-      var topic = await new DBOps().createTopic(JSON.stringify({id: topics[i]}));
-      console.log(topic);
-      var tag_input = {tagTopicId: topics[i], tagPostId: postid};
-      var tag = await new DBOps().createTag(JSON.stringify(tag_input));
-    }
-    */
   }
 
 
   render() {
-    const {text1, topics1} = this.state
-    const enabled = this.handleLength(text1, topics1) &&
-                    this.handleTopicNum(topics1);
-    let buttonColor = enabled ? "primary" : "secondary"
+    const {text1, topics1}  = this.state
+    const enabled           = this.handleLength(text1, topics1) &&
+                              this.handleTopicNum(topics1);
+    let buttonColor         = enabled ? "primary" : "secondary"
 
     return (
         <Form onSubmit={this.props.action}>
