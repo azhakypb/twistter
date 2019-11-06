@@ -4,8 +4,8 @@ import { Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-boot
 // aws modules
 // components
 import Navbar from '../components/Navbar.js'
-import Post from '../components/Post.js'
 import DBOps from '../DBOps.js'
+import Post from '../components/Post.js'
 
 class Search extends Component {
 
@@ -71,6 +71,13 @@ class Search extends Component {
             //console.log("Searching posts",this.searchState);
 
             //this.setState({id:this.searchState.id});
+
+            //var topicPosts = await new DBOps().searchTopic("kevin");
+            //console.log(topicPosts);
+            //const arrayPosts = topicPosts.map(
+            //    (post) => post
+            //);
+            //this.setState({posts: arrayPosts});
 
             //const listPosts = this.state.posts.map(
             //    (post => <Post id={this.state.text}></Post>)
