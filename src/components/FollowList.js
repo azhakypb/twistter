@@ -58,9 +58,10 @@ class FollowList extends Component {
     this.searchState = {id: this.props.username};
     new DBOps().searchUser(JSON.stringify(this.searchState))
       .catch((err)=>{
-        console.log('follow list, initial pull, error',err);
+        console.log('follow list','initial pull','error',err);
       })
       .then((res)=>{
+        console.log('follow list','initial pull',res);
         var followNum = 0;
         var followingNum = 0;
         while(res.getUser.followers.items[followNum] != undefined){
@@ -123,7 +124,7 @@ class FollowList extends Component {
 
   // handler for clicking the following buton
   handleFollowingClick(){
-    console.log('Handle following button click');
+    console.log('follow list','handle following click','called');
 
     if(this.state.isHidden || this.state.type != 'following') {
       // cases of no list being rendered or follower list rendered
