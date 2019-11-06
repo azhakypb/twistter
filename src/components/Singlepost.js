@@ -52,7 +52,7 @@ class Singlepost extends Component {
     );
   }
   handleAddTopic (event){
-  //  event.target.valie.replace(/\s+/g, '');
+    event.target.value = (event.target.value.replace(/\s+/g, ''));
     this.setState({ topics1:    event.target.value.split(",")});
   }
   handleTopicNum(topics1) {
