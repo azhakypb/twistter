@@ -306,7 +306,11 @@ class DBOps extends Component {
 
   constructor(props) {
     super(props);
-    this.state = null;
+    this.state = {
+      id: "",
+      text: "",
+      timestamp: 0
+    }
     this.return_value = null;
   }
   /***** BEGIN CREATE USER FUNCTIONS *****/
@@ -414,7 +418,7 @@ class DBOps extends Component {
     var temp;
     try {
       temp = await API.graphql(graphqlOperation(notifCreateTemplate, info));
-      return temp.data.createNotification;
+      return temp.data;
     } catch (e) {
       return e.data;
     }
