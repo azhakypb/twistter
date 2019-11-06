@@ -85,7 +85,7 @@ class Settings extends Component {
         console.log(res);
 	this.showAlertPW();
 	}
-	}
+	
     }
     async handleSubmitName(event){
         if(this.state.name==='') { this.showAlertEmpty(); }
