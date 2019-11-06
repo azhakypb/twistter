@@ -64,7 +64,8 @@ class Post extends Component {
 			'q_timestamp'	: '',
 			'text'			: '',
 			'q_text'		: '',
-			'topics'		: []
+			'topics'		: [],
+			
 		}
 
 		if( 'id' in this.props && !(this.props.id === '') ){
@@ -84,7 +85,6 @@ class Post extends Component {
 
 		if( this.state.id !== prevState.id ){ this.pull(); }
 	}
-
 	render(){
 
 		const {	
@@ -126,7 +126,7 @@ class Post extends Component {
 				</Toast>
 
 			)
-
+			
 		} else {
 
 			return(
@@ -173,6 +173,7 @@ class Post extends Component {
 						</Row>
 					</Toast.Body>
 				</Toast>
+			
 
 			)
 
