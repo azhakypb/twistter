@@ -47,9 +47,9 @@ class OtherProfile extends Component {
         var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
 
         // redirect if viewing own profile
-	if(this.params.Username === user.username){
-          document.location.href = "/";
-	}
+		if(this.params.Username === user.username){
+          	document.location.href = "/";
+		}
 
 
         cognitoidentityserviceprovider.adminGetUser(this.params, (err, data) => {
@@ -131,8 +131,8 @@ class OtherProfile extends Component {
                         </Card>
                         <h1>{name}</h1>
                         <h2>@{username}</h2>
-			<Button onClick={this.follow} aria-label="Follow">Follow</Button>
-			<Button onClick={this.unfollow} aria-label="Unfollow">Unfollow</Button>
+						<Button onClick={this.follow} aria-label="Follow">Follow</Button>
+						<Button onClick={this.unfollow} aria-label="Unfollow">Unfollow</Button>
                     </Jumbotron>
                 </Container>
 

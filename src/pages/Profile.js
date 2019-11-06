@@ -66,7 +66,7 @@ class Profile extends Component {
             </Col>
 
             <Col>
-            <FollowList username={username}></FollowList>
+            	<FollowList username={username}></FollowList>
             </Col>
       </Row>
     );

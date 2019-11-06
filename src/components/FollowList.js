@@ -65,7 +65,7 @@ class FollowList extends Component {
         		var followNum = 0;
         		var followingNum = 0;
         		while(res.getUser.followers.items[followNum] !== undefined){
-          			followNum++;
+					followNum++;
         		}
         		while(res.getUser.following.items[followingNum] !== undefined){
           			followingNum++;
