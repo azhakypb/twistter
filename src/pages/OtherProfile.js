@@ -47,7 +47,7 @@ class OtherProfile extends Component {
         var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
 
         // redirect if viewing own profile
-	if(this.params.Username == user.username){
+	if(this.params.Username === user.username){
           document.location.href = "/";
 	}
 
