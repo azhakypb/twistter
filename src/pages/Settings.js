@@ -53,17 +53,17 @@ class Settings extends Component {
     handleChangeUrl         (event){this.setState({ url:            event.target.value });}
     // submission field handlers
     async handleSubmitEmail(email){
-    if(this.state.email==='') { this.showAlertEmpty(); }
-    else {
-		Auth.currentAuthenticatedUser({ bypassCache: true })
-        	.catch((err)=>{console.log('error getting user',err);})
-        	.then((user)=>{
-            	var req = {email: email};
+		if(this.state.email==='') { this.showAlertEmpty(); }
+		else {
+			Auth.currentAuthenticatedUser({ bypassCache: true })
+        		.catch((err)=>{console.log('error getting user',err);})
+        		.then((user)=>{
+            		var req = {email: email};
         	Auth.updateUserAttributes(user,req)
             	.catch((err)=>{console.log('error updating email',err)})
             	.then((res)=>{console.log('successfully updated email',res)});
         	});
-    	this.showAlertEmail();
+    		this.showAlertEmail();
 		}
     }
     async handleSubmitPhoneNumber(event){
