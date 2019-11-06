@@ -1,6 +1,6 @@
 // react modules
 import React, { Component } from 'react';
-import { Alert, Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-bootstrap';
+import { Alert, Button, Col, FormControl, InputGroup, Jumbotron, Row, Modal } from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify'
 // components
@@ -24,7 +24,8 @@ class Settings extends Component {
             visiblePW       : false,
             visibleName     : false,
             visibleURL      : false,
-            visibleEmpty    : false
+            visibleEmpty    : false,
+			visibleModalPW	: true,
        };
 
 
@@ -54,62 +55,64 @@ class Settings extends Component {
     async handleSubmitEmail(email){
     if(this.state.email==='') { this.showAlertEmpty(); }
     else {
-    Auth.currentAuthenticatedUser({ bypassCache: true })
-        .catch((err)=>{console.log('error getting user',err);})
-        .then((user)=>{
-            var req = {email: email};
-            Auth.updateUserAttributes(user,req)
-                .catch((err)=>{console.log('error updating email',err)})
-                .then((res)=>{console.log('successfully updated email',res)});
-        });
-    }
-    this.showAlertEmail();
+		Auth.currentAuthenticatedUser({ bypassCache: true })
+        	.catch((err)=>{console.log('error getting user',err);})
+        	.then((user)=>{
+            	var req = {email: email};
+        	Auth.updateUserAttributes(user,req)
+            	.catch((err)=>{console.log('error updating email',err)})
+            	.then((res)=>{console.log('successfully updated email',res)});
+        	});
+    	this.showAlertEmail();
+		}
     }
     async handleSubmitPhoneNumber(event){
         if(this.state.phone_number==='') { this.showAlertEmpty(); }
         else {
-        console.log('updating user phone no');
-        var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
+        	console.log('updating user phone no');
+        	var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
-        var res     = await Auth.updateUserAttributes(user, {phone_number:this.state.phone_number})
+        	var res     = await Auth.updateUserAttributes(user, {phone_number:this.state.phone_number})
                                     .catch((err) => { console.error(err); });
-        console.log(res);
-        this.showAlertPhone();
-    }
+        	console.log(res);
+        	this.showAlertPhone();
+    	}
     }
     async handleSubmitNewPassword(event){
-                if(this.state.old_password==='' || this.state.new_password==='') { this.showAlertEmpty(); }
-
-        console.log('updating user password');
-        var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
+		if(this.state.old_password==='' || this.state.new_password==='') { this.showAlertEmpty(); }
+		else {
+        	console.log('updating user password');
+        	var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
-        var res     = await Auth.changePassword(user, this.state.old_password, this.state.new_password)
+        	var res     = await Auth.changePassword(user, this.state.old_password, this.state.new_password)
                                     .catch((err) => { console.error(err); });
-        console.log(res);
+        	console.log(res);
+			this.showAlertPW();
+		}
     }
     async handleSubmitName(event){
         if(this.state.name==='') { this.showAlertEmpty(); }
         else {
-        console.log('updating user name');
-        var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
+        	console.log('updating user name');
+        	var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
-        var res     = await Auth.updateUserAttributes(user, {name:this.state.name})
+        	var res     = await Auth.updateUserAttributes(user, {name:this.state.name})
                                     .catch((err) => { console.error(err); });
-        console.log(res);
-        this.showAlertName();
-    }
+        	console.log(res);
+        	this.showAlertName();
+    	}
     }
     async handleSubmitUrl(event){
-                if(this.state.phone_number==='') { this.showAlertEmpty(); }
-else {
-        console.log('updating user picture');
-        var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
+    	if(this.state.url==='') { this.showAlertEmpty(); }
+		else {
+        	console.log('updating user picture');
+        	var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
-        var res     = await Auth.updateUserAttributes(user,{picture: this.state.url})
+        	var res     = await Auth.updateUserAttributes(user,{picture: this.state.url})
                                     .catch((err) => { console.error(err); });
-        console.log(res);
-        this.showAlertURL();
-    }
+        	console.log(res);
+        	this.showAlertURL();
+    	}
     }
 
     showAlertEmail() { this.setState({ visibleEmail: true }); }
@@ -117,14 +120,15 @@ else {
     showAlertPW() { this.setState({ visiblePW: true }); }
     showAlertName() { this.setState({ visibleName: true }); }
     showAlertURL() { this.setState({ visibleURL: true }); }
-        showAlertEmpty() { this.setState({ visibleEmpty: true }); }
+    showAlertEmpty() { this.setState({ visibleEmpty: true }); }
 
     closeAlertEmail() { this.setState({ visibleEmail: false }); }
     closeAlertPhone() { this.setState({ visiblePhone: false }); }
     closeAlertPW() { this.setState({ visiblePW: false }); }
     closeAlertName() { this.setState({ visibleName: false }); }
     closeAlertURL() { this.setState({ visibleURL: false }); }
-        closeAlertEmpty() { this.setState({ visibleURL: false }); }
+    closeAlertEmpty() { this.setState({ visibleEmpty: false }); }
+	closeModal() { this.setState({ visibleModalPW: false }); }
 
 
 
@@ -138,6 +142,19 @@ else {
         <Alert variant="success" show={this.state.visibleName} onClose={this.closeAlertName.bind(this)} dismissible>Name successfully updated.</Alert>
         <Alert variant="success" show={this.state.visibleURL} onClose={this.closeAlertURL.bind(this)} dismissible>Image URL successfully updated.</Alert>
         <Alert variant="danger" show={this.state.visibleEmpty} onClose={this.closeAlertEmpty.bind(this)} dismissible>Cannot update info with empty content! Please enter a valid value.</Alert>
+
+
+		<Modal show={this.state.visibleModalPW} onHide={this.closeModal.bind(this)}>
+			<Modal.Header closeButton>
+				<Modal.Title>Confirmation Required</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				Please Reenter Password
+			</Modal.Body>
+			<Modal.Footer>
+				<Button variant="secondary" onClick={this.closeModal.bind(this)}>Close</Button>
+			</Modal.Footer>
+		</Modal>
 
             <Row>
                 <Col>
