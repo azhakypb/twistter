@@ -15,7 +15,7 @@ class FollowList extends Component {
                 console.log('follow list','initial pull','success pulling followers',res);
                 var followers = res.data.getUser.followers.items;
                 this.setState({ 'numFollowers': followers.length });
-                this.setState({ 'followers': followers.map((follower)=>follower.id) }, ()=>console.log(this.state.followers));
+                this.setState({ 'followers': followers.map((follower)=>follower.id.split('-')[0]) }, ()=>console.log(this.state.followers));
             }, (err) => {
                 console.log('follow list','initial pull','error',err);
             });
@@ -25,7 +25,7 @@ class FollowList extends Component {
                 console.log('follow list','initial pull','success pulling following',res);
                 var following = res.data.getUser.following.items;
                 this.setState({ 'numFollowing': following.length });
-                this.setState({ 'following': following.map((following)=>following.id) }, ()=>console.log(this.state.following));
+                this.setState({ 'following': following.map((following)=>following.id.split('-')[1]) }, ()=>console.log(this.state.following));
             }, (err) => {
                 console.log('follow list','initial pull','error',err);
             });
