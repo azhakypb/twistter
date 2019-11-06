@@ -2,81 +2,81 @@ import { Component } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 
 const userCreationTemplate = `mutation createUser($id: ID!) {
-  createUser(input:{
-    id: $id
-  }) {
-    id
-  }
+    createUser(input:{
+        id: $id
+    }) {
+        id
+    }
 }`
 
 const userSearchTemplate = `query getUser($id: ID!) {
-  getUser(
-    id: $id
-  ) {
-    id
-    image
-    likes {
-      items {
+    getUser(
+        id: $id
+    ){
         id
-      }
-    }
-    interests {
-      items {
-        id
-      }
-    }
-    following {
-      items {
-        id
-      }
-    }
-    followers {
-      items {
-        id
-      }
-    }
-    posts {
-      items {
-        id
-        text
-        timestamp
-        author {
-          id
+        image
+        likes {
+            items {
+                id
+            }
         }
-        topics {
-          items {
-            id
-          }
+        interests {
+            items {
+                id
+            }
         }
-        quote {
-          id
+        following {
+            items {
+                id
+            }
         }
-        quoted {
-          items {
-            id
-          }
+        followers {
+            items {
+                id
+            }
         }
-      }
+        posts {
+            items {
+                id
+                text
+                timestamp
+                author {
+                    id
+                }
+                topics {
+                    items {
+                        id
+                    }
+                }
+                quote {
+                    id
+                }
+                quoted {
+                    items {
+                        id
+                    }
+                }
+            }
+        }
+        notifications {
+            items {
+                id
+                user {
+                    id
+                }
+                text
+                timestamp
+            }
+        }
     }
-    notifications {
-      items {
-        id
-        user {
-          id
-        }
-        text
-        timestamp
-      }
-    }
-  }
 }`
 
 const userDeletionTemplate = `mutation deleteUser($id: ID!) {
-  deleteUser(input: {
-    id: $id
-  }) {
-    id
-  }
+    deleteUser(input: {
+        id: $id
+    }) {
+        id
+    }
 }
 `
 
@@ -84,56 +84,55 @@ const followCreateTemplate = `mutation createFollow(
     $id: ID!,
     $followFollowerId: ID!,
     $followFolloweeId: ID!
-  ) {
+    ) {
     createFollow(input: {
-      id: $id,
-      followFollowerId: $followFollowerId,
-      followFolloweeId: $followFolloweeId
+        id: $id,
+        followFollowerId: $followFollowerId,
+        followFolloweeId: $followFolloweeId
     }) {
-      id
-      followee {
         id
-      }
-      follower {
-        id
-      }
+        followee {
+            id
+        }
+        follower {
+            id
+        }
     }
-  }
+}
 `
 
 const followDeleteTemplate = `mutation deleteFollow($id: ID!) {
-  deleteFollow (input: {
-    id: $id
-  }){
-    id
-    followee {
-      id
+    deleteFollow (input: {
+        id: $id
+    }){
+        id
+        followee {
+            id
+        }
+        follower {
+            id
+        }
     }
-    follower {
-      id
-    }
-  }
 }
 `
 
 const postCreateTemplate = `mutation createPost(
-    $text: String!,
-    $timestamp: Int!,
-    $postAuthorId: ID!
-    $postQuoteId: ID!
-  ) {
-  createPost (input:{
-    text: $text,
-    timestamp: $timestamp,
-    postAuthorId: $postAuthorId
-  }){
-    id,
-    text,
-    timestamp,
-    author {
-      id
+        $text: String!,
+        $timestamp: Int!,
+        $postAuthorId: ID!
+    ) {
+        createPost (input:{
+        text: $text,
+        timestamp: $timestamp,
+        postAuthorId: $postAuthorId
+    }){
+        id,
+        text,
+        timestamp,
+        author {
+            id
+        }
     }
-  }
 }`
 
 const postSearchTemplate = `query getPost(
@@ -249,9 +248,7 @@ const searchTopicTemplate = `query searchTopic(
               id
             }
           }
-          quote{
-            id
-          }
+          quote
           quoted {
             items {
               id
@@ -530,60 +527,60 @@ class DBOps extends Component {
 
 }
 
-export async function createUser(info){
-    return API.graphql(graphqlOperation(userCreationTemplate, info));
+export function createUser(info){
+    return API.graphql(graphqlOperation(userCreationTemplate, JSON.stringify(info)));
 }
 
-export async function searchUser(info) {
-    return API.graphql(graphqlOperation(userSearchTemplate, info));
+export function searchUser(info) {
+    return API.graphql(graphqlOperation(userSearchTemplate, JSON.stringify(info)));
 }
 
-export async function deleteUser(info){
-    return API.graphql(graphqlOperation(userDeletionTemplate, info));
+export function deleteUser(info){
+    return API.graphql(graphqlOperation(userDeletionTemplate, JSON.stringify(info)));
 }
 
-export async function createFollow(info){
-    return API.graphql(graphqlOperation(followCreateTemplate, info));
+export function createFollow(info){
+    return API.graphql(graphqlOperation(followCreateTemplate, JSON.stringify(info)));
 }
 
 export async function deleteFollow(info){
-    return API.graphql(graphqlOperation(followDeleteTemplate, info));
+    return API.graphql(graphqlOperation(followDeleteTemplate, JSON.stringify(info)));
 }
 
 export async function createPost(info){
-    return API.graphql(graphqlOperation(postCreateTemplate, info));
+    return API.graphql(graphqlOperation(postCreateTemplate, JSON.stringify(info)));
 }
 
 export async function searchPost(info){
-    return API.graphql(graphqlOperation(postSearchTemplate, info));
+    return API.graphql(graphqlOperation(postSearchTemplate, JSON.stringify(info)));
 }
 
 export async function createNotification(info){
-    return API.graphql(graphqlOperation(notifCreateTemplate, info));
+    return API.graphql(graphqlOperation(notifCreateTemplate, JSON.stringify(info)));
 }
 
 export async function deleteNotification(info){
-    return API.graphql(graphqlOperation(notifDeleteTemplate, info));
+    return API.graphql(graphqlOperation(notifDeleteTemplate, JSON.stringify(info)));
 }
 
 export async function searchNotification(info){
-    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+    return API.graphql(graphqlOperation(notifSearchTemplate, JSON.stringify(info)));
 }
 
 export async function createTopic(info){
-    return API.graphql(graphqlOperation(createTopicTemplate, info));
+    return API.graphql(graphqlOperation(createTopicTemplate, JSON.stringify(info)));
 }
 export async function searchTopic(info){
-    return API.graphql(graphqlOperation(searchTopicTemplate, info));
+    return API.graphql(graphqlOperation(searchTopicTemplate, JSON.stringify(info)));
 }
 export async function createTag(info){
-    return API.graphql(graphqlOperation(createTagTemplate, info));
+    return API.graphql(graphqlOperation(createTagTemplate, JSON.stringify(info)));
 }
 export async function createLike(info){
-    return API.graphql(graphqlOperation(createLikeTemplate, info));
+    return API.graphql(graphqlOperation(createLikeTemplate, JSON.stringify(info)));
 }
 export async function deleteLike(info){
-    return API.graphql(graphqlOperation(deleteLikeTemplate, info));
+    return API.graphql(graphqlOperation(deleteLikeTemplate, JSON.stringify(info)));
 }
 
 

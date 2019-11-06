@@ -3,7 +3,7 @@ import React, { Component, } from 'react';
 import { Button,  ListGroup } from 'react-bootstrap';
 // import custom modules
 import DBOps from '../DBOps.js';
-
+import { searchUser } from '../DBOps.js'
 class FollowList extends Component {
   // used to pull the followers and following names from the database
   async dataPull(){
@@ -56,25 +56,19 @@ class FollowList extends Component {
   // pulls the num of followers and following on first render of component
   async initialPull() {
     this.searchState = {id: this.props.username};
-    new DBOps().searchUser(JSON.stringify(this.searchState))
-      .catch((err)=>{
-        console.log('follow list','initial pull','error',err);
-      })
-      .then((res)=>{
-        console.log('follow list','initial pull',res);
-        var followNum = 0;
-        var followingNum = 0;
-        while(res.getUser.followers.items[followNum] !== undefined){
-          followNum++;
-        }
-        while(res.getUser.following.items[followingNum] !== undefined){
-          followingNum++;
-        }
+    searchUser(this.searchState)
+      .then((result) => {
+        console.log('follow list','initial pull',result);
+        var followNum = result.data.getUser.followers.items.length;
+        var followingNum = result.data.getUser.followee.items.length;
         this.setState({
           'numFollowers': followNum,
           'numFollowing' : followingNum,
           'type' : ''
         });
+      }, (error) => {
+        console.log("Error!");
+        console.log(error.data.getUser);
       });
   }
 
