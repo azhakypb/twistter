@@ -20,12 +20,12 @@ class Singlepost extends Component {
     //bind functions
     this.handleAddPost      = this.handleAddPost.bind(this);
     this.handleAddTopic     = this.handleAddTopic.bind(this);
-    this.handleSubmitable   = this.handleSubmitable.bind(this);
     this.handleTopicNum     = this.handleTopicNum.bind(this);
     this.handleLength       = this.handleLength.bind(this);
     this.handleCreatePost   = this.handleCreatePost.bind(this);
     this.handleTime         = this.handleTime.bind(this);
     this.handleDouble       = this.handleDouble.bind(this);
+  //  this.handleSpace        = this.handleSpace.bind(this);
   }
 
   //handlers
@@ -47,15 +47,13 @@ class Singlepost extends Component {
     var res       = monthNum * 1000000 + dayNum * 10000 + yearNum;
     this.setState({ timestamp1:     res});
   }
-  handleSubmitable(){
-    const {post, topics} = this.state;
-  }
   handleAddPost (event){
     this.setState({ text1:     event.target.value}
     );
   }
   handleAddTopic (event){
-    this.setState({ topics1:   event.target.value.split(",")});
+  //  event.target.valie.replace(/\s+/g, '');
+    this.setState({ topics1:    event.target.value.split(",")});
   }
   handleTopicNum(topics1) {
     console.log('called');
