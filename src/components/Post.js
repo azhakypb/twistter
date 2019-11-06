@@ -2,8 +2,9 @@
 import React, { Component } from 'react';
 import { Badge, Button, Row, Toast } from 'react-bootstrap';
 // aws modules
+import { Auth } from 'aws-amplify';
 // custom modules
-import { searchPost } from '../DBOps.js';
+import { searchPost, createLike } from '../DBOps.js';
 // globals
 
 function TopicList(props){
@@ -34,6 +35,7 @@ class Post extends Component {
 
 		searchPost(info).then((res) => {
 
+			console.log(res);
 			res 		= res.data.getPost;
 			res.author 	= res.author.id
 
@@ -41,7 +43,8 @@ class Post extends Component {
 				username: 		res.author,
 				timestamp: 		res.timestamp,
 				text: 			res.text,
-				topics: 		['Topic 1']
+				topics: 		res.topics.items.map((topic)=>topic.topic.id),
+				likes: 			res.likes.items
 			});
 
 
@@ -64,7 +67,8 @@ class Post extends Component {
 			'q_timestamp'	: '',
 			'text'			: '',
 			'q_text'		: '',
-			'topics'		: []
+			'topics'		: [],
+			'likes'			: []
 		}
 
 		if( 'id' in this.props && !(this.props.id === '') ){
@@ -76,7 +80,7 @@ class Post extends Component {
 	}
 
 	async componentDidMount(){
-		
+
 		if( this.state.id !== '' ){ this.pull(); }
 	}
 
@@ -85,12 +89,21 @@ class Post extends Component {
 		if( this.state.id !== prevState.id ){ this.pull(); }
 	}
 
+	createLike = async () => {
+		var userid = await Auth.currentAuthenticatedUser({ bypassCache: true });
+		console.log(userid.username);
+		var postid = this.props.id;
+		var likeid = userid.username + postid;
+		var ret = await createLike(JSON.stringify({id: likeid, user: userid.username, post: postid}));
+		console.log(ret);
+	}
+
 	render(){
 
-		const {	
+		const {
 			username,
-			q_username, 
-			timestamp, 
+			q_username,
+			timestamp,
 			q_timestamp,
 			text,
 			q_text,
@@ -103,7 +116,7 @@ class Post extends Component {
 
 				<Toast>
 	  				<Toast.Header>
-	    				<strong 
+	    				<strong
 	    				onClick={(e) => {
 	    					document.location.href = "/otherprofile/"+username;
 	    				}}
@@ -118,8 +131,8 @@ class Post extends Component {
 							<TopicList topics={topics}/>
 						</Row>
 						<Row>
-							<Button variant="primary">
-  								Like <Badge variant="light">9</Badge>
+							<Button variant="primary" onClick={this.createLike}>
+  								Like <Badge variant="light">{this.state.likes.length}</Badge>
 							</Button>
 						</Row>
 					</Toast.Body>
@@ -133,8 +146,8 @@ class Post extends Component {
 
 				<Toast>
 	  				<Toast.Header>
-	    					<strong 
-	    						onClick={(e) => document.location.href = "/otherprofile/"+username } 
+	    					<strong
+	    						onClick={(e) => document.location.href = "/otherprofile/"+username }
 	    						className="mr-auto">
 	    						@{username}
 	    					</strong>
@@ -144,7 +157,7 @@ class Post extends Component {
 					<div style={{ paddingLeft: 5, paddingRight: 5 }}>
 					<Toast>
 						<Toast.Header>
-	    					<strong 
+	    					<strong
 	    						onClick={(e) => document.location.href = "/otherprofile/"+q_username }
 	    						className="mr-auto">
 	    						@{q_username}
@@ -167,8 +180,8 @@ class Post extends Component {
 							<TopicList topics={topics}/>
 						</Row>
 						<Row>
-							<Button size="sm"variant="primary">
-  								Like <Badge variant="light">9</Badge>
+							<Button size="sm"variant="primary" onClick={this.createLike}>
+  								Like <Badge variant="light">{this.state.likes.length}</Badge>
 							</Button>
 						</Row>
 					</Toast.Body>

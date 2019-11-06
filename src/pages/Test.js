@@ -180,7 +180,7 @@ class Test extends Component {
 
   handleSNotif(event) {
     this.searchNotifState.id = event.target.value;
-    console.log("Set searchPostState id to: " + event.target.value);
+    console.log("Set searchNotifState id to: " + event.target.value);
   }
 
   searchNotif = async () => {

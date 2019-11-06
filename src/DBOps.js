@@ -278,11 +278,39 @@ const createTagTemplate = `mutation createTag(
   }
 }`
 
+const createLikeTemplate = `mutation createLike(
+  $id: ID!,
+  $user: ID!,
+  $post: ID!
+) {
+  createLike(input: {
+    id: $id,
+    likeLikerId: $user,
+    likeLikeeId: $post
+  }) {
+    id
+  }
+}`
+
+const deleteLikeTemplate = `mutation deleteLike(
+  $id: ID!
+) {
+  deleteLike(input: {
+    id: $id
+  }) {
+    id
+  }
+}`
+
 class DBOps extends Component {
 
   constructor(props) {
     super(props);
-    this.state = null;
+    this.state = {
+      id: "",
+      text: "",
+      timestamp: 0
+    }
     this.return_value = null;
   }
   /***** BEGIN CREATE USER FUNCTIONS *****/
@@ -306,7 +334,7 @@ class DBOps extends Component {
     var temp;
     try {
       temp = await API.graphql(graphqlOperation(userSearchTemplate, info));
-      return temp.data.getUser;
+      return temp.data;
     } catch (e) {
       return e.data;
     }
@@ -390,13 +418,27 @@ class DBOps extends Component {
     var temp;
     try {
       temp = await API.graphql(graphqlOperation(notifCreateTemplate, info));
-      return temp.data.createNotification;
+      return temp.data;
     } catch (e) {
       return e.data;
     }
   }
 
   /***** END CREATE NOTIFICATION *****/
+
+  /***** SEARCH NOTIFICATION *****/
+
+  searchNotification = async (info) => {
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(notifSearchTemplate, info));
+      return temp.data;
+    } catch (e) {
+      return e.data;
+    }
+  }
+
+  /***** END SEARCH NOTIFICATION *****/
 
   /***** DELETE NOTIFICATION *****/
 
@@ -418,7 +460,7 @@ class DBOps extends Component {
     var temp;
     try {
       temp = await API.graphql(graphqlOperation(createTopicTemplate, info));
-      return temp.data.createTopic;
+      return temp.data;
     } catch (e) {
       return e.data;
     }
@@ -432,7 +474,7 @@ class DBOps extends Component {
     var temp;
     try {
       temp = await API.graphql(graphqlOperation(searchTopicTemplate, info));
-      return temp.data.getTopics;
+      return temp.data;
     } catch (e) {
       return e.data;
     }
@@ -449,11 +491,41 @@ class DBOps extends Component {
       console.log(temp);
       return temp.data;
     } catch (e) {
-      return e.data;
+      return e;
     }
   }
 
   /***** END CREATE TAG *****/
+
+  /***** CREATE LIKE *****/
+
+  createLike = async (info) => {
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(createLikeTemplate, info));
+      console.log(temp);
+      return temp.data;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  /***** END CREATE LIKE *****/
+
+  /***** DELETE LIKE *****/
+
+  deleteLike = async (info) => {
+    var temp;
+    try {
+      temp = await API.graphql(graphqlOperation(deleteLikeTemplate, info));
+      console.log(temp);
+      return temp.data;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  /***** END CREATE LIKE *****/
 
 }
 
@@ -498,13 +570,20 @@ export async function searchNotification(info){
 }
 
 export async function createTopic(info){
-    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+    return API.graphql(graphqlOperation(createTopicTemplate, info));
 }
 export async function searchTopic(info){
-    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+    return API.graphql(graphqlOperation(searchTopicTemplate, info));
 }
 export async function createTag(info){
-    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+    return API.graphql(graphqlOperation(createTagTemplate, info));
 }
+export async function createLike(info){
+    return API.graphql(graphqlOperation(createLikeTemplate, info));
+}
+export async function deleteLike(info){
+    return API.graphql(graphqlOperation(deleteLikeTemplate, info));
+}
+
 
 export default DBOps;
