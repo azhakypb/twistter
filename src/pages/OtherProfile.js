@@ -6,7 +6,7 @@ import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
 import DBOps from '../DBOps.js'
-import { createFollow } from '../DBOps.js'
+import { createFollow, deleteFollow } from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
 import FollowList from '../components/FollowList.js'
 var AWS = require('aws-sdk');
@@ -82,20 +82,19 @@ class OtherProfile extends Component {
         var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
         var username = user.username;
 
-        this.followState = {
-            id: username + this.state.username,
-            followFollowerId: username,
-            followFolloweeId: this.state.username
-        }
         this.notifState.userid = this.followState.followFolloweeId;
         this.notifState.text = "You have been followed by " + username;
         this.notifState.timestamp = 1234;
         var ret = await new DBOps().createNotification(JSON.stringify(this.notifState));
         console.log("Created Notification for: " + this.followState.followFolloweeId);
+        
         createFollow(username,this.state.username)
             .then((res)=>{
-                console.log(res);
+                console.log('other profile','follow','success',res);
             })
+            .catch((err)=>{
+                console.log('other profile','follow','error',err);
+            });
     }
 
     async unfollow(){
@@ -103,11 +102,13 @@ class OtherProfile extends Component {
         var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
         var username = user.username;
 
-        this.unfollowState = {
-            id: username + this.state.username
-        }
-        var res = await new DBOps().deleteFollow(JSON.stringify(this.unfollowState));
-        console.log(res);
+        deleteFollow(username,this.state.username)
+            .then((res)=>{
+                console.log('other profile','unfollow','success',res);
+            })
+            .catch((err)=>{
+                console.log('other profile','unfollow','error',err);
+            });
     }
 
     render() {

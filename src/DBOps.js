@@ -568,8 +568,10 @@ export function createFollow(follower, followee){
         followFolloweeId: followee })));
 }
 
-export function deleteFollow(info){
-    return API.graphql(graphqlOperation(followDeleteTemplate, info));
+export function deleteFollow(follower, followee){
+    return API.graphql(graphqlOperation(followDeleteTemplate, JSON.stringify({
+        id: id: follower+'-'+followee
+    })));
 }
 
 export function createPost(info){
