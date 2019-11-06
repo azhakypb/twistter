@@ -9,6 +9,26 @@ const userCreationTemplate = `mutation createUser($id: ID!) {
     }
 }`
 
+const getFollowersTemplate = `query getUser($id: ID!) {
+    getUser(id: $id){
+        followers{
+            items{
+                id
+            }
+        }
+    }
+}`
+
+const getFollowingTemplate = `query getUser($id: ID!) {
+    getUser(id: $id){
+        following{
+            items{
+                id
+            }
+        }
+    }
+}`
+
 const userSearchTemplate = `query getUser($id: ID!) {
     getUser(
         id: $id
@@ -534,7 +554,7 @@ export function createUser(info){
 }
 
 export function searchUser(info) {
-    return API.graphql(graphqlOperation(userSearchTemplate, info));
+    return API.graphql(graphqlOperation(userSearchTemplate, JSON.stringify({id:info})));
 }
 
 export function deleteUser(info){
@@ -545,44 +565,50 @@ export function createFollow(info){
     return API.graphql(graphqlOperation(followCreateTemplate, info));
 }
 
-export async function deleteFollow(info){
+export function deleteFollow(info){
     return API.graphql(graphqlOperation(followDeleteTemplate, info));
 }
 
-export async function createPost(info){
+export function createPost(info){
     return API.graphql(graphqlOperation(postCreateTemplate, info));
 }
 
-export async function searchPost(info){
+export function searchPost(info){
     return API.graphql(graphqlOperation(postSearchTemplate, info));
 }
 
-export async function createNotification(info){
+export function createNotification(info){
     return API.graphql(graphqlOperation(notifCreateTemplate, info));
 }
 
-export async function deleteNotification(info){
+export function deleteNotification(info){
     return API.graphql(graphqlOperation(notifDeleteTemplate, info));
 }
 
-export async function searchNotification(info){
+export function searchNotification(info){
     return API.graphql(graphqlOperation(notifSearchTemplate, info));
 }
 
-export async function createTopic(info){
+export function createTopic(info){
     return API.graphql(graphqlOperation(createTopicTemplate, info));
 }
-export async function searchTopic(info){
+export function searchTopic(info){
     return API.graphql(graphqlOperation(searchTopicTemplate, info));
 }
-export async function createTag(info){
+export function createTag(info){
     return API.graphql(graphqlOperation(createTagTemplate, info));
 }
-export async function createLike(info){
+export function createLike(info){
     return API.graphql(graphqlOperation(createLikeTemplate, info));
 }
-export async function deleteLike(info){
+export function deleteLike(info){
     return API.graphql(graphqlOperation(deleteLikeTemplate, info));
+}
+export function getFollowers(userid){
+    return API.graphql(graphqlOperation(getFollowersTemplate, JSON.stringify({id: userid})));
+}
+export function getFollowing(userid){
+    return API.graphql(graphqlOperation(getFollowingTemplate, JSON.stringify({id: userid})));
 }
 
 
