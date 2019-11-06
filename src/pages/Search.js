@@ -18,7 +18,6 @@ class Search extends Component {
             showResults : 0,
             posts       : []
         };
-
         // bind functions
         this.Results = this.Results.bind(this);
         this.handleChangeText = this.handleChangeText.bind(this);
@@ -87,7 +86,6 @@ class Search extends Component {
                 <Col md="6" xs="10">
                     <Jumbotron>
                         <h2>Search</h2>
-
                         <InputGroup
                             className="mb-3"
                             value={this.state.search}
@@ -106,7 +104,6 @@ class Search extends Component {
                         </InputGroup>
                     </Jumbotron>
                     <this.Results />
-                    
                 </Col>                
                 <Col>
                     <p>.</p>
