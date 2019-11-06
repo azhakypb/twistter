@@ -1,6 +1,6 @@
 // react modules
 import React, { Component } from 'react';
-import { Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-bootstrap';
+import { Button, Col, FormControl, InputGroup, Jumbotron, Row, DropdownButton } from 'react-bootstrap';
 // aws modules
 // components
 import Navbar from '../components/Navbar.js'
@@ -34,7 +34,11 @@ class Search extends Component {
             </div>
         )
         else return (
-            <div />
+            <div>
+                <Jumbotron>
+                    <h2>Please enter topic or username above</h2>
+                </Jumbotron>
+            </div>
         )
     }
     // input field handlers
@@ -106,7 +110,7 @@ class Search extends Component {
                     <this.Results />
                 </Col>                
                 <Col>
-                    <p>.</p>
+                    
                 </Col>
             </Row>
         );
