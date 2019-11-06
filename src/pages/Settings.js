@@ -23,8 +23,9 @@ class Settings extends Component {
             visiblePW       : false,
             visibleName     : false,
             visibleURL      : false,
-	    visibleEmpty    : false,
-        };
+            visibleEmpty    : false
+       };
+
         // bind functions
         this.handleChangeEmail        = this.handleChangeEmail.bind(this);
         this.handleChangeName         = this.handleChangeName.bind(this);
@@ -37,7 +38,6 @@ class Settings extends Component {
         this.handleSubmitNewPassword  = this.handleSubmitNewPassword.bind(this);
         this.handleSubmitPhoneNumber  = this.handleSubmitPhoneNumber.bind(this);
         this.handleSubmitUrl          = this.handleSubmitUrl.bind(this);
-
         console.log(Auth.currentAuthenticatedUser());
     }
     // input field handlers
@@ -49,7 +49,7 @@ class Settings extends Component {
     handleChangeUrl         (event){this.setState({ url:            event.target.value });}
     // submission field handlers
     async handleSubmitEmail(email){
-	if(this.state.email=='') {this.showAlertEmpty(); }
+	if(this.state.email==='') {this.showAlertEmpty(); }
         else {
 	Auth.currentAuthenticatedUser({ bypassCache: true })
             .catch((err)=>{console.log('error getting user',err);})
@@ -63,7 +63,7 @@ class Settings extends Component {
 	}
     }
     async handleSubmitPhoneNumber(event){
-        if(this.state.phone_number=='') {this.showAlertEmpty();}
+        if(this.state.phone_number==='') { this.showAlertEmpty(); }
         else {
         console.log('updating user phone no');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
@@ -75,7 +75,7 @@ class Settings extends Component {
         }
     }
     async handleSubmitNewPassword(event){
-	if(this.state.new_password=='' || this.state.old_password=='') {this.showAlertEmpty();}
+        if(this.state.old_password==='' || this.state.new_password==='') { this.showAlertEmpty(); }
 	else {
         console.log('updating user password');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
@@ -85,21 +85,24 @@ class Settings extends Component {
         console.log(res);
 	this.showAlertPW();
 	}
+	}
     }
     async handleSubmitName(event){
-	if(this.state.name=='') { this.showAlertEmpty();}
-	else {
+        if(this.state.name==='') { this.showAlertEmpty(); }
+        else {
+
         console.log('updating user name');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
         var res     = await Auth.updateUserAttributes(user, {name:this.state.name})
                                     .catch((err) => { console.error(err); });
         console.log(res);
+
 	this.showAlertName();
 	}
     }
     async handleSubmitUrl(event){
-	if(this.state.url=='') { this.showAlertEmpty(); }
+        if(this.state.phone_number==='') { this.showAlertEmpty(); }
 	else {
         console.log('updating user picture');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
@@ -125,17 +128,17 @@ class Settings extends Component {
     showAlertEmpty() { this.setState({ visibleEmpty: true }); }
     closeAlertEmpty() { this.setState({ visibleEmpty: false }); }
 
+
     render() {
         return (
-	  <div>
-    	    <Alert variant="success" show={this.state.visibleEmail} onClose={this.closeAlertEmail.bind(this)} dismissible>Email successfully updated.</Alert>
-    	    <Alert variant="success" show={this.state.visiblePhone} onClose={this.closeAlertPhone.bind(this)} dismissible>Phone # successfully updated.</Alert>
-    	    <Alert variant="success" show={this.state.visiblePW} onClose={this.closeAlertPW.bind(this)} dismissible>Password successfully updated.</Alert>
-    	    <Alert variant="success" show={this.state.visibleName} onClose={this.closeAlertName.bind(this)} dismissible>Name successfully updated.</Alert>
-    	    <Alert variant="success" show={this.state.visibleURL} onClose={this.closeAlertURL.bind(this)} dismissible>Image URL successfully updated.</Alert>
-	    <Alert variant="danger" show={this.state.visibleEmpty} onClose={this.closeAlertEmpty.bind(this)} dismissible>Cannot update info with empty content! Please enter a valid value.</Alert>
+            <div>
 
-
+        <Alert variant="success" show={this.state.visibleEmail} onClose={this.closeAlertEmail.bind(this)} dismissible>Email successfully updated.</Alert>
+        <Alert variant="success" show={this.state.visiblePhone} onClose={this.closeAlertPhone.bind(this)} dismissible>Phone # successfully updated.</Alert>
+        <Alert variant="success" show={this.state.visiblePW} onClose={this.closeAlertPW.bind(this)} dismissible>Password successfully updated.</Alert>
+        <Alert variant="success" show={this.state.visibleName} onClose={this.closeAlertName.bind(this)} dismissible>Name successfully updated.</Alert>
+        <Alert variant="success" show={this.state.visibleURL} onClose={this.closeAlertURL.bind(this)} dismissible>Image URL successfully updated.</Alert>
+        <Alert variant="danger" show={this.state.visibleEmpty} onClose={this.closeAlertEmpty.bind(this)} dismissible>Cannot update info with empty content! Please enter a valid value.</Alert>
             <Row>
                 <Col>
                     <Navbar></Navbar>
@@ -246,7 +249,7 @@ class Settings extends Component {
                     <p>.</p>
                 </Col>
             </Row>
-	  </div>
+            </div>
 
         );
     }
