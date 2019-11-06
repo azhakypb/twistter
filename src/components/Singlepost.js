@@ -12,10 +12,10 @@ class Singlepost extends Component {
   //  var today = new Date();
     this.state = {
       submitable    : false,
-      text1: '',
-      topics1: '',
-      postAuthorId1: this.props.username,
-      timestamp1: 0
+      text1         : '',
+      topics1       : '',
+      postAuthorId1 : this.props.username,
+      timestamp1    : 0
     }
     //bind functions
     this.handleAddPost      = this.handleAddPost.bind(this);
@@ -35,16 +35,16 @@ class Singlepost extends Component {
   }
   handleTime() {
     var month, day, year;
-    var today = new Date();
-    month  = today.getMonth();
-    day    = today.getDate();
-    year   = today.getFullYear();
+    var today     = new Date();
+    month         = today.getMonth();
+    day           = today.getDate();
+    year          = today.getFullYear();
 
-    var monthNum = 1 + parseInt(month, 10);
-    var dayNum = parseInt(day, 10);
-    var yearNum = parseInt(year, 10);
+    var monthNum  = 1 + parseInt(month, 10);
+    var dayNum    = parseInt(day, 10);
+    var yearNum   = parseInt(year, 10);
 
-    var res = monthNum * 1000000 + dayNum * 10000 + yearNum;
+    var res       = monthNum * 1000000 + dayNum * 10000 + yearNum;
     this.setState({ timestamp1:     res});
   }
   handleSubmitable(){
@@ -59,15 +59,12 @@ class Singlepost extends Component {
   }
   handleTopicNum(topics1) {
     console.log('called');
-    var topicNum = 0;
-    for(var i = 0; i < topics1.length; i++){
-      if (topics1[i] == ',') topicNum++;
-    }
-    if(topicNum >= 5) {
-      console.log('Topic Limit is Exceeded');
+    if(topics1.length > 5) {
       return false;
     }
-    else{return true;}
+    else {
+      return true;
+    }
   }
   handleLength(text1, topics1) {
     if(text1.length > 0 && topics1.length > 0) {
@@ -142,6 +139,7 @@ class Singlepost extends Component {
                         placeholder="Write something here before submitting"
                         as="textarea"
                         aria-label="With textarea"
+                        maxlength="407"
                     />
                 </InputGroup>
                 <InputGroup
@@ -152,6 +150,7 @@ class Singlepost extends Component {
                         placeholder="Add one to five topics, separate with comma if necessary"
                         as="textarea"
                         aria-label="With textarea"
+                        maxlength="50"
                     />
                 </InputGroup>
                 <Button
