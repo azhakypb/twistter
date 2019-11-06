@@ -570,7 +570,7 @@ export function createFollow(follower, followee){
 
 export function deleteFollow(follower, followee){
     return API.graphql(graphqlOperation(followDeleteTemplate, JSON.stringify({
-        id: id: follower+'-'+followee
+        id: follower+'-'+followee
     })));
 }
 

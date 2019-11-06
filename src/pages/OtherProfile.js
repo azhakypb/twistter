@@ -81,16 +81,17 @@ class OtherProfile extends Component {
 
         var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
         var username = user.username;
-
-        this.notifState.userid = this.followState.followFolloweeId;
-        this.notifState.text = "You have been followed by " + username;
-        this.notifState.timestamp = 1234;
-        var ret = await new DBOps().createNotification(JSON.stringify(this.notifState));
-        console.log("Created Notification for: " + this.followState.followFolloweeId);
         
         createFollow(username,this.state.username)
-            .then((res)=>{
+            .then(async (res)=>{
                 console.log('other profile','follow','success',res);
+
+                this.notifState.userid = this.state.username;
+                this.notifState.text = "You have been followed by " + username;
+                this.notifState.timestamp = 1234;
+                var ret = await new DBOps().createNotification(JSON.stringify(this.notifState));
+                console.log('other profile','follow',"Created Notification for: " + this.state.username, ret);
+
             })
             .catch((err)=>{
                 console.log('other profile','follow','error',err);
