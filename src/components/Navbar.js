@@ -54,7 +54,7 @@ class Navbar extends Component {
 	    			<h2>Navbar</h2>
 	    			<Link
 	    				to= '/'
-	    				paddingTop="50px">
+	    				paddingtop="100px">
 		  				<Button
 		  					variant="secondary"
 		  					size="md"
@@ -73,7 +73,7 @@ class Navbar extends Component {
 						</Link>
 	    			<Link
 	    				to= '/settings'
-	    				paddingTop="50px">
+	    				paddingtop="50px">
 		  				<Button
 		  					variant="secondary"
 		  					size="md"
@@ -83,7 +83,7 @@ class Navbar extends Component {
 	  				</Link>
 	          <Link
 	            to= '/'
-	            paddingTop="50px">
+	            paddingtop="50px">
 	            <Button
 	              variant="secondary"
 	              size="md"

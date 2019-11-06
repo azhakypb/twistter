@@ -16,8 +16,8 @@ class FollowList extends Component {
     var tempList = []; // temporary array to push to
     var usernameLen = this.props.username.length;
 
-    if(this.state.type == 'follower'){
-      while(request.getUser.followers.items[i] != undefined){
+    if(this.state.type === 'follower'){
+      while(request.getUser.followers.items[i] !== undefined){
         // string must be manipulated to only show the follower
         var followerTemp = request.getUser.followers.items[i].id;
         tempList.push(followerTemp.substring(0, followerTemp.length - (usernameLen) ));
@@ -28,8 +28,8 @@ class FollowList extends Component {
               'numFollowers' : i
               });
     }
-    else if(this.state.type == 'following'){
-      while(request.getUser.following.items[i] != undefined){
+    else if(this.state.type === 'following'){
+      while(request.getUser.following.items[i] !== undefined){
        // string manipulation to only show the following user
        var followingTemp = request.getUser.following.items[i].id;
        tempList.push(followingTemp.substring((usernameLen), followingTemp.length));
@@ -64,10 +64,10 @@ class FollowList extends Component {
         console.log('follow list','initial pull',res);
         var followNum = 0;
         var followingNum = 0;
-        while(res.getUser.followers.items[followNum] != undefined){
+        while(res.getUser.followers.items[followNum] !== undefined){
           followNum++;
         }
-        while(res.getUser.following.items[followingNum] != undefined){
+        while(res.getUser.following.items[followingNum] !== undefined){
           followingNum++;
         }
         this.setState({
@@ -103,7 +103,7 @@ class FollowList extends Component {
   handleFollowerClick(){
     console.log('Handle follower button click');
 
-    if(this.state.isHidden || this.state.type != 'follower') {
+    if(this.state.isHidden || this.state.type !== 'follower') {
       // cases of no list being rendered or following list rendered
       this.setState({
               'type' : 'follower',
@@ -126,7 +126,7 @@ class FollowList extends Component {
   handleFollowingClick(){
     console.log('follow list','handle following click','called');
 
-    if(this.state.isHidden || this.state.type != 'following') {
+    if(this.state.isHidden || this.state.type !== 'following') {
       // cases of no list being rendered or follower list rendered
       this.setState({
               'type' : 'following',
@@ -148,16 +148,16 @@ class FollowList extends Component {
   render(){
     const {isHidden, type, list, numFollowers, numFollowing } = this.state;
     // initial call to pull num followers and following
-    if(type == 'initial' && this.props.username){
+    if(type === 'initial' && this.props.username){
       console.log(this.props.username);
       this.initialPull();
     }
     // setup header for when a list is displayed
     var header;
-    if(type == 'follower'){
+    if(type === 'follower'){
       header = numFollowers + " Followers";
     }
-    else if(type == 'following'){
+    else if(type === 'following'){
       header = numFollowing + " Following";
     }
     return(
