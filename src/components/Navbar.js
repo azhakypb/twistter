@@ -1,6 +1,6 @@
 // react modules
 import React, { Component, } from 'react';
-import { Button, Jumbotron, Container, Row, Col} from 'react-bootstrap';
+import { Button, Jumbotron } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 // aws modules
 import { Auth } from 'aws-amplify';
