@@ -52,7 +52,7 @@ class Settings extends Component {
     handleChangeUrl         (event){this.setState({ url:            event.target.value });}
     // submission field handlers
     async handleSubmitEmail(email){
-    if(this.state.email=='') { this.showAlertEmpty(); }
+    if(this.state.email==='') { this.showAlertEmpty(); }
     else {
     Auth.currentAuthenticatedUser({ bypassCache: true })
         .catch((err)=>{console.log('error getting user',err);})
@@ -66,7 +66,7 @@ class Settings extends Component {
     this.showAlertEmail();
     }
     async handleSubmitPhoneNumber(event){
-        if(this.state.phone_number=='') { this.showAlertEmpty(); }
+        if(this.state.phone_number==='') { this.showAlertEmpty(); }
         else {
         console.log('updating user phone no');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
@@ -78,7 +78,7 @@ class Settings extends Component {
     }
     }
     async handleSubmitNewPassword(event){
-                if(this.state.old_password=='' || this.state.new_password=='') { this.showAlertEmpty(); }
+                if(this.state.old_password==='' || this.state.new_password==='') { this.showAlertEmpty(); }
 
         console.log('updating user password');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
@@ -88,7 +88,7 @@ class Settings extends Component {
         console.log(res);
     }
     async handleSubmitName(event){
-        if(this.state.name=='') { this.showAlertEmpty(); }
+        if(this.state.name==='') { this.showAlertEmpty(); }
         else {
         console.log('updating user name');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
@@ -100,7 +100,7 @@ class Settings extends Component {
     }
     }
     async handleSubmitUrl(event){
-                if(this.state.phone_number=='') { this.showAlertEmpty(); }
+                if(this.state.phone_number==='') { this.showAlertEmpty(); }
 else {
         console.log('updating user picture');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })

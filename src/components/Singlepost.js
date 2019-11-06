@@ -41,7 +41,7 @@ class Singlepost extends Component {
     console.log('called');
     var topicNum = 0;
     for(var i = 0; i < topics1.length; i++){
-      if (topics1[i] == ',') topicNum++;
+      if (topics1[i] === ',') topicNum++;
     }
     if(topicNum >= 5) {
       console.log('Topic Limit is Exceeded');
