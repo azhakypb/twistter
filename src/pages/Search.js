@@ -62,7 +62,7 @@ class Search extends Component {
                         "Search topic result", res);
                     if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
                         this.setState({posts:[]},()=>{
-                                this.setState({ posts: res.getTopics.posts.items.map( post => <Post id={post.post.id}/>)});
+                                this.setState({ posts: res.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
                             });
                     }
                     else{
