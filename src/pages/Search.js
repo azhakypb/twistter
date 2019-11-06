@@ -15,7 +15,7 @@ class Search extends Component {
         this.state = { 
             text        : '',
             search      : '',
-            showResults : true,
+            showResults : false,
             posts       : []
         };
 
@@ -33,7 +33,7 @@ class Search extends Component {
         if (this.state.showResults) return (
             <div>
                 <Jumbotron>
-                    <h2>Searching for... {this.state.search}</h2>
+                    <h2>Showing results for {this.state.search}</h2>
                     <ul>{this.state.posts}</ul>
                 </Jumbotron>
             </div>
@@ -45,6 +45,7 @@ class Search extends Component {
     // input field handlers
     handleChangeText  (event){
         this.setState({ text: event.target.value });
+        console.log("Set text state to: " + this.state.text);
     }
 
     // submission field handlers
@@ -56,7 +57,7 @@ class Search extends Component {
 
             new DBOps().searchTopic(JSON.stringify({id: this.state.text}))
                 .then((res)=>{
-                    console.log('search topic result',res);
+                    console.log('Search topic result',res);
                     if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
                         this.setState({posts:[]},()=>{
                                 this.setState({ posts: res.getTopics.posts.items.map( post => <Post id={post.post.id}/>)});
@@ -67,24 +68,9 @@ class Search extends Component {
                     }
                 });
 
-            //this.setState({id: this.state.text});
-            //console.log("Searching posts",this.searchState);
-
-            //this.setState({id:this.searchState.id});
-
-            //var topicPosts = await new DBOps().searchTopic("kevin");
-            //console.log(topicPosts);
-            //const arrayPosts = topicPosts.map(
-            //    (post) => post
-            //);
-            //this.setState({posts: arrayPosts});
-
-            //const listPosts = this.state.posts.map(
-            //    (post => <Post id={this.state.text}></Post>)
-            //);
-
-            //this.setState({ posts: listPosts});
             this.setState({ showResults: true });
+            console.log("Set showResults state to true");
+            console.log("Showing search results");
         }
     }
 
@@ -104,8 +90,8 @@ class Search extends Component {
                             value={this.state.search}
                             onChange={this.handleChangeText}>
                             <FormControl
-                                placeholder="Type Topic Here"
-                                aria-label="Type Topic Here"
+                                placeholder="Type Topic or Username Here"
+                                aria-label="Type Topic or Username Here"
                                 aria-describedby="basic-addon2"/>
                             <InputGroup.Append>
                                 <Button
