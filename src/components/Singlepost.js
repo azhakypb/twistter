@@ -9,13 +9,13 @@ class Singlepost extends Component {
   constructor(props) {
 
     super(props);
-    var today = new Date();
+  //  var today = new Date();
     this.state = {
       submitable    : false,
-      text1: '',
-      topics1: '',
-      postAuthorId1: this.props.username,
-      timestamp1: 132
+      text1         : '',
+      topics1       : '',
+      postAuthorId1 : this.props.username,
+      timestamp1    : 0
     }
     //bind functions
     this.handleAddPost      = this.handleAddPost.bind(this);
@@ -24,9 +24,29 @@ class Singlepost extends Component {
     this.handleTopicNum     = this.handleTopicNum.bind(this);
     this.handleLength       = this.handleLength.bind(this);
     this.handleCreatePost   = this.handleCreatePost.bind(this);
+    this.handleTime         = this.handleTime.bind(this);
+    this.handleDouble       = this.handleDouble.bind(this);
   }
 
   //handlers
+  handleDouble() {
+    this.handleTime();
+    this.handleCreatePost();
+  }
+  handleTime() {
+    var month, day, year;
+    var today     = new Date();
+    month         = today.getMonth();
+    day           = today.getDate();
+    year          = today.getFullYear();
+
+    var monthNum  = 1 + parseInt(month, 10);
+    var dayNum    = parseInt(day, 10);
+    var yearNum   = parseInt(year, 10);
+
+    var res       = monthNum * 1000000 + dayNum * 10000 + yearNum;
+    this.setState({ timestamp1:     res});
+  }
   handleSubmitable(){
     const {post, topics} = this.state;
   }
@@ -39,20 +59,17 @@ class Singlepost extends Component {
   }
   handleTopicNum(topics1) {
     console.log('called');
-    var topicNum = 0;
-    for(var i = 0; i < topics1.length; i++){
-      if (topics1[i] === ',') topicNum++;
-    }
-    if(topicNum >= 5) {
-      console.log('Topic Limit is Exceeded');
+    if(topics1.length > 5) {
       return false;
     }
-    else{return true;}
+    else {
+      return true;
+    }
   }
   handleLength(text1, topics1) {
     if(text1.length > 0 && topics1.length > 0) {
       return true;
-    }else {
+    } else {
       console.log('Post and Topic Forms Require a text');
       return false
     }
@@ -62,10 +79,10 @@ class Singlepost extends Component {
     Auth.currentAuthenticatedUser({ bypassCache: true })
         .catch((err)=>{console.log('error getting user',err);})
         .then((user)=>{
-            var username = user.username;
-            var toSend = {
-                text: this.state.text1,
-                timestamp: 132,
+            var username    = user.username;
+            var toSend      = {
+                text        : this.state.text1,
+                timestamp   : this.state.timestamp1,
                 postAuthorId: username
             };
             new DBOps().createPost(JSON.stringify(toSend))
@@ -88,50 +105,38 @@ class Singlepost extends Component {
                     }
                 });
         });
-
-    /*
-    console.log(toSend);
-    var topics = this.state.topics1.split(",");
-    var post = await new DBOps().createPost(JSON.stringify(toSend));
-    console.log(post);
-    var postid = post.id;
-    for (var i = 0; i < topics.length; i++) {
-      var topic = await new DBOps().createTopic(JSON.stringify({id: topics[i]}));
-      console.log(topic);
-      var tag_input = {tagTopicId: topics[i], tagPostId: postid};
-      var tag = await new DBOps().createTag(JSON.stringify(tag_input));
-    }
-    */
   }
 
 
   render() {
-    const {text1, topics1} = this.state
-    const enabled = this.handleLength(text1, topics1) &&
-                    this.handleTopicNum(topics1);
-    let buttonColor = enabled ? "primary" : "secondary"
+    const {text1, topics1}  = this.state
+    const enabled           = this.handleLength(text1, topics1) &&
+                              this.handleTopicNum(topics1);
+    let buttonColor         = enabled ? "primary" : "secondary"
 
     return (
         <Form onSubmit={this.props.action}>
             <InputGroup>
                 <InputGroup
-                    value={this.state.text1} 
+                    value={this.state.text1}
                     onChange={this.handleAddPost}>
-                    <FormControl 
+                    <FormControl
                         rows='5'
                         placeholder="Write something here before submitting"
                         as="textarea"
                         aria-label="With textarea"
+                        maxlength="407"
                     />
                 </InputGroup>
                 <InputGroup
                     value={this.state.topics1}
                     onChange={this.handleAddTopic}>
                     <FormControl
-                        rows='1'
-                        placeholder="Add one to five topics, separate with space if necessary"
-                        as="textarea" 
-                        aria-label="With textarea" 
+                        rows='2'
+                        placeholder="Add one to five topics, separate with comma if necessary"
+                        as="textarea"
+                        aria-label="With textarea"
+                        maxlength="50"
                     />
                 </InputGroup>
                 <Button
@@ -139,7 +144,7 @@ class Singlepost extends Component {
                     size="md"
                     disabled={!enabled}
                     type="submit"
-                    onClick={this.handleCreatePost}
+                    onClick={this.handleDouble}
                     block>
                     Submit
                 </Button>
