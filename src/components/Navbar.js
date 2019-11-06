@@ -1,6 +1,6 @@
 // react modules
 import React, { Component, } from 'react';
-import { Button, Jumbotron, Container, Row, Col} from 'react-bootstrap';
+import { Button, Jumbotron } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 // aws modules
 import { Auth } from 'aws-amplify';
@@ -54,7 +54,7 @@ class Navbar extends Component {
 	    			<h2>Navbar</h2>
 	    			<Link
 	    				to= '/'
-	    				paddingTop="50px">
+	    				paddingtop="100px">
 		  				<Button
 		  					variant="secondary"
 		  					size="md"
@@ -73,7 +73,7 @@ class Navbar extends Component {
 						</Link>
 	    			<Link
 	    				to= '/settings'
-	    				paddingTop="50px">
+	    				paddingtop="50px">
 		  				<Button
 		  					variant="secondary"
 		  					size="md"
@@ -83,7 +83,7 @@ class Navbar extends Component {
 	  				</Link>
 	          <Link
 	            to= '/'
-	            paddingTop="50px">
+	            paddingtop="50px">
 	            <Button
 	              variant="secondary"
 	              size="md"
