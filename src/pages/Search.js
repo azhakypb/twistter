@@ -15,11 +15,8 @@ class Search extends Component {
         this.state = { 
             text        : '',
             search      : '',
-<<<<<<< HEAD
-            showResults : false,
-=======
             showResults : 0,
->>>>>>> dev
+            searchType  : '',
             posts       : []
         };
         // bind functions
@@ -29,14 +26,19 @@ class Search extends Component {
     }
     // list of posts
     Results(props) {
+        if (this.state.showResults === 1 &&
+            this.state.searchType !== "#" && this.state.searchType !== "@") return (
+            <div>
+                <Jumbotron>
+                    <h2>Not a valid search</h2>
+                    <h2>Please begin search with '#' for posts or '@' for users</h2>
+                </Jumbotron>
+            </div>
+        )
         if (this.state.showResults === 1) return (
             <div>
                 <Jumbotron>
-<<<<<<< HEAD
-                    <h2>Showing results for {this.state.search}</h2>
-=======
                     <h2>Search results for {this.state.search}</h2>
->>>>>>> dev
                     <ul>{this.state.posts}</ul>
                 </Jumbotron>
             </div>
@@ -52,56 +54,56 @@ class Search extends Component {
     // input field handlers
     handleChangeText  (event){
         this.setState({ text: event.target.value });
-<<<<<<< HEAD
-        console.log("Set text state to: " + this.state.text);
-=======
         console.log("Search page\n" + 
             "handleChangeText function\n" +
             "Set text state to :" + event.target.value);
->>>>>>> dev
     }
 
     // submission field handlers
     
     handleSubmitText = async() => {
         if (!Object.is(this.state.text, '')) {
-            this.setState({ search: this.state.text });
+            this.state.search = this.state.text.slice(1);
+            //this.setState({ search: this.state.text.slice(1) });
             console.log("Search page\n" + 
                 "handleChangeText function\n" +
                 "Set search state to :" + this.state.text);
             
-            console.log(this.state.text[0]);
-            console.log(this.state.text.split(1));
-            
-            new DBOps().searchTopic(JSON.stringify({id: this.state.text}))
-                .then((res)=>{
-<<<<<<< HEAD
-                    console.log('Search topic result',res);
-=======
-                    console.log("Search page\n" + 
-                        "handleChangeText function\n" +
-                        "Search topic result", res);
->>>>>>> dev
-                    if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
-                        this.setState({posts:[]},()=>{
-                                this.setState({ posts: res.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
-                            });
-                    }
-                    else{
-                        this.setState({posts:[]});
-                    }
-                });
+            this.state.searchType = this.state.text[0];
+            console.log(this.state.searchType);            
+            console.log(this.state.search);
 
-<<<<<<< HEAD
-            this.setState({ showResults: true });
-            console.log("Set showResults state to true");
-            console.log("Showing search results");
-=======
+
+            if (this.state.searchType == "#") {
+                new DBOps().searchTopic(JSON.stringify({id: this.state.search}))
+                    .then((res)=>{
+                        console.log("Search page\n" + 
+                            "handleChangeText function\n" +
+                            "Search topic result", res);
+                        if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
+                            this.setState({posts:[]},()=>{
+                                    this.setState({ posts: res.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
+                                });
+                        }
+                        else{
+                            this.setState({posts:[]});
+                        }
+                    });
+            }
+
+            else if (this.state.searchType == "@") {
+
+            }
+
+            else
+            {
+                console.log("NOT A VALID SEARCH PROMPT!");
+            }
+
             this.setState({ showResults: 1 });
             console.log("Search page\n" + 
                 "handleChangeText function\n" +
                 "Set showResults state to 1");
->>>>>>> dev
         }
     }
 
