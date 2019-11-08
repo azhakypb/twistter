@@ -574,7 +574,7 @@ export function deleteFollow(follower, followee){
     })));
 }
 
-export async function createPost(author,topics,text,quoteid=false){
+export function createPost(author,topics,text,quoteid=false){
     return new Promise((resolve,reject)=>{
         var month, day, year;
         var today     = new Date();
@@ -600,6 +600,7 @@ export async function createPost(author,topics,text,quoteid=false){
                             id: topic
                         })))
                             .then((res)=>{
+
                                 API.graphql(graphqlOperation(createTagTemplate, JSON.stringify({
                                     tagTopicId: topic,
                                     tagPostId: postid
@@ -608,7 +609,13 @@ export async function createPost(author,topics,text,quoteid=false){
                                     });
 
                             },(err)=>{
-                                reject(err);
+
+                                if(err.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException'){
+                                    console.log('dbops','create post','topic already exists, ignoring error');
+                                } else {
+                                    console.log('dbops','create post','unhandled error',err);
+                                }
+                                
                             });
                     }
                     resolve(res)
