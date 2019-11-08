@@ -557,8 +557,8 @@ export function searchUser(username) {
     return API.graphql(graphqlOperation(userSearchTemplate, JSON.stringify({id:username})));
 }
 
-export function deleteUser(info){
-    return API.graphql(graphqlOperation(userDeletionTemplate, info));
+export function deleteUser(username){
+    return API.graphql(graphqlOperation(userDeletionTemplate, JSON.stringify({id: username})));
 }
 
 export function createFollow(follower, followee){
