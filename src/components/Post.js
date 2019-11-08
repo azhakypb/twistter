@@ -1,6 +1,8 @@
 // react modules
 import React, { Component } from 'react';
 import { Badge, Button, Row, Toast } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faQuoteRight, faQuoteLeft } from '@fortawesome/free-solid-svg-icons'
 // aws modules
 import { Auth } from 'aws-amplify';
 // custom modules
@@ -17,15 +19,16 @@ function TopicList(props){
 
 class Post extends Component {
 
+
 	stub() {
 		this.setState({
 			'username'		: 'Poster Username',
 			'q_username'	: 'Quote Username',
 			'timestamp'		: 'Post Timestamp',
-			'q_timestamp' 	: 'Quote Timestamp',
-			'text' 			: 'Post Text Post Text Post Text Post Text Post Text Post Text',
-			'q_text'		: 'Quote Text Quote Text Quote Text Quote Text Quote Text',
-			'topics' 		: [ 'Topic 1', 'Topic 2', 'Topic 3']
+			'q_timestamp' : 'Quote Timestamp',
+			'text' 				: 'Post Text Post Text Post Text Post Text Post Text Post Text',
+			'q_text'			: 'Quote Text Quote Text Quote Text Quote Text Quote Text',
+			'topics' 			: [ 'Topic 1', 'Topic 2', 'Topic 3']
 		});
 	}
 
@@ -132,9 +135,10 @@ class Post extends Component {
 							<TopicList topics={topics}/>
 						</Row>
 						<Row>
-							<Button variant="primary" onClick={this.createLike}>
+							<Button variant="primary" size="sm" onClick={this.createLike}>
   								Like <Badge variant="light">{this.state.likes.length}</Badge>
 							</Button>
+							<Button variant="info" size="sm"><FontAwesomeIcon icon={faQuoteLeft} /> <FontAwesomeIcon icon={faQuoteRight} /></Button>
 						</Row>
 					</Toast.Body>
 				</Toast>
