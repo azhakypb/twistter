@@ -75,6 +75,8 @@ class Search extends Component {
 
 
             if (this.state.searchType == "#") {
+                console.log("Searching for posts w/ topic\n" +
+                    "Topic = " + this.state.search);
                 new DBOps().searchTopic(JSON.stringify({id: this.state.search}))
                     .then((res)=>{
                         console.log("Search page\n" + 
@@ -92,7 +94,8 @@ class Search extends Component {
             }
 
             else if (this.state.searchType == "@") {
-
+                console.log("Searching for users w/ username\n" +
+                    "Username contains " + this.state.search);
             }
 
             else
