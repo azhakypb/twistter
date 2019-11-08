@@ -82,9 +82,13 @@ class Test extends Component {
     console.log("Set deleteState followee to: " + event.target.value);
   }
 
-  handleDeleteUser = async () => {
-    var temp = await new DBOps().deleteUser(JSON.stringify(this.deleteState));
-    console.log(temp);
+  handleDeleteUser = () => {
+    deleteUser(this.deleteState.id)
+        .then((res)=>{
+            console.log('test','deleteUser','success',res)
+        },(err)=>{
+            console.log('test','deleteUser','error',err)
+        });
   }
 
   handleUnfollowInput(event) {

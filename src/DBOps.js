@@ -553,8 +553,8 @@ export function createUser(username){
     return API.graphql(graphqlOperation(userCreationTemplate, JSON.stringify({id:username})));
 }
 
-export function searchUser(info) {
-    return API.graphql(graphqlOperation(userSearchTemplate, JSON.stringify({id:info})));
+export function searchUser(username) {
+    return API.graphql(graphqlOperation(userSearchTemplate, JSON.stringify({id:username})));
 }
 
 export function deleteUser(info){
