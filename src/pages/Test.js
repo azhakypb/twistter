@@ -124,10 +124,16 @@ class Test extends Component {
     console.log("Set createState id to: " + event.target.value);
   }
 
-  handleCreateUser = async () => {
-    var temp = await new DBOps().createUser(JSON.stringify(this.createState));
-    console.log(temp);
-  }
+    handleCreateUser = () => {
+        var username = this.createState.id
+        createUser(username)
+            .then((res)=>{
+                console.log('test','create user','success',res)
+            },(err)=>{
+                console.log('test','create user','error',err)
+            });
+
+    }
 
   handleSearch(event) {
     this.searchState = {id: event.target.value};
