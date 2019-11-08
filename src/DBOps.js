@@ -574,7 +574,7 @@ export function deleteFollow(follower, followee){
     })));
 }
 
-export function createPost(author,topics,text,quoteid=false){
+export async function createPost(author,topics,text,quoteid=false){
     return new Promise((resolve,reject)=>{
         var month, day, year;
         var today     = new Date();
@@ -592,6 +592,25 @@ export function createPost(author,topics,text,quoteid=false){
                 text: text,
             })))
                 .then((res)=>{
+                    var postid = res.data.createPost.id
+                    for(var i=0; i<topics.length;i++){
+
+                        const topic = topics[i]
+                        API.graphql(graphqlOperation(createTopicTemplate, JSON.stringify({
+                            id: topic
+                        })))
+                            .then((res)=>{
+                                API.graphql(graphqlOperation(createTagTemplate, JSON.stringify({
+                                    tagTopicId: topic,
+                                    tagPostId: postid
+                                }))).catch((err)=>{
+                                        reject(err);
+                                    });
+
+                            },(err)=>{
+                                reject(err);
+                            });
+                    }
                     resolve(res)
                 },(err)=>{
                     reject(err)

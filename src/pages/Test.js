@@ -166,11 +166,11 @@ class Test extends Component {
 
   handleCreatePost = async () => {
     var topics = this.createPostState.topics.split(",");
-    createPost(this.createPostState.postAuthorId,[],this.createPostState.text)
+    await createPost(this.createPostState.postAuthorId,topics,this.createPostState.text)
         .then((res)=>{
-            console.log('test','create post','success',res)
+            console.log('test','create post','success',res);
         },(err)=>{
-            console.log('test','create post','error',err)
+            console.log('test','create post','error',err);
         });
     //var postid = post.id;
     //for (var i = 0; i < topics.length; i++) {
