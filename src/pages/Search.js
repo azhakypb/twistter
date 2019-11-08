@@ -58,6 +58,9 @@ class Search extends Component {
                 "handleChangeText function\n" +
                 "Set search state to :" + this.state.text);
             
+            console.log(this.state.text[0]);
+            console.log(this.state.text.split(1));
+            
             new DBOps().searchTopic(JSON.stringify({id: this.state.text}))
                 .then((res)=>{
                     console.log("Search page\n" + 
