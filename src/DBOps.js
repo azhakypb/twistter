@@ -574,8 +574,23 @@ export function deleteFollow(follower, followee){
     })));
 }
 
-export function createPost(info){
-    return API.graphql(graphqlOperation(postCreateTemplate, info));
+export function createPost(author,timestamp,topics,text,quoteid=false){
+    return new Promise((resolve,reject)=>{
+        if(quoteid){
+
+        } else{
+            API.graphql(graphqlOperation(postCreateTemplate, JSON.stringify({
+                postAuthorId: author,
+                timestamp: timestamp,
+                text: text,
+            })))
+                .then((res)=>{
+                    return res;
+                },(err)=>{
+                    return err;
+                });
+        }
+    });
 }
 
 export function searchPost(info){
