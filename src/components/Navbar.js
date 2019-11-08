@@ -1,6 +1,6 @@
 // react modules
 import React, { Component, } from 'react';
-import { Button, Jumbotron, Container, Row, Col} from 'react-bootstrap';
+import { Button, Jumbotron } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 // aws modules
 import { Auth } from 'aws-amplify';
@@ -14,7 +14,7 @@ class Navbar extends Component {
 		// props and states
     	super(props);
     	// bind functions
-	  //  this.displayUserAttributes 	=	this.displayUserAttributes	.bind(this);
+		//  this.displayUserAttributes 	=	this.displayUserAttributes	.bind(this);
 	    this.deleteUser				=	this.deleteUser.bind(this);
   	}
 
@@ -49,12 +49,12 @@ class Navbar extends Component {
 	render() {
 
     	return(
-				<div>
+			<div>
 	    		<Jumbotron>
 	    			<h2>Navbar</h2>
 	    			<Link
 	    				to= '/'
-	    				paddingTop="50px">
+	    				paddingtop="100px">
 		  				<Button
 		  					variant="secondary"
 		  					size="md"
@@ -62,7 +62,7 @@ class Navbar extends Component {
 		    				Profile
 		  				</Button>
 	    			</Link>
-						<Link
+					<Link
 						to= '/search'>
 						<Button
 							variant="secondary"
@@ -70,10 +70,10 @@ class Navbar extends Component {
 							block>
 							Search
 							</Button>
-						</Link>
+					</Link>
 	    			<Link
 	    				to= '/settings'
-	    				paddingTop="50px">
+	    				paddingtop="50px">
 		  				<Button
 		  					variant="secondary"
 		  					size="md"
@@ -81,17 +81,17 @@ class Navbar extends Component {
 		    				Settings
 		  				</Button>
 	  				</Link>
-	          <Link
-	            to= '/'
-	            paddingTop="50px">
-	            <Button
-	              variant="secondary"
-	              size="md"
-	              onClick={(e) => Auth.signOut()}
-	              block>
-	              Log Out
-	            </Button>
-	          </Link>
+	          		<Link
+	            		to= '/'
+	            		paddingtop="50px">
+	            		<Button
+	              			variant="secondary"
+	              			size="md"
+	              			onClick={(e) => Auth.signOut()}
+	              			block>
+	              			Log Out
+	            		</Button>
+	          		</Link>
 	  				<Button
 	  					variant="secondary"
 	  					size="md"
@@ -101,7 +101,7 @@ class Navbar extends Component {
 	  				</Button>
 	  				<Postwrite username={this.props.username}></Postwrite>
 	    		</Jumbotron>
-				</div>
+			</div>
     	);
   	}
 }
