@@ -6,7 +6,6 @@ import { Auth } from 'aws-amplify'
 // components
 import Navbar from '../components/Navbar.js'
 
-
 class Settings extends Component {
 
     constructor(props){
@@ -27,7 +26,6 @@ class Settings extends Component {
             visibleEmpty    : false
        };
 
-
         // bind functions
         this.handleChangeEmail        = this.handleChangeEmail.bind(this);
         this.handleChangeName         = this.handleChangeName.bind(this);
@@ -35,12 +33,11 @@ class Settings extends Component {
         this.handleChangeOldPassword  = this.handleChangeOldPassword.bind(this);
         this.handleChangePhoneNumber  = this.handleChangePhoneNumber.bind(this);
         this.handleChangeUrl          = this.handleChangeUrl.bind(this);
+        this.handleSubmitEmail        = this.handleSubmitEmail.bind(this);
         this.handleSubmitName         = this.handleSubmitName.bind(this);
         this.handleSubmitNewPassword  = this.handleSubmitNewPassword.bind(this);
         this.handleSubmitPhoneNumber  = this.handleSubmitPhoneNumber.bind(this);
         this.handleSubmitUrl          = this.handleSubmitUrl.bind(this);
-        this.handleSubmitEmail        = this.handleSubmitEmail.bind(this);
-
         console.log(Auth.currentAuthenticatedUser());
     }
     // input field handlers
@@ -52,18 +49,18 @@ class Settings extends Component {
     handleChangeUrl         (event){this.setState({ url:            event.target.value });}
     // submission field handlers
     async handleSubmitEmail(email){
-    if(this.state.email==='') { this.showAlertEmpty(); }
-    else {
-    Auth.currentAuthenticatedUser({ bypassCache: true })
-        .catch((err)=>{console.log('error getting user',err);})
-        .then((user)=>{
-            var req = {email: email};
-            Auth.updateUserAttributes(user,req)
-                .catch((err)=>{console.log('error updating email',err)})
-                .then((res)=>{console.log('successfully updated email',res)});
-        });
-    }
-    this.showAlertEmail();
+	if(this.state.email==='') {this.showAlertEmpty(); }
+        else {
+	Auth.currentAuthenticatedUser({ bypassCache: true })
+            .catch((err)=>{console.log('error getting user',err);})
+            .then((user)=>{
+                var req = {email: email};
+                Auth.updateUserAttributes(user,req)
+                    .catch((err)=>{console.log('error updating email',err)})
+                    .then((res)=>{console.log('successfully updated email',res)});
+            });
+	this.showAlertEmail();
+	}
     }
     async handleSubmitPhoneNumber(event){
         if(this.state.phone_number==='') { this.showAlertEmpty(); }
@@ -74,58 +71,62 @@ class Settings extends Component {
         var res     = await Auth.updateUserAttributes(user, {phone_number:this.state.phone_number})
                                     .catch((err) => { console.error(err); });
         console.log(res);
-        this.showAlertPhone();
-    }
+	this.showAlertPhone();
+        }
     }
     async handleSubmitNewPassword(event){
-                if(this.state.old_password==='' || this.state.new_password==='') { this.showAlertEmpty(); }
-
+        if(this.state.old_password==='' || this.state.new_password==='') { this.showAlertEmpty(); }
+	else {
         console.log('updating user password');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
         var res     = await Auth.changePassword(user, this.state.old_password, this.state.new_password)
                                     .catch((err) => { console.error(err); });
         console.log(res);
+	this.showAlertPW();
+	}
+	
     }
     async handleSubmitName(event){
         if(this.state.name==='') { this.showAlertEmpty(); }
         else {
+
         console.log('updating user name');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
         var res     = await Auth.updateUserAttributes(user, {name:this.state.name})
                                     .catch((err) => { console.error(err); });
         console.log(res);
-        this.showAlertName();
-    }
+
+	this.showAlertName();
+	}
     }
     async handleSubmitUrl(event){
-                if(this.state.phone_number==='') { this.showAlertEmpty(); }
-else {
+        if(this.state.phone_number==='') { this.showAlertEmpty(); }
+	else {
         console.log('updating user picture');
         var user    = await Auth.currentAuthenticatedUser({ bypassCache: true })
                                     .catch((err) => { console.error(err); });
         var res     = await Auth.updateUserAttributes(user,{picture: this.state.url})
                                     .catch((err) => { console.error(err); });
         console.log(res);
-        this.showAlertURL();
+	this.showAlertURL();
+	}
     }
-    }
 
-    showAlertEmail() { this.setState({ visibleEmail: true }); }
-    showAlertPhone() { this.setState({ visiblePhone: true }); }
-    showAlertPW() { this.setState({ visiblePW: true }); }
-    showAlertName() { this.setState({ visibleName: true }); }
-    showAlertURL() { this.setState({ visibleURL: true }); }
-        showAlertEmpty() { this.setState({ visibleEmpty: true }); }
-
-    closeAlertEmail() { this.setState({ visibleEmail: false }); }
-    closeAlertPhone() { this.setState({ visiblePhone: false }); }
-    closeAlertPW() { this.setState({ visiblePW: false }); }
-    closeAlertName() { this.setState({ visibleName: false }); }
-    closeAlertURL() { this.setState({ visibleURL: false }); }
-        closeAlertEmpty() { this.setState({ visibleURL: false }); }
-
+    //  alert display control functions
+    showAlertEmail() {  this.setState({ visibleEmail: true });  }
+    closeAlertEmail() {  this.setState({ visibleEmail: false });  }
+    showAlertPhone() {  this.setState({ visiblePhone: true });  }
+    closeAlertPhone() {  this.setState({ visiblePhone: false });  }
+    showAlertPW() {  this.setState({ visiblePW: true });  }
+    closeAlertPW() {  this.setState({ visiblePW: false });  }
+    showAlertName() {  this.setState({ visibleName: true });  }
+    closeAlertName() {  this.setState({ visibleName: false });  }
+    showAlertURL() {  this.setState({ visibleURL: true });  }
+    closeAlertURL() {  this.setState({ visibleURL: false });  }
+    showAlertEmpty() { this.setState({ visibleEmpty: true }); }
+    closeAlertEmpty() { this.setState({ visibleEmpty: false }); }
 
 
     render() {
@@ -138,7 +139,6 @@ else {
         <Alert variant="success" show={this.state.visibleName} onClose={this.closeAlertName.bind(this)} dismissible>Name successfully updated.</Alert>
         <Alert variant="success" show={this.state.visibleURL} onClose={this.closeAlertURL.bind(this)} dismissible>Image URL successfully updated.</Alert>
         <Alert variant="danger" show={this.state.visibleEmpty} onClose={this.closeAlertEmpty.bind(this)} dismissible>Cannot update info with empty content! Please enter a valid value.</Alert>
-
             <Row>
                 <Col>
                     <Navbar></Navbar>
@@ -250,6 +250,7 @@ else {
                 </Col>
             </Row>
             </div>
+
         );
     }
 }

@@ -6,6 +6,7 @@ import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
 import DBOps from '../DBOps.js'
+import { createFollow, deleteFollow } from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
 import FollowList from '../components/FollowList.js'
 var AWS = require('aws-sdk');
@@ -47,9 +48,9 @@ class OtherProfile extends Component {
         var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
 
         // redirect if viewing own profile
-	if(this.params.Username === user.username){
-          document.location.href = "/";
-	}
+		if(this.params.Username === user.username){
+          	document.location.href = "/";
+		}
 
 
         cognitoidentityserviceprovider.adminGetUser(this.params, (err, data) => {
@@ -80,20 +81,21 @@ class OtherProfile extends Component {
 
         var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
         var username = user.username;
+        
+        createFollow(username,this.state.username)
+            .then(async (res)=>{
+                console.log('other profile','follow','success',res);
 
-        this.followState = {
-            id: username + this.state.username,
-            followFollowerId: username,
-            followFolloweeId: this.state.username
-        }
-        this.notifState.userid = this.followState.followFolloweeId;
-        this.notifState.text = "You have been followed by " + username;
-        this.notifState.timestamp = 1234;
-        var ret = await new DBOps().createNotification(JSON.stringify(this.notifState));
-        console.log("Created Notification for: " + this.followState.followFolloweeId);
-        var res =  await new DBOps().createFollow(JSON.stringify(this.followState));
-        console.log(ret);
-        console.log(res);
+                this.notifState.userid = this.state.username;
+                this.notifState.text = "You have been followed by " + username;
+                this.notifState.timestamp = 1234;
+                var ret = await new DBOps().createNotification(JSON.stringify(this.notifState));
+                console.log('other profile','follow',"Created Notification for: " + this.state.username, ret);
+
+            })
+            .catch((err)=>{
+                console.log('other profile','follow','error',err);
+            });
     }
 
     async unfollow(){
@@ -101,11 +103,13 @@ class OtherProfile extends Component {
         var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
         var username = user.username;
 
-        this.unfollowState = {
-            id: username + this.state.username
-        }
-        var res = await new DBOps().deleteFollow(JSON.stringify(this.unfollowState));
-        console.log(res);
+        deleteFollow(username,this.state.username)
+            .then((res)=>{
+                console.log('other profile','unfollow','success',res);
+            })
+            .catch((err)=>{
+                console.log('other profile','unfollow','error',err);
+            });
     }
 
     render() {
@@ -131,8 +135,8 @@ class OtherProfile extends Component {
                         </Card>
                         <h1>{name}</h1>
                         <h2>@{username}</h2>
-			<Button onClick={this.follow} aria-label="Follow">Follow</Button>
-			<Button onClick={this.unfollow} aria-label="Unfollow">Unfollow</Button>
+						<Button onClick={this.follow} aria-label="Follow">Follow</Button>
+						<Button onClick={this.unfollow} aria-label="Unfollow">Unfollow</Button>
                     </Jumbotron>
                 </Container>
 
@@ -149,7 +153,9 @@ class OtherProfile extends Component {
             </Col>
 
             <Col>
-                <FollowList username={username}/>
+
+                <FollowList username={username}></FollowList>
+
             </Col>
       </Row>
     );
