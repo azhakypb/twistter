@@ -574,14 +574,21 @@ export function deleteFollow(follower, followee){
     })));
 }
 
-export function createPost(author,timestamp,topics,text,quoteid=false){
+export function createPost(author,topics,text,quoteid=false){
     return new Promise((resolve,reject)=>{
+        var month, day, year;
+        var today     = new Date();
+        var monthNum  = 1 + parseInt(today.getMonth(), 10);
+        var dayNum    = parseInt(today.getDate(), 10);
+        var yearNum   = parseInt(todat.getFullYear(), 10);
+        var timeid    = monthNum * 1000000 + dayNum * 10000 + yearNum;
+
         if(quoteid){
 
         } else{
             API.graphql(graphqlOperation(postCreateTemplate, JSON.stringify({
                 postAuthorId: author,
-                timestamp: timestamp,
+                timestamp: timeid,
                 text: text,
             })))
                 .then((res)=>{
