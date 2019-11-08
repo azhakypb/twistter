@@ -611,11 +611,20 @@ export function createPost(author,topics,text,quoteid=false){
                             },(err)=>{
 
                                 if(err.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException'){
+
                                     console.log('dbops','create post','topic already exists, ignoring error');
+
+                                    API.graphql(graphqlOperation(createTagTemplate, JSON.stringify({
+                                        tagTopicId: topic,
+                                        tagPostId: postid
+                                    }))).catch((err)=>{
+                                        reject(err);
+                                    });
+
                                 } else {
                                     console.log('dbops','create post','unhandled error',err);
                                 }
-                                
+
                             });
                     }
                     resolve(res)
