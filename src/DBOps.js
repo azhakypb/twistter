@@ -580,7 +580,7 @@ export function createPost(author,topics,text,quoteid=false){
         var today     = new Date();
         var monthNum  = 1 + parseInt(today.getMonth(), 10);
         var dayNum    = parseInt(today.getDate(), 10);
-        var yearNum   = parseInt(todat.getFullYear(), 10);
+        var yearNum   = parseInt(today.getFullYear(), 10);
         var timeid    = monthNum * 1000000 + dayNum * 10000 + yearNum;
 
         if(quoteid){
@@ -592,9 +592,9 @@ export function createPost(author,topics,text,quoteid=false){
                 text: text,
             })))
                 .then((res)=>{
-                    return res;
+                    resolve(res)
                 },(err)=>{
-                    return err;
+                    reject(err)
                 });
         }
     });

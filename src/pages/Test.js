@@ -165,16 +165,19 @@ class Test extends Component {
   }
 
   handleCreatePost = async () => {
-    this.createPostState.timestamp = 1234;
     var topics = this.createPostState.topics.split(",");
-    var post = await new DBOps().createPost(JSON.stringify(this.createPostState)); // create post
-    var postid = post.id;
-    for (var i = 0; i < topics.length; i++) {
-      var temp2 = await new DBOps().createTopic(JSON.stringify({id: topics[i]}));
-      var tag_input = {tagTopicId: topics[i], tagPostId: postid};
-      var tag_ret = await new DBOps().createTag(JSON.stringify(tag_input));
-    }
-    console.log(post);
+    createPost(this.createPostState.postAuthorId,[],this.createPostState.text)
+        .then((res)=>{
+            console.log('test','create post','success',res)
+        },(err)=>{
+            console.log('test','create post','error',err)
+        });
+    //var postid = post.id;
+    //for (var i = 0; i < topics.length; i++) {
+    //  var temp2 = await new DBOps().createTopic(JSON.stringify({id: topics[i]}));
+    //  var tag_input = {tagTopicId: topics[i], tagPostId: postid};
+    //  var tag_ret = await new DBOps().createTag(JSON.stringify(tag_input));
+    //}
   }
 
   handleSPost(event) {
