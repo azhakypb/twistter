@@ -549,8 +549,8 @@ class DBOps extends Component {
 
 }
 
-export function createUser(info){
-    return API.graphql(graphqlOperation(userCreationTemplate, info));
+export function createUser(username){
+    return API.graphql(graphqlOperation(userCreationTemplate, JSON.stringify({id:username})));
 }
 
 export function searchUser(info) {
