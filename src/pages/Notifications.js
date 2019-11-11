@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import {Col, Row } from 'react-bootstrap';
 import DBOps from '../DBOps.js'
 import { Auth } from 'aws-amplify';
+import Navbar from '../components/Navbar.js'
 
 class Notifications extends Component {
 
@@ -27,10 +29,21 @@ class Notifications extends Component {
       temp.push(<div>Notication {index}:<br/>id: {value.id}<br/>text: {value.text}<br/>follower: {value.user.id}</div>);
     }
 
-    return (<div className="App">
-      {temp}
-    </div>);
-  }
+    return (
+		<div>
+			<Row>
+				<Col>
+					<Navbar></Navbar>
+				</Col>
+				<Col md="6" xs="10" >
+      				{temp}
+				</Col>
+				<Col>
+				</Col>
+			</Row>
+    	</div>
+	);
+	}
 
 }
 
