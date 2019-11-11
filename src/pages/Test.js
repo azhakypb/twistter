@@ -2,7 +2,7 @@
 // react modules
 import React, { Component } from 'react';
 import DBOps from '../DBOps.js'
-import { createUser, searchUser, deleteUser, createFollow, deleteFollow, createPost, searchPost, createNotification, searchNotification, deleteNotification } from '../DBOps.js'
+import { createUser, searchUser, deleteUser, createFollow, deleteFollow, createPost, createTopic, searchPost, createNotification, searchNotification, deleteNotification } from '../DBOps.js'
 import Post from '../components/Post.js'
 
 class Test extends Component {
@@ -236,8 +236,12 @@ class Test extends Component {
   }
 
   createTopic = async () => {
-    var temp = await new DBOps().createTopic(JSON.stringify(this.createTopicState));
-    console.log(temp);
+    createTopic(this.createTopicState.id)
+        .then((res)=>{
+            console.log('test','create topic','success',res);
+        },(err)=>{
+            console.log('test','create topic','error',err);
+        });
   }
 
   handleCTTag(event) {

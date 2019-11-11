@@ -692,8 +692,10 @@ export function searchNotification(id){
     })));
 }
 
-export function createTopic(info){
-    return API.graphql(graphqlOperation(createTopicTemplate, info));
+export function createTopic(id){
+    return API.graphql(graphqlOperation(createTopicTemplate,JSON.stringify({
+    	id: id
+    })));
 }
 export function searchTopic(info){
     return API.graphql(graphqlOperation(searchTopicTemplate, info));
