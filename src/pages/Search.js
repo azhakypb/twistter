@@ -96,6 +96,7 @@ class Search extends Component {
             else if (this.state.searchType == "@") {
                 console.log("Searching for users w/ username\n" +
                     "Username contains " + this.state.search);
+                
             }
 
             else
