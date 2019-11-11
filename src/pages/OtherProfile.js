@@ -9,6 +9,7 @@ import DBOps from '../DBOps.js'
 import { createFollow, deleteFollow } from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
 import FollowList from '../components/FollowList.js'
+import { UsernameContext } from '../UsernameContext.js';
 var AWS = require('aws-sdk');
 
 class OtherProfile extends Component {
@@ -79,15 +80,15 @@ class OtherProfile extends Component {
 
     async follow(){
 
-        var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-        var username = user.username;
+      //  var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+      //  var username = user.username;
         
-        createFollow(username,this.state.username)
+        createFollow(this.context.username,this.state.username)
             .then(async (res)=>{
                 console.log('other profile','follow','success',res);
 
                 this.notifState.userid = this.state.username;
-                this.notifState.text = "You have been followed by " + username;
+                this.notifState.text = "You have been followed by " + this.context.username;
                 this.notifState.timestamp = 1234;
                 var ret = await new DBOps().createNotification(JSON.stringify(this.notifState));
                 console.log('other profile','follow',"Created Notification for: " + this.state.username, ret);
@@ -100,10 +101,10 @@ class OtherProfile extends Component {
 
     async unfollow(){
 
-        var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-        var username = user.username;
+       // var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+       // var username = user.username;
 
-        deleteFollow(username,this.state.username)
+        deleteFollow(this.context.username,this.state.username)
             .then((res)=>{
                 console.log('other profile','unfollow','success',res);
             })
@@ -162,4 +163,5 @@ class OtherProfile extends Component {
   }
 }
 
+OtherProfile.contextType = UsernameContext;
 export default OtherProfile;
