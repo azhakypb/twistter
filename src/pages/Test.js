@@ -186,9 +186,12 @@ class Test extends Component {
   }
 
   handleSearchPost = async () => {
-    console.log('searching posts',this.searchPostState);
-    var temp = await new DBOps().searchPost(JSON.stringify(this.searchPostState));
-    console.log(temp)
+    searchPost(this.searchPostState.id).
+        then((res)=>{
+            console.log('test','search post','success',res);
+        },(err)=>{
+            console.log('test','search post','error',err);
+        });
   }
 
   handleSNotif(event) {

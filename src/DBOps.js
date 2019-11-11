@@ -635,8 +635,10 @@ export function createPost(author,topics,text,quoteid=false){
     });
 }
 
-export function searchPost(info){
-    return API.graphql(graphqlOperation(postSearchTemplate, info));
+export function searchPost(id){
+    return API.graphql(graphqlOperation(postSearchTemplate, JSON.stringify({
+    	id: id
+    })));
 }
 
 export function createNotification(info){
