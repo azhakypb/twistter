@@ -686,8 +686,10 @@ export function deleteNotification(id){
     })));
 }
 
-export function searchNotification(info){
-    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+export function searchNotification(id){
+    return API.graphql(graphqlOperation(notifSearchTemplate,JSON.stringify({
+    	id: id
+    })));
 }
 
 export function createTopic(info){

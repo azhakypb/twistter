@@ -198,8 +198,12 @@ class Test extends Component {
   }
 
   searchNotif = async () => {
-    var temp = await new DBOps().searchNotification(JSON.stringify(this.searchNotifState));
-    console.log(temp);
+    searchNotification(this.searchNotifState.id)
+        .then((res)=>{
+            console.log('test','search notification','success',res);
+        },(err)=>{
+            console.log('test','search notification','error',err);
+        });
   }
 
   handleDNotif(event) {
