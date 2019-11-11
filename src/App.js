@@ -15,24 +15,22 @@ import OtherProfile from './pages/OtherProfile.js'
 // style sheet
 import './App.css';
 
-//const user = Auth.currentAuthenticatedUser({ bypassCache: true});
-
 class App extends Component {
-	state = { username: '' };
-	
-	async getUser(){
-		var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
+	constructor(props){
+		super(props);
+		this.state = {
+			username: ""
+		}
+	}
+
+	async componentDidMount(){
+		const user = await Auth.currentAuthenticatedUser({ bypassCache: true});
 		this.setState({
 			username: user.username
 		});
-		console.log('Context test:', user.username);
-  	}
+	}
 
     render() {
-		if(this.state.username === ''){
-			this.getUser();
-		}
-		//console.log('Context test:', user.username);
 		return (
 			<UsernameContext.Provider value={{username: this.state.username}}>
             	<Router>
@@ -57,7 +55,7 @@ class App extends Component {
                         	path="/notifications"
                         	component = { Notifications }
                     	/>
-                    	<Route path="/otherprofile/:id" component={ OtherProfile } />
+                    	<Route path="/otherprofile/:id" component={ OtherProfile }/>
                 	</Switch>
             	</Router>
 			</UsernameContext.Provider>

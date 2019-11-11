@@ -34,7 +34,7 @@ class OtherProfile extends Component {
     }
 
     async componentDidMount(){
-
+	//	console.log('OtherProfile context test:', this.props.username);
         var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({
                                                                                         region: awsmobile.aws_cognito_region,
                                                                                         accessKeyId: "AKIA6PTGMIK45Y2CRIYF",
