@@ -207,9 +207,13 @@ class Test extends Component {
     console.log("Set searchPostState id to: " + event.target.value);
   }
 
-  deleteNotif = async () => {
-    var temp = await new DBOps().deleteNotification(JSON.stringify(this.deleteNotifState));
-    console.log(temp);
+  deleteNotif = () => {
+    deleteNotification(this.deleteNotifState.id)
+        .then((res)=>{
+            console.log('test','delete notification','success',res);
+        },(err)=>{
+            console.log('test','delete notification','error',err);
+        });
   }
 
   handleSTopic(event) {
