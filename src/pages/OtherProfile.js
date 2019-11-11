@@ -83,15 +83,8 @@ class OtherProfile extends Component {
         var username = user.username;
         
         createFollow(username,this.state.username)
-            .then(async (res)=>{
+            .then((res)=>{
                 console.log('other profile','follow','success',res);
-
-                this.notifState.userid = this.state.username;
-                this.notifState.text = "You have been followed by " + username;
-                this.notifState.timestamp = 1234;
-                var ret = await new DBOps().createNotification(JSON.stringify(this.notifState));
-                console.log('other profile','follow',"Created Notification for: " + this.state.username, ret);
-
             })
             .catch((err)=>{
                 console.log('other profile','follow','error',err);

@@ -562,10 +562,33 @@ export function deleteUser(username){
 }
 
 export function createFollow(follower, followee){
-    return API.graphql(graphqlOperation(followCreateTemplate, JSON.stringify({
-        id: follower+'-'+followee,
-        followFollowerId: follower,
-        followFolloweeId: followee })));
+	return new Promise((resolve,reject)=>{
+
+		API.graphql(graphqlOperation(followCreateTemplate, JSON.stringify({
+        	id: follower+'-'+followee,
+        	followFollowerId: follower,
+        	followFolloweeId: followee 
+    	}))).then((res)=>{
+
+    		const res1 = res;
+
+			createNotification(followee,'You have been followed by '+follower)
+				.then((res)=>{
+
+					var resObject = {'followResult':res1,'notificationResult':res};
+					resolve(resObject);
+
+				},(err)=>{
+
+					var resObject = {'followResult':res1,'notificationResult':err};
+					reject(resObject);
+
+				});
+
+    	},(err)=>{
+    		reject(err);
+    	})
+	});
 }
 
 export function deleteFollow(follower, followee){
@@ -641,8 +664,20 @@ export function searchPost(id){
     })));
 }
 
-export function createNotification(info){
-    return API.graphql(graphqlOperation(notifCreateTemplate, info));
+export function createNotification(userid,text){
+
+    var month, day, year;
+    var today     = new Date();
+    var monthNum  = 1 + parseInt(today.getMonth(), 10);
+    var dayNum    = parseInt(today.getDate(), 10);
+    var yearNum   = parseInt(today.getFullYear(), 10);
+    var timeid    = monthNum * 1000000 + dayNum * 10000 + yearNum;
+
+    return API.graphql(graphqlOperation(notifCreateTemplate, JSON.stringify({
+    	userid: userid,
+    	text: text,
+    	time: timeid
+    })));
 }
 
 export function deleteNotification(info){

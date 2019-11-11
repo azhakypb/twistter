@@ -113,14 +113,12 @@ class Test extends Component {
 
   handleFollow = async () => {
     this.followState.id = this.followState.followFollowerId + "-" + this.followState.followFolloweeId;
-    console.log("Set followState id to: " + this.followState.id);
-    this.createNotification.userid = this.followState.followFolloweeId;
-    this.createNotification.text = "You have been followed by " + this.followState.followFollowerId;
-    this.createNotification.time = 1234;
-    var ret = await new DBOps().createNotification(JSON.stringify(this.createNotification));
-    console.log("Created Notification for: " + this.followState.followFolloweeId);
-    var temp = await new DBOps().createFollow(JSON.stringify(this.followState));
-    console.log(temp);
+    createFollow(this.followState.followFollowerId,this.followState.followFolloweeId)
+        .then((res)=>{
+            console.log('test','create follow','success',res);
+        },(err)=>{
+            console.log('test','create follow','error',err);
+        });
   }
 
   handleCreate(event) {
