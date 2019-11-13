@@ -268,9 +268,7 @@ const searchTopicTemplate = `query searchTopic(
               id
             }
           }
-          quote{
-            id
-          }
+          quote
           quoted {
             items {
               id
@@ -550,7 +548,7 @@ class DBOps extends Component {
 }
 
 export function createUser(info){
-    return API.graphql(graphqlOperation(userCreationTemplate, info));
+    return API.graphql(graphqlOperation(userCreationTemplate, JSON.stringify(info)));
 }
 
 export function searchUser(info) {
@@ -558,7 +556,7 @@ export function searchUser(info) {
 }
 
 export function deleteUser(info){
-    return API.graphql(graphqlOperation(userDeletionTemplate, info));
+    return API.graphql(graphqlOperation(userDeletionTemplate, JSON.stringify(info)));
 }
 
 export function createFollow(follower, followee){
