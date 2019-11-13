@@ -4,12 +4,12 @@ import { Button,  ListGroup } from 'react-bootstrap';
 // import custom modules
 import { searchUser, getFollowers, getFollowing } from '../DBOps.js';
 import DBOps from '../DBOps.js';
-
+import { searchUser } from '../DBOps.js'
 class FollowList extends Component {
 
     // pulls the num of followers and following on first render of component
     async initialPull() {
-    
+
         getFollowers(this.props.username)
             .then((res)=>{
                 console.log('follow list','initial pull','success pulling followers',res);
