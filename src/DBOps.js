@@ -559,12 +559,17 @@ export function deleteUser(info){
     return API.graphql(graphqlOperation(userDeletionTemplate, JSON.stringify(info)));
 }
 
-export function createFollow(info){
-    return API.graphql(graphqlOperation(followCreateTemplate, JSON.stringify(info)));
+export function createFollow(follower, followee){
+    return API.graphql(graphqlOperation(followCreateTemplate, JSON.stringify({
+        id: follower+'-'+followee,
+        followFollowerId: follower,
+        followFolloweeId: followee })));
 }
 
-export function deleteFollow(info){
-    return API.graphql(graphqlOperation(followDeleteTemplate, info));
+export function deleteFollow(follower, followee){
+    return API.graphql(graphqlOperation(followDeleteTemplate, JSON.stringify({
+        id: follower+'-'+followee
+    })));
 }
 
 export function createPost(info){

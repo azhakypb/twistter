@@ -51,6 +51,7 @@ class Singlepost extends Component {
     	);
   	}
   	handleAddTopic (event){
+      event.target.value = (event.target.value.replace(/\s+/g, ''));
     	this.setState({ topics1:   event.target.value.split(",")});
   	}
   	handleTopicNum(topics1) {
@@ -132,7 +133,7 @@ class Singlepost extends Component {
                         	placeholder="Add one to five topics, separate with comma if necessary"
                         	as="textarea"
                         	aria-label="With textarea"
-                        	maxlength="50"
+                        	maxlength="100"
                     	/>
                 	</InputGroup>
                 	<Button

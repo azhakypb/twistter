@@ -6,8 +6,10 @@ import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
 import DBOps from '../DBOps.js'
+import { createFollow, deleteFollow } from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
 import FollowList from '../components/FollowList.js'
+import { UsernameContext } from '../UsernameContext.js';
 var AWS = require('aws-sdk');
 
 class OtherProfile extends Component {
@@ -78,34 +80,37 @@ class OtherProfile extends Component {
 
     async follow(){
 
-        var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-        var username = user.username;
+      //  var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+      //  var username = user.username;
+        
+        createFollow(this.context.username,this.state.username)
+            .then(async (res)=>{
+                console.log('other profile','follow','success',res);
 
-        this.followState = {
-            id: username + this.state.username,
-            followFollowerId: username,
-            followFolloweeId: this.state.username
-        }
-        this.notifState.userid = this.followState.followFolloweeId;
-        this.notifState.text = "You have been followed by " + username;
-        this.notifState.timestamp = 1234;
-        var ret = await new DBOps().createNotification(JSON.stringify(this.notifState));
-        console.log("Created Notification for: " + this.followState.followFolloweeId);
-        var res =  await new DBOps().createFollow(JSON.stringify(this.followState));
-        console.log(ret);
-        console.log(res);
+                this.notifState.userid = this.state.username;
+                this.notifState.text = "You have been followed by " + this.context.username;
+                this.notifState.timestamp = 1234;
+                var ret = await new DBOps().createNotification(JSON.stringify(this.notifState));
+                console.log('other profile','follow',"Created Notification for: " + this.state.username, ret);
+
+            })
+            .catch((err)=>{
+                console.log('other profile','follow','error',err);
+            });
     }
 
     async unfollow(){
 
-        var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-        var username = user.username;
+       // var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+       // var username = user.username;
 
-        this.unfollowState = {
-            id: username + this.state.username
-        }
-        var res = await new DBOps().deleteFollow(JSON.stringify(this.unfollowState));
-        console.log(res);
+        deleteFollow(this.context.username,this.state.username)
+            .then((res)=>{
+                console.log('other profile','unfollow','success',res);
+            })
+            .catch((err)=>{
+                console.log('other profile','unfollow','error',err);
+            });
     }
 
     render() {
@@ -158,4 +163,5 @@ class OtherProfile extends Component {
   }
 }
 
+OtherProfile.contextType = UsernameContext;
 export default OtherProfile;
