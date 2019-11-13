@@ -4,7 +4,7 @@ import { Button, Col, FormControl, InputGroup, ListGroup, Jumbotron, Row, Dropdo
 // aws modules
 // components
 import Navbar from '../components/Navbar.js'
-import DBOps, { getFollowing } from '../DBOps.js'
+import { getFollowing, searchTopic } from '../DBOps.js'
 import Post from '../components/Post.js'
 import UserlistItem from '../components/UserlistItem.js'
 import FollowList from '../components/FollowList.js'
@@ -78,20 +78,20 @@ class Search extends Component {
             if (this.state.searchType == "#") {
                 console.log("Searching for posts w/ topic\n" +
                     "Topic = " + this.state.search);
-                new DBOps().searchTopic(JSON.stringify({id: this.state.search}))
+                searchTopic(JSON.stringify({id: this.state.search}))
                     .then((res)=>{
                         console.log("Search page\n" + 
                             "handleChangeText function\n" +
-                            "Search topic result", res);
-                        if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
+                            "Search topic result", res, this.state.search);
+                        /*if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
                             this.setState({posts:[]},()=>{
                                     this.setState({ posts: res.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
                                 });
                         }
                         else{
 
-                        }
-                    });
+                        }*/
+                    }, (err) => {console.log(err)});
             }
 
             else if (this.state.searchType == "@") {

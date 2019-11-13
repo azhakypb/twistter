@@ -249,6 +249,15 @@ const searchTopicTemplate = `query searchTopic(
 ) {
   getTopics(id: $id) {
     id
+  }
+}
+`
+/*
+const searchTopicTemplate = `query searchTopic(
+  $id: ID!
+) {
+  getTopics(id: $id) {
+    id
     posts {
       items {
         post {
@@ -279,7 +288,7 @@ const searchTopicTemplate = `query searchTopic(
     }
   }
 }
-`
+`*/
 
 const createTagTemplate = `mutation createTag(
   $tagTopicId: ID!,
@@ -492,9 +501,9 @@ class DBOps extends Component {
     var temp;
     try {
       temp = await API.graphql(graphqlOperation(searchTopicTemplate, info));
-      return temp.data;
+      return temp;
     } catch (e) {
-      return e.data;
+      return e;
     }
   }
 
