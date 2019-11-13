@@ -72,9 +72,8 @@ class Search extends Component {
                 "Set search state to :" + this.state.text);
             
             this.state.searchType = this.state.text[0];
-            console.log(this.state.searchType);            
+            console.log(this.state.searchType);
             console.log(this.state.search);
-
 
             if (this.state.searchType == "#") {
                 console.log("Searching for posts w/ topic\n" +
