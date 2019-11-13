@@ -1,11 +1,11 @@
 // react modules
 import React, { Component } from 'react';
-import { Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-bootstrap';
+import { Button, Col, FormControl, InputGroup, Jumbotron, Row, DropdownButton } from 'react-bootstrap';
 // aws modules
 // components
 import Navbar from '../components/Navbar.js'
-import Post from '../components/Post.js'
 import DBOps from '../DBOps.js'
+import Post from '../components/Post.js'
 
 class Search extends Component {
 
@@ -15,14 +15,9 @@ class Search extends Component {
         this.state = { 
             text        : '',
             search      : '',
-            showResults : true,
+            showResults : 0,
             posts       : []
         };
-
-        this.searchState = {
-            id: ""
-        }
-
         // bind functions
         this.Results = this.Results.bind(this);
         this.handleChangeText = this.handleChangeText.bind(this);
@@ -30,21 +25,28 @@ class Search extends Component {
     }
     // list of posts
     Results(props) {
-        if (this.state.showResults) return (
+        if (this.state.showResults === 1) return (
             <div>
                 <Jumbotron>
-                    <h2>Searching for... {this.state.search}</h2>
+                    <h2>Search results for {this.state.search}</h2>
                     <ul>{this.state.posts}</ul>
                 </Jumbotron>
             </div>
         )
         else return (
-            <div />
+            <div>
+                <Jumbotron>
+                    <h2>Please enter topic or username above</h2>
+                </Jumbotron>
+            </div>
         )
     }
     // input field handlers
     handleChangeText  (event){
         this.setState({ text: event.target.value });
+        console.log("Search page\n" + 
+            "handleChangeText function\n" +
+            "Set text state to :" + event.target.value);
     }
 
     // submission field handlers
@@ -52,14 +54,18 @@ class Search extends Component {
     handleSubmitText = async() => {
         if (!Object.is(this.state.text, '')) {
             this.setState({ search: this.state.text });
-            console.log("Set search state to: " + this.state.text);
-
+            console.log("Search page\n" + 
+                "handleChangeText function\n" +
+                "Set search state to :" + this.state.text);
+            
             new DBOps().searchTopic(JSON.stringify({id: this.state.text}))
                 .then((res)=>{
-                    console.log('search topic result',res);
+                    console.log("Search page\n" + 
+                        "handleChangeText function\n" +
+                        "Search topic result", res);
                     if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
                         this.setState({posts:[]},()=>{
-                                this.setState({ posts: res.getTopics.posts.items.map( post => <Post id={post.post.id}/>)});
+                                this.setState({ posts: res.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
                             });
                     }
                     else{
@@ -67,17 +73,10 @@ class Search extends Component {
                     }
                 });
 
-            //this.setState({id: this.state.text});
-            //console.log("Searching posts",this.searchState);
-
-            //this.setState({id:this.searchState.id});
-
-            //const listPosts = this.state.posts.map(
-            //    (post => <Post id={this.state.text}></Post>)
-            //);
-
-            //this.setState({ posts: listPosts});
-            this.setState({ showResults: true });
+            this.setState({ showResults: 1 });
+            console.log("Search page\n" + 
+                "handleChangeText function\n" +
+                "Set showResults state to 1");
         }
     }
 
@@ -91,14 +90,13 @@ class Search extends Component {
                 <Col md="6" xs="10">
                     <Jumbotron>
                         <h2>Search</h2>
-
                         <InputGroup
                             className="mb-3"
                             value={this.state.search}
                             onChange={this.handleChangeText}>
                             <FormControl
-                                placeholder="Type Topic Here"
-                                aria-label="Type Topic Here"
+                                placeholder="Type Topic or Username Here"
+                                aria-label="Type Topic or Username Here"
                                 aria-describedby="basic-addon2"/>
                             <InputGroup.Append>
                                 <Button
@@ -110,10 +108,9 @@ class Search extends Component {
                         </InputGroup>
                     </Jumbotron>
                     <this.Results />
-                    
                 </Col>                
                 <Col>
-                    <p>.</p>
+                    
                 </Col>
             </Row>
         );
