@@ -83,14 +83,18 @@ class Search extends Component {
                         console.log("Search page\n" + 
                             "handleChangeText function\n" +
                             "Search topic result", res, this.state.search);
-                        /*if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
+                        console.log(res);
+                        console.log(res.getTopics);
+                        /*
+                        if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
                             this.setState({posts:[]},()=>{
                                     this.setState({ posts: res.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
                                 });
                         }
                         else{
 
-                        }*/
+                        }
+                        */
                     }, (err) => {console.log(err)});
             }
 
