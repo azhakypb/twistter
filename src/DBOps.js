@@ -697,8 +697,10 @@ export function createTopic(id){
     	id: id
     })));
 }
-export function searchTopic(info){
-    return API.graphql(graphqlOperation(searchTopicTemplate, info));
+export function searchTopic(id){
+    return API.graphql(graphqlOperation(searchTopicTemplate, JSON.stringify({
+      id: id
+    })));
 }
 export function createTag(info){
     return API.graphql(graphqlOperation(createTagTemplate, info));
