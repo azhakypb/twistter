@@ -84,17 +84,17 @@ class Search extends Component {
                             "handleChangeText function\n" +
                             "Search topic result", res, this.state.search);
                         console.log(res);
-                        console.log(res.getTopics);
-                        /*
-                        if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
+                        console.log(res.data.getTopics);
+                        
+                        if( !(res.data.getTopics === null) && res.data.getTopics.posts.items.length > 0 ){
                             this.setState({posts:[]},()=>{
-                                    this.setState({ posts: res.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
+                                    this.setState({ posts: res.data.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
                                 });
                         }
                         else{
 
                         }
-                        */
+                    
                     }, (err) => {console.log(err)});
             }
 
