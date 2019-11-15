@@ -249,6 +249,29 @@ const searchTopicTemplate = `query searchTopic(
 ) {
   getTopics(id: $id) {
     id
+    posts {
+      items {
+        post {
+          id,
+          text,
+          timestamp,
+          author {
+            id
+          }
+          likes {
+            items {
+              id
+            }
+          }
+          topics {
+            items {
+              id
+            }
+          }
+          
+        }
+      }
+    }
   }
 }
 `
