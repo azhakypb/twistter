@@ -101,12 +101,16 @@ class Search extends Component {
             else if (this.state.searchType == "@") {
                 console.log("Searching for users w/ username\n" +
                     "Username contains " + this.state.search);
-                const users = ["mark", "awsellers"];
+
+                    //
+
+                    const users = ["mark", "awsellers"];
                 this.setState({posts:[]},()=>{
                     this.setState({posts: users.map(user => <ListGroup.Item href={'/otherprofile/'+user} action key={user}>
                         {user}
                     </ListGroup.Item>)})
                 })
+
                 this.setState({posts:[<ListGroup.Item href={'/testing'} action>
                     Check back soon for working version</ListGroup.Item>]});
             }

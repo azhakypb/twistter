@@ -133,8 +133,7 @@ const followDeleteTemplate = `mutation deleteFollow($id: ID!) {
             id
         }
     }
-}
-`
+}`
 
 const postCreateTemplate = `mutation createPost(
         $text: String!,
