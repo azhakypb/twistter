@@ -139,6 +139,7 @@ const postCreateTemplate = `mutation createPost(
         $text: String!,
         $timestamp: Int!,
         $postAuthorId: ID!
+
     ) {
         createPost (input:{
         text: $text,
@@ -267,50 +268,12 @@ const searchTopicTemplate = `query searchTopic(
               id
             }
           }
-          
         }
       }
     }
   }
 }
 `
-/*
-const searchTopicTemplate = `query searchTopic(
-  $id: ID!
-) {
-  getTopics(id: $id) {
-    id
-    posts {
-      items {
-        post {
-          id,
-          text,
-          timestamp,
-          author {
-            id
-          }
-          likes {
-            items {
-              id
-            }
-          }
-          topics {
-            items {
-              id
-            }
-          }
-          quote
-          quoted {
-            items {
-              id
-            }
-          }
-        }
-      }
-    }
-  }
-}
-`*/
 
 const createTagTemplate = `mutation createTag(
   $tagTopicId: ID!,
@@ -350,6 +313,44 @@ const deleteLikeTemplate = `mutation deleteLike(
     id
   }
 }`
+
+const createEngagementTemplate = `mutation createEngagement(
+  $id: ID!,
+  $value: Int!,
+  $topicid: ID!,
+  $userid: ID!
+) {
+  createEngagement(input: {
+    id: $id,
+    value: $value,
+    engagementTopicId: $topicid,
+    engagementUserId: $userid
+  }) {
+    id
+    value
+  }
+}`
+
+const updateEngagementTemplate = `mutation updateEngagement(
+  $id: ID!,
+  $value: Int!
+) {
+  updateEngagement(input: {id: $id, value: $value}) {
+    id
+    value
+  }
+}`
+
+const getEngagementTemplate = `query getEngagement(
+  $id: ID!
+) {
+  getEngagement(id: $id) {
+    id
+    value
+  }
+}`
+
+
 
 class DBOps extends Component {
 
@@ -578,23 +579,46 @@ class DBOps extends Component {
 
 }
 
-export function createUser(info){
-    return API.graphql(graphqlOperation(userCreationTemplate, JSON.stringify(info)));
+export function createUser(username){
+    return API.graphql(graphqlOperation(userCreationTemplate, JSON.stringify({id:username})));
 }
 
-export function searchUser(info) {
-    return API.graphql(graphqlOperation(userSearchTemplate, JSON.stringify({id:info})));
+export function searchUser(username) {
+    return API.graphql(graphqlOperation(userSearchTemplate, JSON.stringify({id:username})));
 }
 
-export function deleteUser(info){
-    return API.graphql(graphqlOperation(userDeletionTemplate, JSON.stringify(info)));
+export function deleteUser(username){
+    return API.graphql(graphqlOperation(userDeletionTemplate, JSON.stringify({id: username})));
 }
 
 export function createFollow(follower, followee){
-    return API.graphql(graphqlOperation(followCreateTemplate, JSON.stringify({
-        id: follower+'-'+followee,
-        followFollowerId: follower,
-        followFolloweeId: followee })));
+	return new Promise((resolve,reject)=>{
+
+		API.graphql(graphqlOperation(followCreateTemplate, JSON.stringify({
+        	id: follower+'-'+followee,
+        	followFollowerId: follower,
+        	followFolloweeId: followee
+    	}))).then((res)=>{
+
+    		const res1 = res;
+
+			createNotification(followee,'You have been followed by '+follower)
+				.then((res)=>{
+
+					var resObject = {'followResult':res1,'notificationResult':res};
+					resolve(resObject);
+
+				},(err)=>{
+
+					var resObject = {'followResult':res1,'notificationResult':err};
+					reject(resObject);
+
+				});
+
+    	},(err)=>{
+    		reject(err);
+    	})
+	});
 }
 
 export function deleteFollow(follower, followee){
@@ -603,31 +627,110 @@ export function deleteFollow(follower, followee){
     })));
 }
 
-export function createPost(info){
-    return API.graphql(graphqlOperation(postCreateTemplate, info));
+export function createPost(author,topics,text,quoteid=false){
+    return new Promise((resolve,reject)=>{
+        var month, day, year;
+        var today     = new Date();
+        var monthNum  = 1 + parseInt(today.getMonth(), 10);
+        var dayNum    = parseInt(today.getDate(), 10);
+        var yearNum   = parseInt(today.getFullYear(), 10);
+        var timeid    = monthNum * 1000000 + dayNum * 10000 + yearNum;
+
+        if(quoteid){
+
+        } else{
+            API.graphql(graphqlOperation(postCreateTemplate, JSON.stringify({
+                postAuthorId: author,
+                timestamp: timeid,
+                text: text,
+            })))
+                .then((res)=>{
+                    var postid = res.data.createPost.id
+                    for(var i=0; i<topics.length;i++){
+
+                        const topic = topics[i]
+                        API.graphql(graphqlOperation(createTopicTemplate, JSON.stringify({
+                            id: topic
+                        })))
+                            .then((res)=>{
+
+                                API.graphql(graphqlOperation(createTagTemplate, JSON.stringify({
+                                    tagTopicId: topic,
+                                    tagPostId: postid
+                                }))).catch((err)=>{
+                                        reject(err);
+                                    });
+
+                            },(err)=>{
+
+                                if(err.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException'){
+
+                                    console.log('dbops','create post','topic already exists, ignoring error');
+
+                                    API.graphql(graphqlOperation(createTagTemplate, JSON.stringify({
+                                        tagTopicId: topic,
+                                        tagPostId: postid
+                                    }))).catch((err)=>{
+                                        reject(err);
+                                    });
+
+                                } else {
+                                    console.log('dbops','create post','unhandled error',err);
+                                }
+
+                            });
+                    }
+                    resolve(res)
+                },(err)=>{
+                    reject(err)
+                });
+        }
+    });
 }
 
-export function searchPost(info){
-    return API.graphql(graphqlOperation(postSearchTemplate, info));
+export function searchPost(id){
+    return API.graphql(graphqlOperation(postSearchTemplate, JSON.stringify({
+    	id: id
+    })));
 }
 
-export function createNotification(info){
-    return API.graphql(graphqlOperation(notifCreateTemplate, info));
+export function createNotification(userid,text){
+
+    var month, day, year;
+    var today     = new Date();
+    var monthNum  = 1 + parseInt(today.getMonth(), 10);
+    var dayNum    = parseInt(today.getDate(), 10);
+    var yearNum   = parseInt(today.getFullYear(), 10);
+    var timeid    = monthNum * 1000000 + dayNum * 10000 + yearNum;
+
+    return API.graphql(graphqlOperation(notifCreateTemplate, JSON.stringify({
+    	userid: userid,
+    	text: text,
+    	time: timeid
+    })));
 }
 
-export function deleteNotification(info){
-    return API.graphql(graphqlOperation(notifDeleteTemplate, info));
+export function deleteNotification(id){
+    return API.graphql(graphqlOperation(notifDeleteTemplate,JSON.stringify({
+    	id: id
+    })));
 }
 
-export function searchNotification(info){
-    return API.graphql(graphqlOperation(notifSearchTemplate, info));
+export function searchNotification(id){
+    return API.graphql(graphqlOperation(notifSearchTemplate,JSON.stringify({
+    	id: id
+    })));
 }
 
-export function createTopic(info){
-    return API.graphql(graphqlOperation(createTopicTemplate, info));
+export function createTopic(id){
+    return API.graphql(graphqlOperation(createTopicTemplate,JSON.stringify({
+    	id: id
+    })));
 }
-export function searchTopic(info){
-    return API.graphql(graphqlOperation(searchTopicTemplate, info));
+export function searchTopic(id){
+    return API.graphql(graphqlOperation(searchTopicTemplate, JSON.stringify({
+      id: id
+    })));
 }
 export function createTag(info){
     return API.graphql(graphqlOperation(createTagTemplate, info));
@@ -644,6 +747,17 @@ export function getFollowers(userid){
 export function getFollowing(userid){
     return API.graphql(graphqlOperation(getFollowingTemplate, JSON.stringify({id: userid})));
 }
-
+export function createEngagement(info) {
+  return API.graphql(graphqlOperation(createEngagementTemplate, JSON.stringify(info)));
+}
+export function updateEngagement(info) {
+  return API.graphql(graphqlOperation(updateEngagementTemplate, JSON.stringify(info)));
+}
+export function getEngagement(engagementId) {
+  return API.graphql(graphqlOperation(getEngagementTemplate, JSON.stringify(engagementId)));
+}
+export function customQuery(template, params) {
+  return API.graphql(graphqlOperation(template, JSON.stringify(params)));
+}
 
 export default DBOps;

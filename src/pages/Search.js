@@ -4,7 +4,7 @@ import { Button, Col, FormControl, InputGroup, ListGroup, Jumbotron, Row, Dropdo
 // aws modules
 // components
 import Navbar from '../components/Navbar.js'
-import { getFollowing, searchTopic } from '../DBOps.js'
+import { getFollowing, searchTopic, customQuery } from '../DBOps.js'
 import Post from '../components/Post.js'
 import UserlistItem from '../components/UserlistItem.js'
 import FollowList from '../components/FollowList.js'
@@ -14,7 +14,7 @@ class Search extends Component {
     constructor(props){
         // props and state
         super(props);
-        this.state = { 
+        this.state = {
             text        : '',
             search      : '',
             showResults : 0,
@@ -56,21 +56,21 @@ class Search extends Component {
     // input field handlers
     handleChangeText  (event){
         this.setState({ text: event.target.value });
-        console.log("Search page\n" + 
+        console.log("Search page\n" +
             "handleChangeText function\n" +
             "Set text state to :" + event.target.value);
     }
 
     // submission field handlers
-    
+
     handleSubmitText = async() => {
         if (!Object.is(this.state.text, '')) {
             this.state.search = this.state.text.slice(1);
             //this.setState({ search: this.state.text.slice(1) });
-            console.log("Search page\n" + 
+            console.log("Search page\n" +
                 "handleChangeText function\n" +
                 "Set search state to :" + this.state.text);
-            
+
             this.state.searchType = this.state.text[0];
             console.log(this.state.searchType);
             console.log(this.state.search);
@@ -80,12 +80,12 @@ class Search extends Component {
                     "Topic = " + this.state.search);
                 searchTopic(JSON.stringify({id: this.state.search}))
                     .then((res)=>{
-                        console.log("Search page\n" + 
+                        console.log("Search page\n" +
                             "handleChangeText function\n" +
                             "Search topic result", res, this.state.search);
                         console.log(res);
                         console.log(res.data.getTopics);
-                        
+
                         if( !(res.data.getTopics === null) && res.data.getTopics.posts.items.length > 0 ){
                             this.setState({posts:[]},()=>{
                                     this.setState({ posts: res.data.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
@@ -94,25 +94,30 @@ class Search extends Component {
                         else{
 
                         }
-                    
+
                     }, (err) => {console.log(err)});
             }
 
             else if (this.state.searchType == "@") {
                 console.log("Searching for users w/ username\n" +
                     "Username contains " + this.state.search);
-
-                    //
-
-                    const users = ["mark", "awsellers"];
+                const searchTemplate = `query searchUsers($input: ID!) {
+                  searchUsers(filter: {id: {wildcard: $input}}) {
+                    items {
+                      id
+                    }
+                  }
+                }`
+                var users = await customQuery(searchTemplate, {input: this.state.search + "*"});
+                // const users = ["mark", "awsellers"];
+                console.log(users.data.searchUsers.items);
                 this.setState({posts:[]},()=>{
-                    this.setState({posts: users.map(user => <ListGroup.Item href={'/otherprofile/'+user} action key={user}>
-                        {user}
+                    this.setState({posts: users.data.searchUsers.items.map(user => <ListGroup.Item href={'/otherprofile/'+user.id} action key={user.id}>
+                        {user.id}
                     </ListGroup.Item>)})
                 })
-
-                this.setState({posts:[<ListGroup.Item href={'/testing'} action>
-                    Check back soon for working version</ListGroup.Item>]});
+                // this.setState({posts:[<ListGroup.Item href={'/testing'} action>
+                //     Check back soon for working version</ListGroup.Item>]});
             }
 
             else
@@ -121,7 +126,7 @@ class Search extends Component {
             }
 
             this.setState({ showResults: 1 });
-            console.log("Search page\n" + 
+            console.log("Search page\n" +
                 "handleChangeText function\n" +
                 "Set showResults state to 1");
         }
@@ -155,9 +160,9 @@ class Search extends Component {
                         </InputGroup>
                     </Jumbotron>
                     <this.Results />
-                </Col>                
+                </Col>
                 <Col>
-                    
+
                 </Col>
             </Row>
         );

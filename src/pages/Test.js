@@ -7,6 +7,7 @@ import { createFollow, deleteFollow } from '../DBOps.js'                        
 import { createNotification, searchNotification, deleteNotification } from '../DBOps.js'  // Noitification methods
 import { createTopic, searchTopic } from '../DBOps.js'                                    // Topic methods
 import { createTag } from '../DBOps.js'                                                   // Tag methods
+import { customQuery } from '../DBOps.js'
 import DBOps from '../DBOps.js'
 import Post from '../components/Post.js'
 
@@ -64,6 +65,10 @@ class Test extends Component {
       tagTopicId: "",
       tagPostId: ""
     }
+    this.wcustate = {
+      input: ""
+    }
+
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
     this.handleFollowee = this.handleFollowee.bind(this);
@@ -80,6 +85,7 @@ class Test extends Component {
     this.handleCTopic = this.handleCTopic.bind(this);
     this.handleCTTag = this.handleCTTag.bind(this);
     this.handleCPTag = this.handleCPTag.bind(this);
+    this.handleWUSearch = this.handleWUSearch.bind(this);
   }
 
   /***** User Operations In Testing *****/
@@ -94,9 +100,13 @@ class Test extends Component {
     console.log("Set deleteState followee to: " + event.target.value);
   }
 
-  handleSearch(event) {
-    this.searchState = {id: event.target.value};
-    console.log("Set searchState id to: " + event.target.value);
+  handleDeleteUser = () => {
+    deleteUser(this.deleteState.id)
+        .then((res)=>{
+            console.log('test','deleteUser','success',res)
+        },(err)=>{
+            console.log('test','deleteUser','error',err)
+        });
   }
 
   handleCreateUser = async () => {
@@ -154,16 +164,34 @@ class Test extends Component {
 
   handleFollow = async () => {
     this.followState.id = this.followState.followFollowerId + "-" + this.followState.followFolloweeId;
-    console.log("Set followState id to: " + this.followState.id);
-    this.createNotification.userid = this.followState.followFolloweeId;
-    this.createNotification.text = "You have been followed by " + this.followState.followFollowerId;
-    this.createNotification.time = 1234;
-    var ret = await new DBOps().createNotification(JSON.stringify(this.createNotification));
-    console.log("Created Notification for: " + this.followState.followFolloweeId);
-    var temp = await new DBOps().createFollow(JSON.stringify(this.followState));
-    console.log(temp);
+    createFollow(this.followState.followFollowerId,this.followState.followFolloweeId)
+        .then((res)=>{
+            console.log('test','create follow','success',res);
+        },(err)=>{
+            console.log('test','create follow','error',err);
+        });
   }
 
+  handleCreate(event) {
+    this.createState = {id: event.target.value};
+    console.log("Set createState id to: " + event.target.value);
+  }
+
+    handleCreateUser = () => {
+        var username = this.createState.id
+        createUser(username)
+            .then((res)=>{
+                console.log('test','create user','success',res)
+            },(err)=>{
+                console.log('test','create user','error',err)
+            });
+
+    }
+
+  handleSearch(event) {
+    this.searchState = {id: event.target.value};
+    console.log("Set searchState id to: " + event.target.value);
+  }
 
   /***** Post Operations in Testing *****/
 
@@ -188,22 +216,28 @@ class Test extends Component {
   }
 
   handleCreatePost = async () => {
-    this.createPostState.timestamp = 1234;
     var topics = this.createPostState.topics.split(",");
-    var post = await new DBOps().createPost(JSON.stringify(this.createPostState)); // create post
-    var postid = post.id;
-    for (var i = 0; i < topics.length; i++) {
-      var temp2 = await new DBOps().createTopic(JSON.stringify({id: topics[i]}));
-      var tag_input = {tagTopicId: topics[i], tagPostId: postid};
-      var tag_ret = await new DBOps().createTag(JSON.stringify(tag_input));
-    }
-    console.log(post);
+    createPost(this.createPostState.postAuthorId,topics,this.createPostState.text)
+        .then((res)=>{
+            console.log('test','create post','success',res);
+        },(err)=>{
+            console.log('test','create post','error',err);
+        });
+    //var postid = post.id;
+    //for (var i = 0; i < topics.length; i++) {
+    //  var temp2 = await new DBOps().createTopic(JSON.stringify({id: topics[i]}));
+    //  var tag_input = {tagTopicId: topics[i], tagPostId: postid};
+    //  var tag_ret = await new DBOps().createTag(JSON.stringify(tag_input));
+    //}
   }
 
   handleSearchPost = async () => {
-    console.log('searching posts',this.searchPostState);
-    var temp = await new DBOps().searchPost(JSON.stringify(this.searchPostState));
-    console.log(temp)
+    searchPost(this.searchPostState.id).
+        then((res)=>{
+            console.log('test','search post','success',res);
+        },(err)=>{
+            console.log('test','search post','error',err);
+        });
   }
 
   /***** Notification Operations in Testing *****/
@@ -213,19 +247,27 @@ class Test extends Component {
     console.log("Set searchNotifState id to: " + event.target.value);
   }
 
+  searchNotif = async () => {
+    searchNotification(this.searchNotifState.id)
+        .then((res)=>{
+            console.log('test','search notification','success',res);
+        },(err)=>{
+            console.log('test','search notification','error',err);
+        });
+  }
+
   handleDNotif(event) {
     this.deleteNotifState.id = event.target.value;
     console.log("Set searchPostState id to: " + event.target.value);
   }
 
-  searchNotif = async () => {
-    var temp = await new DBOps().searchNotification(JSON.stringify(this.searchNotifState));
-    console.log(temp);
-  }
-
-  deleteNotif = async () => {
-    var temp = await new DBOps().deleteNotification(JSON.stringify(this.deleteNotifState));
-    console.log(temp);
+  deleteNotif = () => {
+    deleteNotification(this.deleteNotifState.id)
+        .then((res)=>{
+            console.log('test','delete notification','success',res);
+        },(err)=>{
+            console.log('test','delete notification','error',err);
+        });
   }
 
   /***** Topic Operations in Testing *****/
@@ -241,13 +283,12 @@ class Test extends Component {
   }
 
   createTopic = async () => {
-    var temp = await new DBOps().createTopic(JSON.stringify(this.createTopicState));
-    console.log(temp);
-  }
-
-  searchTopic = async () => {
-    var temp = await new DBOps().searchTopic(JSON.stringify(this.searchTopicState));
-    console.log(temp);
+    createTopic(this.createTopicState.id)
+        .then((res)=>{
+            console.log('test','create topic','success',res);
+        },(err)=>{
+            console.log('test','create topic','error',err);
+        });
   }
 
   /***** Tag Operations in Testing *****/
@@ -265,6 +306,25 @@ class Test extends Component {
   createTag = async () => {
     var temp = await new DBOps().createTag(JSON.stringify(this.createTagState));
     console.log(temp);
+  }
+
+  /***** WC User Search *****/
+
+  handleWUSearch(event) {
+    this.wcustate.input = event.target.value;
+    console.log("Set wcustate input to: " + event.target.value);
+  }
+
+  WCUSearch = async () => {
+    const template = `query searchUsers($input: ID!) {
+      searchUsers(filter: {id: {wildcard: $input}}) {
+        items {
+          id
+        }
+      }
+    }`
+    var temp = await customQuery(template, {input: this.wcustate.input + "*"});
+    console.log(temp.data.searchUsers.items);
   }
 
   render() {
@@ -313,6 +373,8 @@ class Test extends Component {
         Tag Topic ID : <input onChange={this.handleCTTag}/><br/>
         Tag Post ID : <input onChange={this.handleCPTag}/><br/>
         <button onClick={this.createTag}>Create Tag</button><br/>
+        Wild Card User Search : <input onChange={this.handleWUSearch}/>
+        <button onClick={this.WCUSearch}>Search Users with WildCard</button><br/>
       </div>
 
     );

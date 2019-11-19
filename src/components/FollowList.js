@@ -4,7 +4,6 @@ import { Button,  ListGroup } from 'react-bootstrap';
 // import custom modules
 import { searchUser, getFollowers, getFollowing } from '../DBOps.js';
 import DBOps from '../DBOps.js';
-//import { searchUser } from '../DBOps.js'
 class FollowList extends Component {
 
     // pulls the num of followers and following on first render of component
@@ -13,7 +12,10 @@ class FollowList extends Component {
         getFollowers(this.props.username)
             .then((res)=>{
                 console.log('follow list','initial pull','success pulling followers',res);
-                var followers = res.data.getUser.followers.items;
+                var followers = [];
+                if (res.data.getUser != null) {
+                  followers = res.data.getUser.followers.items;
+                }
                 this.setState({ 'numFollowers': followers.length });
                 this.setState({ 'followers': followers.map((follower)=>follower.id.split('-')[0]) }, ()=>console.log(this.state.followers));
             }, (err) => {
@@ -23,7 +25,10 @@ class FollowList extends Component {
         getFollowing(this.props.username)
             .then((res)=>{
                 console.log('follow list','initial pull','success pulling following',res);
-                var following = res.data.getUser.following.items;
+                var following = [];
+                if (res.data.getUser != null) {
+                  following = res.data.getUser.following.items;
+                }
                 this.setState({ 'numFollowing': following.length });
                 this.setState({ 'following': following.map((following)=>following.id.split('-')[1]) }, ()=>console.log(this.state.following));
             }, (err) => {
@@ -100,32 +105,32 @@ class FollowList extends Component {
     const {isHidden, type, list, numFollowers, numFollowing } = this.state;
     // initial call to pull num followers and following
     if(type === 'initial' && this.props.username){
-      console.log(this.props.username);
-      this.initialPull();
+        console.log(this.props.username);
+        this.initialPull();
     }
     // setup header for when a list is displayed
     var header;
     if(type === 'follower'){
-      header = numFollowers + " Followers";
+        header = numFollowers + " Followers";
     }
     else if(type === 'following'){
-      header = numFollowing + " Following";
+        header = numFollowing + " Following";
     }
     return(
-    <div>
-      <Button onClick={this.handleFollowerClick}>{numFollowers} Followers</Button>
-      <br />
-      <br />
-      <Button onClick ={this.handleFollowingClick}>{numFollowing} Following</Button>
-      <br />
-      <br />
-      <h5>{header}</h5>
-      <ListGroup>
-        {list.map(item => (
-          <ListGroup.Item href={'/otherprofile/'+item} action key={item}>{item}</ListGroup.Item>
-        ))}
-      </ListGroup>
-      </div>
+        <div>
+            <Button onClick={this.handleFollowerClick}>{numFollowers} Followers</Button>
+            <br />
+            <br />
+            <Button onClick ={this.handleFollowingClick}>{numFollowing} Following</Button>
+            <br />
+            <br />
+            <h5>{header}</h5>
+            <ListGroup>
+                {list.map(item => (
+                    <ListGroup.Item href={'/otherprofile/'+item} action key={item}>{item}</ListGroup.Item>
+                ))}
+            </ListGroup>
+        </div>
     )
   }
 }
