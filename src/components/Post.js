@@ -4,7 +4,7 @@ import { Badge, Button, Row, Toast } from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify';
 // custom modules
-import { searchPost, createLike } from '../DBOps.js';
+import { searchPost, createLike, createEngagement, updateEngagement, getEngagement } from '../DBOps.js';
 // globals
 
 function TopicList(props){
@@ -75,6 +75,11 @@ class Post extends Component {
 			this.state.id = this.props.id;
 		}
 
+		this.engage = {
+			userid: "",
+			topic: ""
+		}
+
 		this.pull = this.pull.bind(this);
 		this.stub = this.stub.bind(this);
 	}
@@ -95,6 +100,21 @@ class Post extends Component {
 		var postid = this.props.id;
 		var likeid = userid.username + postid;
 		var ret = await createLike(JSON.stringify({id: likeid, user: userid.username, post: postid}));
+		// loop to update engagement between user and his/her topics
+		for (var i = 0; i < this.state.topics.length; i++) {
+			this.engage.topic = this.state.topics[i];
+			this.engage.userid = userid.username;
+			var engagement = await getEngagement({id: userid.username + "-" + this.state.topics[i]});
+			if (engagement.data.getEngagement == null) { // creates engagement if user never engaged with that specific topic
+				console.log("Created Engagement: " + JSON.stringify(createEngagement({id: this.engage.userid + "-" + this.engage.topic,
+																																							value: 1, topicid: this.engage.topic,
+																																							userid: this.engage.userid})));
+			}
+			else { // user has engaged with topic before
+				updateEngagement({id: engagement.data.getEngagement.id, value: engagement.data.getEngagement.value + 1});
+				console.log("Updated Engagment: " + JSON.stringify(engagement));
+			}
+		}
 		console.log(ret);
 	}
 

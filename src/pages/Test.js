@@ -7,6 +7,7 @@ import { createFollow, deleteFollow } from '../DBOps.js'                        
 import { createNotification, searchNotification, deleteNotification } from '../DBOps.js'  // Noitification methods
 import { createTopic, searchTopic } from '../DBOps.js'                                    // Topic methods
 import { createTag } from '../DBOps.js'                                                   // Tag methods
+import { customQuery } from '../DBOps.js'
 import DBOps from '../DBOps.js'
 import Post from '../components/Post.js'
 
@@ -64,6 +65,10 @@ class Test extends Component {
       tagTopicId: "",
       tagPostId: ""
     }
+    this.wcustate = {
+      input: ""
+    }
+
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
     this.handleFollowee = this.handleFollowee.bind(this);
@@ -80,6 +85,7 @@ class Test extends Component {
     this.handleCTopic = this.handleCTopic.bind(this);
     this.handleCTTag = this.handleCTTag.bind(this);
     this.handleCPTag = this.handleCPTag.bind(this);
+    this.handleWUSearch = this.handleWUSearch.bind(this);
   }
 
   /***** User Operations In Testing *****/
@@ -241,12 +247,12 @@ class Test extends Component {
   }
 
   createTopic = async () => {
-    var temp = await new DBOps().createTopic(JSON.stringify(this.createTopicState));
+    var temp = await createTopic(JSON.stringify(this.createTopicState));
     console.log(temp);
   }
 
   searchTopic = async () => {
-    var temp = await new DBOps().searchTopic(JSON.stringify(this.searchTopicState));
+    var temp = await searchTopic(JSON.stringify(this.searchTopicState));
     console.log(temp);
   }
 
@@ -265,6 +271,25 @@ class Test extends Component {
   createTag = async () => {
     var temp = await new DBOps().createTag(JSON.stringify(this.createTagState));
     console.log(temp);
+  }
+
+  /***** WC User Search *****/
+
+  handleWUSearch(event) {
+    this.wcustate.input = event.target.value;
+    console.log("Set wcustate input to: " + event.target.value);
+  }
+
+  WCUSearch = async () => {
+    const template = `query searchUsers($input: ID!) {
+      searchUsers(filter: {id: {wildcard: $input}}) {
+        items {
+          id
+        }
+      }
+    }`
+    var temp = await customQuery(template, {input: this.wcustate.input + "*"});
+    console.log(temp.data.searchUsers.items);
   }
 
   render() {
@@ -313,6 +338,8 @@ class Test extends Component {
         Tag Topic ID : <input onChange={this.handleCTTag}/><br/>
         Tag Post ID : <input onChange={this.handleCPTag}/><br/>
         <button onClick={this.createTag}>Create Tag</button><br/>
+        Wild Card User Search : <input onChange={this.handleWUSearch}/>
+        <button onClick={this.WCUSearch}>Search Users with WildCard</button><br/>
       </div>
 
     );
