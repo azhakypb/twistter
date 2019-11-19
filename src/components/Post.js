@@ -7,6 +7,7 @@ import { faQuoteRight, faQuoteLeft } from '@fortawesome/free-solid-svg-icons'
 import { Auth } from 'aws-amplify';
 // custom modules
 import { searchPost, createLike } from '../DBOps.js';
+import ProcessQuote from './ProcessQuote.js'
 // globals
 
 function TopicList(props){
@@ -78,10 +79,14 @@ class Post extends Component {
 			this.state.id = this.props.id;
 		}
 
-		this.pull = this.pull.bind(this);
-		this.stub = this.stub.bind(this);
+		this.pull 	   = this.pull.bind(this);
+		this.stub 	   = this.stub.bind(this);
+		this.callQuote = this.callQuote.bind(this);
 	}
-
+	callQuote() {
+		console.log("callQuote is called");
+		return <ProcessQuote/>
+	}
 	async componentDidMount(){
 
 		if( this.state.id !== '' ){ this.pull(); }
@@ -138,7 +143,7 @@ class Post extends Component {
 							<Button variant="primary" size="sm" onClick={this.createLike}>
   								Like <Badge variant="light">{this.state.likes.length}</Badge>
 							</Button>
-							<Button variant="info" size="sm"><FontAwesomeIcon icon={faQuoteLeft} /> <FontAwesomeIcon icon={faQuoteRight} /></Button>
+							<Button variant="info" size="sm" onClick={this.callQuote}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight} /></Button>
 						</Row>
 					</Toast.Body>
 				</Toast>
