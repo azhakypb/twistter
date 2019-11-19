@@ -13,7 +13,7 @@ class Search extends Component {
     constructor(props){
         // props and state
         super(props);
-        this.state = { 
+        this.state = {
             text        : '',
             search      : '',
             showResults : 0,
@@ -45,28 +45,28 @@ class Search extends Component {
     // input field handlers
     handleChangeText  (event){
         this.setState({ text: event.target.value });
-        console.log("Search page\n" + 
+        console.log("Search page\n" +
             "handleChangeText function\n" +
             "Set text state to :" + event.target.value);
     }
 
     // submission field handlers
-    
+
     handleSubmitText = async() => {
         if (!Object.is(this.state.text, '')) {
             this.setState({ search: this.state.text });
-            console.log("Search page\n" + 
+            console.log("Search page\n" +
                 "handleChangeText function\n" +
                 "Set search state to :" + this.state.text);
-            
+
             searchTopic(this.state.text)
                 .then((res)=>{
-                    console.log("Search page\n" + 
+                    console.log("Search page\n" +
                         "handleChangeText function\n" +
                         "Search topic result", res);
-                    if( !(res.getTopics === null) && res.getTopics.posts.items.length > 0 ){
+                    if( !(res.data.getTopics === null) && res.data.getTopics.posts.items.length > 0 ){
                         this.setState({posts:[]},()=>{
-                                this.setState({ posts: res.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
+                                this.setState({ posts: res.data.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
                             });
                     }
                     else{
@@ -75,7 +75,7 @@ class Search extends Component {
                 });
 
             this.setState({ showResults: 1 });
-            console.log("Search page\n" + 
+            console.log("Search page\n" +
                 "handleChangeText function\n" +
                 "Set showResults state to 1");
         }
@@ -109,9 +109,9 @@ class Search extends Component {
                         </InputGroup>
                     </Jumbotron>
                     <this.Results />
-                </Col>                
+                </Col>
                 <Col>
-                    
+
                 </Col>
             </Row>
         );
