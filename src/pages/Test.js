@@ -9,7 +9,6 @@ import { createTopic, searchTopic } from '../DBOps.js'                          
 import { createTag } from '../DBOps.js'                                                   // Tag methods
 import { customQuery } from '../DBOps.js'
 import DBOps from '../DBOps.js'
-import { createUser, searchUser, deleteUser, createFollow, deleteFollow, createPost, createTopic, searchPost, createNotification, searchNotification, deleteNotification } from '../DBOps.js'
 import Post from '../components/Post.js'
 
 class Test extends Component {
