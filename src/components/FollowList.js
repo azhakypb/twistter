@@ -13,7 +13,10 @@ class FollowList extends Component {
         getFollowers(this.props.username)
             .then((res)=>{
                 console.log('follow list','initial pull','success pulling followers',res);
-                var followers = res.data.getUser.followers.items;
+                var followers = [];
+                if (res.data.getUser != null) {
+                  followers = res.data.getUser.followers.items;
+                }
                 this.setState({ 'numFollowers': followers.length });
                 this.setState({ 'followers': followers.map((follower)=>follower.id.split('-')[0]) }, ()=>console.log(this.state.followers));
             }, (err) => {
@@ -23,7 +26,10 @@ class FollowList extends Component {
         getFollowing(this.props.username)
             .then((res)=>{
                 console.log('follow list','initial pull','success pulling following',res);
-                var following = res.data.getUser.following.items;
+                var following = [];
+                if (res.data.getUser != null) {
+                  following = res.data.getUser.following.items;
+                }
                 this.setState({ 'numFollowing': following.length });
                 this.setState({ 'following': following.map((following)=>following.id.split('-')[1]) }, ()=>console.log(this.state.following));
             }, (err) => {
