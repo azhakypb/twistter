@@ -193,22 +193,16 @@ class Settings extends Component {
 
             {this.state.alerts.map((msg,index) => {
                 return(
-                    <Alert key={index} variant='success' dismissible='true'>
+                    <Alert key={index} variant='success' dismissible onClose={()=>this.removeAlert(index)}>
                         {msg}
-                        <Button variant="outline-success" onClick={()=>{this.removeAlert(index)}}>
-                            Close
-                        </Button>
                     </Alert>
                 );
             })}
 
             {this.state.errors.map((msg,index) => {
                 return(
-                    <Alert key={index} variant='danger' dismissible='true'>
+                    <Alert key={index} variant='danger' dismissible onClose={()=>this.removeError(index)}>
                         {msg}
-                        <Button variant="outline-error" onClick={()=>{this.removeError(index)}}>
-                            Close
-                        </Button>
                     </Alert>
                 );
             })}
