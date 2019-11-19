@@ -326,6 +326,44 @@ const deleteLikeTemplate = `mutation deleteLike(
   }
 }`
 
+const createEngagementTemplate = `mutation createEngagement(
+  $id: ID!,
+  $value: Int!,
+  $topicid: ID!,
+  $userid: ID!
+) {
+  createEngagement(input: {
+    id: $id,
+    value: $value,
+    engagementTopicId: $topicid,
+    engagementUserId: $userid
+  }) {
+    id
+    value
+  }
+}`
+
+const updateEngagementTemplate = `mutation updateEngagement(
+  $id: ID!,
+  $value: Int!
+) {
+  updateEngagement(input: {id: $id, value: $value}) {
+    id
+    value
+  }
+}`
+
+const getEngagementTemplate = `query getEngagement(
+  $id: ID!
+) {
+  getEngagement(id: $id) {
+    id
+    value
+  }
+}`
+
+
+
 class DBOps extends Component {
 
   constructor(props) {
@@ -721,6 +759,17 @@ export function getFollowers(userid){
 export function getFollowing(userid){
     return API.graphql(graphqlOperation(getFollowingTemplate, JSON.stringify({id: userid})));
 }
-
+export function createEngagement(info) {
+  return API.graphql(graphqlOperation(createEngagementTemplate, JSON.stringify(info)));
+}
+export function updateEngagement(info) {
+  return API.graphql(graphqlOperation(updateEngagementTemplate, JSON.stringify(info)));
+}
+export function getEngagement(engagementId) {
+  return API.graphql(graphqlOperation(getEngagementTemplate, JSON.stringify(engagementId)));
+}
+export function customQuery(template, params) {
+  return API.graphql(graphqlOperation(template, JSON.stringify(params)));
+}
 
 export default DBOps;

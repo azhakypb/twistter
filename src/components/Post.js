@@ -90,7 +90,7 @@ class Post extends Component {
 	handleAddQuotePost (event){
 		this.setState({ quoteText:	event.target.value}
 		);
-	}
+	}	
 	handleAddQuoteTopic (event){
 		this.setState({ quoteTopic: event.target.value}
 		);
