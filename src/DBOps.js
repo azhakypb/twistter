@@ -139,7 +139,6 @@ const postCreateTemplate = `mutation createPost(
         $text: String!,
         $timestamp: Int!,
         $postAuthorId: ID!
-
     ) {
         createPost (input:{
         text: $text,
@@ -274,6 +273,18 @@ const searchTopicTemplate = `query searchTopic(
   }
 }
 `
+
+/* To be added to search Topic
+quote{
+  id
+}
+quoted {
+  items {
+    id
+  }
+}
+
+*/
 
 const createTagTemplate = `mutation createTag(
   $tagTopicId: ID!,

@@ -27,10 +27,13 @@ type Post @model(queries: {get: "getPost"}, mutations: {create: "createPost", up
   quoted:   [Post]  @connection(name: "postQuoted")
 }
 
-type Follow @model(queries: {get: "getFollow"}, mutations: {create: "createFollow", delete: "deleteFollow"}, subscriptions: null){
+type Follow @model(queries: {get: "getFollow"}, mutations: {create: "createFollow", update: "updateFollow", delete: "deleteFollow"}, subscriptions: null){
   id: ID!
   follower: User! @connection(name: "userFollower")
   followee: User! @connection(name: "userFollowee")
+  followedtopics: [Topic] @connection
+  unfollowedtopics: [Topic] @connection
+  newtopics: [Topic] @connection
 }
 
 type Like @model(queries: {get: "getLike"}, mutations: {create: "createLike", delete: "deleteLike"}, subscriptions: null){
