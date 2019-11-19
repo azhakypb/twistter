@@ -58,13 +58,7 @@ class Search extends Component {
             console.log("Search page\n" +
                 "handleChangeText function\n" +
                 "Set search state to :" + this.state.text);
-<<<<<<< HEAD
-
-            searchTopic(JSON.stringify({id: this.state.text}))
-=======
-
             searchTopic(this.state.text)
->>>>>>> dev
                 .then((res)=>{
                     console.log("Search page\n" +
                         "handleChangeText function\n" +
