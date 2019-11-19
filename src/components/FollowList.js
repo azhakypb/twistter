@@ -9,7 +9,7 @@ class FollowList extends Component {
 
     // pulls the num of followers and following on first render of component
     async initialPull() {
-    
+
         getFollowers(this.props.username)
             .then((res)=>{
                 console.log('follow list','initial pull','success pulling followers',res);
