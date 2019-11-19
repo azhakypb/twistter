@@ -4,6 +4,7 @@ import { Button, Col, FormControl, InputGroup, Jumbotron, Row, DropdownButton } 
 // aws modules
 // components
 import Navbar from '../components/Navbar.js'
+import { searchTopic } from '../DBOps.js'
 import DBOps from '../DBOps.js'
 import Post from '../components/Post.js'
 
@@ -58,7 +59,7 @@ class Search extends Component {
                 "handleChangeText function\n" +
                 "Set search state to :" + this.state.text);
             
-            new DBOps().searchTopic(JSON.stringify({id: this.state.text}))
+            searchTopic(this.state.text)
                 .then((res)=>{
                     console.log("Search page\n" + 
                         "handleChangeText function\n" +

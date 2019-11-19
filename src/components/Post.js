@@ -35,9 +35,7 @@ class Post extends Component {
 
 	async pull(){
 
-		var info = JSON.stringify({id: this.state.id});
-
-		searchPost(info).then((res) => {
+		searchPost(this.state.id).then((res) => {
 
 			console.log(res);
 			res 		= res.data.getPost;
