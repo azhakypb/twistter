@@ -274,7 +274,7 @@ const searchTopicTemplate = `query searchTopic(
     }
   }
 }
-`*/
+`
 
 const createTagTemplate = `mutation createTag(
   $tagTopicId: ID!,

@@ -4,12 +4,7 @@ import { Button, Col, FormControl, InputGroup, ListGroup, Jumbotron, Row, Dropdo
 // aws modules
 // components
 import Navbar from '../components/Navbar.js'
-<<<<<<< HEAD
-import { getFollowing, searchTopic } from '../DBOps.js'
-=======
-import { searchTopic } from '../DBOps.js'
-import DBOps from '../DBOps.js'
->>>>>>> dev-kevin
+import { getFollowing, searchTopic, customQuery } from '../DBOps.js'
 import Post from '../components/Post.js'
 import UserlistItem from '../components/UserlistItem.js'
 import FollowList from '../components/FollowList.js'
@@ -106,14 +101,23 @@ class Search extends Component {
             else if (this.state.searchType == "@") {
                 console.log("Searching for users w/ username\n" +
                     "Username contains " + this.state.search);
-                const users = ["mark", "awsellers"];
+                const searchTemplate = `query searchUsers($input: ID!) {
+                  searchUsers(filter: {id: {wildcard: $input}}) {
+                    items {
+                      id
+                    }
+                  }
+                }`
+                var users = await customQuery(searchTemplate, {input: this.state.search + "*"});
+                // const users = ["mark", "awsellers"];
+                console.log(users.data.searchUsers.items);
                 this.setState({posts:[]},()=>{
-                    this.setState({posts: users.map(user => <ListGroup.Item href={'/otherprofile/'+user} action key={user}>
-                        {user}
+                    this.setState({posts: users.data.searchUsers.items.map(user => <ListGroup.Item href={'/otherprofile/'+user.id} action key={user.id}>
+                        {user.id}
                     </ListGroup.Item>)})
                 })
-                this.setState({posts:[<ListGroup.Item href={'/testing'} action>
-                    Check back soon for working version</ListGroup.Item>]});
+                // this.setState({posts:[<ListGroup.Item href={'/testing'} action>
+                //     Check back soon for working version</ListGroup.Item>]});
             }
 
             else
