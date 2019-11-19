@@ -1,13 +1,12 @@
 // react modules
 import React, { Component } from 'react';
-import { Badge, Button, Row, Toast } from 'react-bootstrap';
+import { Badge, Button, Row, Toast, Modal, InputGroup, FormControl, Container } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faQuoteRight, faQuoteLeft } from '@fortawesome/free-solid-svg-icons'
 // aws modules
 import { Auth } from 'aws-amplify';
 // custom modules
 import { searchPost, createLike } from '../DBOps.js';
-import ProcessQuote from './ProcessQuote.js'
 // globals
 
 function TopicList(props){
@@ -70,20 +69,38 @@ class Post extends Component {
 			'text'			: '',
 			'q_text'		: '',
 			'topics'		: [],
-			'likes'			: []
+			'likes'			: [],
+		}
+		this.stateQuote = {
+			showModal		: false,
+			quoteText		: '',
+			quoteTopic		: ''
 		}
 
 		if( 'id' in this.props && !(this.props.id === '') ){
 			this.state.id = this.props.id;
 		}
 
-		this.pull 	   = this.pull.bind(this);
-		this.stub 	   = this.stub.bind(this);
-		this.callQuote = this.callQuote.bind(this);
+		this.pull 	   				= this.pull.bind(this);
+		this.stub 	   				= this.stub.bind(this);
+		this.handleModalClick 		= this.handleModalClick.bind(this);
+		this.handleAddQuotePost 	= this.handleAddQuotePost.bind(this);
+		this.handleAddQuoteTopic 	= this.handleAddQuoteTopic.bind(this);
 	}
-	callQuote() {
-		console.log("callQuote is called");
-		return <ProcessQuote/>
+	handleAddQuotePost (event){
+		this.setState({ quoteText:	event.target.value}
+		);
+	}
+	handleAddQuoteTopic (event){
+		this.setState({ quoteTopic: event.target.value}
+		);
+	}
+	handleModalClick() {
+		this.setState(prevState => {
+			return {
+				showModal: !prevState.showModal
+			}
+		});
 	}
 	async componentDidMount(){
 
@@ -119,32 +136,76 @@ class Post extends Component {
 		if( q_username === '' ){
 
 			return(
-
-				<Toast>
-	  				<Toast.Header>
-	    				<strong
-	    					onClick={(e) => {
-	    						document.location.href = "/otherprofile/"+username;
-	    					}}
-	    					className="mr-auto">@{username}
-						</strong>
-	    				<small>{timestamp}</small>
-					</Toast.Header>
-					<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
-						<Row style={{ paddingBottom: 5}}>
-							{text}
-						</Row>
-						<Row>
-							<TopicList topics={topics}/>
-						</Row>
-						<Row>
-							<Button variant="primary" size="sm" onClick={this.createLike}>
-  								Like <Badge variant="light">{this.state.likes.length}</Badge>
-							</Button>
-							<Button variant="info" size="sm" onClick={this.callQuote}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight} /></Button>
-						</Row>
-					</Toast.Body>
-				</Toast>
+				<div>
+					<Toast>
+		  				<Toast.Header>
+		    				<strong
+		    					onClick={(e) => {
+		    						document.location.href = "/otherprofile/"+username;
+		    					}}
+		    					className="mr-auto">@{username}
+							</strong>
+		    				<small>{timestamp}</small>
+						</Toast.Header>
+						<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
+							<Row style={{ paddingBottom: 5}}>
+								{text}
+							</Row>
+							<Row>
+								<TopicList topics={topics}/>
+							</Row>
+							<Row>
+								<Button variant="primary" size="sm" onClick={this.createLike}>
+	  								Like <Badge variant="light">{this.state.likes.length}</Badge>
+								</Button>
+								<Button variant="info" size="sm" onClick={this.handleModalClick}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight} /></Button>
+							</Row>
+						</Toast.Body>
+					</Toast>
+					<Modal show={this.stateQuote.showModal}>
+						<Modal.Header closeButton>
+							<Modal.Title>Quoting @{this.state.username}</Modal.Title>
+        				</Modal.Header>
+        				<Modal.Body>
+							<InputGroup>
+								<Container>
+									<Row>
+										<FormControl
+											rows='5'
+											placeholder='Quote Here'
+											as='textarea'
+											maxlength="407"
+										/>
+									</Row>
+									<Row>
+										<FormControl
+											rows='7'
+											as='textarea'
+											value={"The post: \n" + this.state.text + "\n" + "Topics: \n" + this.state.topics}
+											disabled
+										/>
+									</Row>
+									<Row>
+										<FormControl
+											rows='2'
+											as='textarea'
+											placeHolder="Add one to five topics, separate with comma if necessary"
+											maxlength="100"
+										/>
+									</Row>
+								</Container>
+							</InputGroup>
+						</Modal.Body>
+        				<Modal.Footer>
+          					<Button variant="secondary" onClick={this.handleModalClick}>
+            					Close
+          					</Button>
+          					<Button variant="primary" onClick={this.handleModalClick}>
+            					Save Changes
+          					</Button>
+        				</Modal.Footer>
+      				</Modal>
+				</div>
 
 			)
 
