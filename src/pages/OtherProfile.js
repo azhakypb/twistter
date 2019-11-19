@@ -57,7 +57,6 @@ class OtherProfile extends Component {
         cognitoidentityserviceprovider.adminGetUser(this.params, (err, data) => {
 
             if (err){
-
                 console.log(err, err.stack); // an error occurred
             } else{
 
