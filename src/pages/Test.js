@@ -1,7 +1,8 @@
 
 // react modules
 import React, { Component } from 'react';
-import DBOps from '../DBOps.js'
+import DBOps from '../DBOps.js';
+import TopicView from  '../components/TopicView.js';
 import { createUser, searchUser, deleteUser, createFollow, deleteFollow, createPost, createTopic, searchPost, createNotification, searchNotification, deleteNotification } from '../DBOps.js'
 import Post from '../components/Post.js'
 
@@ -305,6 +306,7 @@ class Test extends Component {
         Tag Topic ID : <input onChange={this.handleCTTag}/><br/>
         Tag Post ID : <input onChange={this.handleCPTag}/><br/>
         <button onClick={this.createTag}>Create Tag</button><br/>
+        <TopicView/>
       </div>
 
     );
