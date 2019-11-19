@@ -1,6 +1,7 @@
 import React, { Component, } from 'react';
 import { Button, InputGroup, FormControl, Form} from 'react-bootstrap';
 import DBOps from '../DBOps.js'
+import { createPost } from '../DBOps.js'
 import { Auth } from 'aws-amplify'
 
 class Singlepost extends Component {
@@ -15,7 +16,6 @@ class Singlepost extends Component {
       		text1         : '',
       		topics1       : '',
       		postAuthorId1 : this.props.username,
-      		timestamp1    : 0
     	}
     	//bind functions
     	this.handleAddPost      = this.handleAddPost.bind(this);
@@ -23,28 +23,12 @@ class Singlepost extends Component {
     	this.handleTopicNum     = this.handleTopicNum.bind(this);
     	this.handleLength       = this.handleLength.bind(this);
     	this.handleCreatePost   = this.handleCreatePost.bind(this);
-    	this.handleTime         = this.handleTime.bind(this);
     	this.handleDouble       = this.handleDouble.bind(this);
   	}
 
   	//handlers
   	handleDouble() {
-    	this.handleTime();
     	this.handleCreatePost();
-  	}
-  	handleTime() {
-    	var month, day, year;
-    	var today     = new Date();
-    	month         = today.getMonth();
-    	day           = today.getDate();
-    	year          = today.getFullYear();
-
-    	var monthNum  = 1 + parseInt(month, 10);
-    	var dayNum    = parseInt(day, 10);
-    	var yearNum   = parseInt(year, 10);
-
-    	var res       = monthNum * 1000000 + dayNum * 10000 + yearNum;
-    	this.setState({ timestamp1:     res});
   	}
   	handleAddPost (event){
     	this.setState({ text1:     event.target.value}
@@ -76,31 +60,12 @@ class Singlepost extends Component {
     	Auth.currentAuthenticatedUser({ bypassCache: true })
         	.catch((err)=>{console.log('error getting user',err);})
         	.then((user)=>{
-            	var username    = user.username;
-            	var toSend      = {
-                	text        : this.state.text1,
-                	timestamp   : this.state.timestamp1,
-                	postAuthorId: username
-            	};
-            	new DBOps().createPost(JSON.stringify(toSend))
-                	.then((post)=>{
-                    	const topics = this.state.topics1;
-                    	console.log('Singlepost.js handleCreatePost() topics:', topics);
-                    	for (var i = 0; i < topics.length; i++) {
-                        	const topic = topics[i];
-                        	new DBOps().createTopic(JSON.stringify({id: topic}))
-                        		.finally(()=>{
-                            		var tag_input = {tagTopicId: topic, tagPostId: post.id};
-                            new DBOps().createTag(JSON.stringify(tag_input))
-                                .catch((err)=>{
-                                    console.log('Singlepost.js handleCreatePost() create tag error',err);
-                                })
-                                .then((res)=>{
-                                    console.log('Singlepost.js handleCreatePost() create tag success',res);
-                                });
-                        	})
-                    	}
-                	});
+            	createPost(user.username,this.state.topics1,this.state.text1)
+                    .then((res)=>{
+                        console.log('single post','handle create post','success',res)
+                    },(err)=>{
+                        console.log('single post','handle create post','success',err)
+                    })
         	});
   	}
 

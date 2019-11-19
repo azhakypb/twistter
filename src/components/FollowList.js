@@ -105,32 +105,32 @@ class FollowList extends Component {
     const {isHidden, type, list, numFollowers, numFollowing } = this.state;
     // initial call to pull num followers and following
     if(type === 'initial' && this.props.username){
-      console.log(this.props.username);
-      this.initialPull();
+        console.log(this.props.username);
+        this.initialPull();
     }
     // setup header for when a list is displayed
     var header;
     if(type === 'follower'){
-      header = numFollowers + " Followers";
+        header = numFollowers + " Followers";
     }
     else if(type === 'following'){
-      header = numFollowing + " Following";
+        header = numFollowing + " Following";
     }
     return(
-    <div>
-      <Button onClick={this.handleFollowerClick}>{numFollowers} Followers</Button>
-      <br />
-      <br />
-      <Button onClick ={this.handleFollowingClick}>{numFollowing} Following</Button>
-      <br />
-      <br />
-      <h5>{header}</h5>
-      <ListGroup>
-        {list.map(item => (
-          <ListGroup.Item href={'/otherprofile/'+item} action key={item}>{item}</ListGroup.Item>
-        ))}
-      </ListGroup>
-      </div>
+        <div>
+            <Button onClick={this.handleFollowerClick}>{numFollowers} Followers</Button>
+            <br />
+            <br />
+            <Button onClick ={this.handleFollowingClick}>{numFollowing} Following</Button>
+            <br />
+            <br />
+            <h5>{header}</h5>
+            <ListGroup>
+                {list.map(item => (
+                    <ListGroup.Item href={'/otherprofile/'+item} action key={item}>{item}</ListGroup.Item>
+                ))}
+            </ListGroup>
+        </div>
     )
   }
 }
