@@ -268,20 +268,24 @@ const searchTopicTemplate = `query searchTopic(
               id
             }
           }
-          quote{
-            id
-          }
-          quoted {
-            items {
-              id
-            }
-          }
         }
       }
     }
   }
 }
 `
+
+/* To be added to search Topic
+quote{
+  id
+}
+quoted {
+  items {
+    id
+  }
+}
+
+*/
 
 const createTagTemplate = `mutation createTag(
   $tagTopicId: ID!,
@@ -567,7 +571,7 @@ export function createFollow(follower, followee){
 		API.graphql(graphqlOperation(followCreateTemplate, JSON.stringify({
         	id: follower+'-'+followee,
         	followFollowerId: follower,
-        	followFolloweeId: followee 
+        	followFolloweeId: followee
     	}))).then((res)=>{
 
     		const res1 = res;
