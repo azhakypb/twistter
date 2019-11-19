@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 
 import DBOps from '../DBOps.js'
+import { deleteUser } from '../DBOps.js'
 import Postwrite from '../components/Postwrite.js'
 
 class Navbar extends Component {
@@ -38,9 +39,16 @@ class Navbar extends Component {
                     if (this.props.onSessionChange) {
                         this.props.onSessionChange();
                     }
-                    document.location.href = "/login";
-                    new DBOps().deleteUser(username);
-                    resolve();
+                    deleteUser(username)
+                    	.then((res)=>{
+                    		console.log('navbar','delete user','success',res)
+                    		document.location.href = "/login";
+                    		resolve();
+                    	},(err)=>{
+                    		console.log('navbar','delete user','error',err)
+                    		document.location.href = "/login";
+                    		resolve();
+                    	});
                 });
             }))
             .catch(this.onError);

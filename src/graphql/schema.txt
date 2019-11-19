@@ -45,7 +45,7 @@ type Tag @model(queries: {get: "getTag"}, mutations: {create: "createTag", delet
   topic: Topic! @connection(name: "topicTag")
 }
 
-type Engagement @model(queries: {get: "getEngagement"}, mutations: {create: "createEngagement, updateEngagement"}, subscriptions: null) {
+type Engagement @model(queries: {get: "getEngagement"}, mutations: {create: "createEngagement", update: "updateEngagement"}, subscriptions: null) {
   id: ID!
   value: Int!
   topic: Topic! @connection(name: "topicEngagement")

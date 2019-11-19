@@ -4,7 +4,12 @@ import { Button, Col, FormControl, InputGroup, ListGroup, Jumbotron, Row, Dropdo
 // aws modules
 // components
 import Navbar from '../components/Navbar.js'
+<<<<<<< HEAD
 import { getFollowing, searchTopic } from '../DBOps.js'
+=======
+import { searchTopic } from '../DBOps.js'
+import DBOps from '../DBOps.js'
+>>>>>>> dev-kevin
 import Post from '../components/Post.js'
 import UserlistItem from '../components/UserlistItem.js'
 import FollowList from '../components/FollowList.js'
