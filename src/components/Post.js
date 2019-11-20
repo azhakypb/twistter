@@ -2,11 +2,13 @@
 import React, { Component } from 'react';
 import { Badge, Button, Row, Toast, Modal, InputGroup, FormControl, Container } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faQuoteRight, faQuoteLeft } from '@fortawesome/free-solid-svg-icons'
+import { faQuoteRight, faQuoteLeft, faEdit } from '@fortawesome/free-solid-svg-icons'
 // aws modules
 import { Auth } from 'aws-amplify';
 // custom modules
 import { searchPost, createLike } from '../DBOps.js';
+import Quoteprocess from  './Quoteprocess'
+import Editprocess from  './Editprocess'
 // globals
 
 function TopicList(props){
@@ -70,39 +72,38 @@ class Post extends Component {
 			'q_text'		: '',
 			'topics'		: [],
 			'likes'			: [],
+			showQuote		: false,
+			showEdit		: false,
+			enableEdit		: false
 		}
-		this.stateQuote = {
-			showModal		: false,
-			quoteText		: '',
-			quoteTopic		: ''
-		}
-
 		if( 'id' in this.props && !(this.props.id === '') ){
 			this.state.id = this.props.id;
 		}
 
 		this.pull 	   				= this.pull.bind(this);
 		this.stub 	   				= this.stub.bind(this);
-		this.handleModalClick 		= this.handleModalClick.bind(this);
-		this.handleAddQuotePost 	= this.handleAddQuotePost.bind(this);
-		this.handleAddQuoteTopic 	= this.handleAddQuoteTopic.bind(this);
+		this.handleQuoteClick 		= this.handleQuoteClick.bind(this);
+		this.handleEditClick 		= this.handleEditClick.bind(this);
+		this.handleEnableEdit		= this.handleEnableEdit.bind(this);
 	}
-	handleAddQuotePost (event){
-		this.setState({ quoteText:	event.target.value}
-		);
-	}	
-	handleAddQuoteTopic (event){
-		this.setState({ quoteTopic: event.target.value}
-		);
+	handleEnableEdit() {
+		
 	}
-	handleModalClick() {
+	handleQuoteClick() {
 		this.setState(prevState => {
 			return {
-				showModal: !prevState.showModal
+				showQuote: !prevState.showQuote
 			}
 		});
 	}
-	async componentDidMount(){
+	handleEditClick() {
+		this.setState(prevState => {
+			return {
+				showEdit: !prevState.showEdit
+			}
+		});
+	}
+		async componentDidMount(){
 
 		if( this.state.id !== '' ){ this.pull(); }
 	}
@@ -130,7 +131,7 @@ class Post extends Component {
 			q_timestamp,
 			text,
 			q_text,
-			topics
+			topics,
 		} = this.state;
 
 		if( q_username === '' ){
@@ -158,53 +159,13 @@ class Post extends Component {
 								<Button variant="primary" size="sm" onClick={this.createLike}>
 	  								Like <Badge variant="light">{this.state.likes.length}</Badge>
 								</Button>
-								<Button variant="info" size="sm" onClick={this.handleModalClick}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight} /></Button>
+								<Button variant="outline-info" size="sm" onClick={this.handleQuoteClick}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight} /></Button>
+								<Button variant="outline-warning" size="sm" onClick={this.handleEditClick}><FontAwesomeIcon icon={faEdit} /></Button>
 							</Row>
 						</Toast.Body>
 					</Toast>
-					<Modal show={this.stateQuote.showModal}>
-						<Modal.Header closeButton>
-							<Modal.Title>Quoting @{this.state.username}</Modal.Title>
-        				</Modal.Header>
-        				<Modal.Body>
-							<InputGroup>
-								<Container>
-									<Row>
-										<FormControl
-											rows='5'
-											placeholder='Quote Here'
-											as='textarea'
-											maxlength="407"
-										/>
-									</Row>
-									<Row>
-										<FormControl
-											rows='7'
-											as='textarea'
-											value={"The post: \n" + this.state.text + "\n" + "Topics: \n" + this.state.topics}
-											disabled
-										/>
-									</Row>
-									<Row>
-										<FormControl
-											rows='2'
-											as='textarea'
-											placeHolder="Add one to five topics, separate with comma if necessary"
-											maxlength="100"
-										/>
-									</Row>
-								</Container>
-							</InputGroup>
-						</Modal.Body>
-        				<Modal.Footer>
-          					<Button variant="secondary" onClick={this.handleModalClick}>
-            					Close
-          					</Button>
-          					<Button variant="primary" onClick={this.handleModalClick}>
-            					Save Changes
-          					</Button>
-        				</Modal.Footer>
-      				</Modal>
+					{this.state.showQuote ? <Quoteprocess action={this.handleQuoteClick} username={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote}/> : null}
+					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
 				</div>
 
 			)
