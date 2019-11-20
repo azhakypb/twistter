@@ -766,7 +766,7 @@ export function customQuery(template, params) {
   return API.graphql(graphqlOperation(template, JSON.stringify(params)));
 }
 export function getUserPost(userid) {
-  const template = `query getUser ($id: ID!){
+  const template = `query getUser($id: ID!){
     getUser(id: $id) {
       posts {
         items {
@@ -776,7 +776,7 @@ export function getUserPost(userid) {
       }
     }
   }`
-  return API.grapql(graphqlOperation(template, {id: userid}));
+  return API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
 }
 export function getFollowedPost(userid) {
   // get all posts and return
