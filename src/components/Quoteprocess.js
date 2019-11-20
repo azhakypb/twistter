@@ -13,11 +13,11 @@ class Quoteprocess extends Component {
 			quoteText		: '',
 			quoteTopic		: ''
 		}
-		this.handleAddQuotePost 	= this.handleAddQuotePost.bind(this);
-		this.handleAddQuoteTopic 	= this.handleAddQuoteTopic.bind(this);
+		this.handleAddQuotePost 	    = this.handleAddQuotePost.bind(this);
+		this.handleAddQuoteTopic 	    = this.handleAddQuoteTopic.bind(this);
 		this.handleTopicNumQuote     	= this.handleTopicNumQuote.bind(this);
 		this.handleLengthQuote       	= this.handleLengthQuote.bind(this);
-		this.handleDouble			= this.handleDouble.bind(this);
+		this.handleDouble			    = this.handleDouble.bind(this);
 	}
     handleDouble(){
         //create a quoted post

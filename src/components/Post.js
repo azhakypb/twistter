@@ -2,11 +2,11 @@
 import React, { Component } from 'react';
 import { Badge, Button, Row, Toast, Modal, InputGroup, FormControl, Container } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faQuoteRight, faQuoteLeft, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faQuoteRight, faQuoteLeft, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 // aws modules
 import { Auth } from 'aws-amplify';
 // custom modules
-import { searchPost, createLike } from '../DBOps.js';
+import { searchPost, createLike, deleteLike } from '../DBOps.js';
 import Quoteprocess from  './Quoteprocess'
 import Editprocess from  './Editprocess'
 // globals
@@ -74,7 +74,9 @@ class Post extends Component {
 			'likes'			: [],
 			showQuote		: false,
 			showEdit		: false,
-			enableEdit		: false
+			enableEdit		: false,
+			showLiked		: false,
+			curUser 		: ''
 		}
 		if( 'id' in this.props && !(this.props.id === '') ){
 			this.state.id = this.props.id;
@@ -84,10 +86,22 @@ class Post extends Component {
 		this.stub 	   				= this.stub.bind(this);
 		this.handleQuoteClick 		= this.handleQuoteClick.bind(this);
 		this.handleEditClick 		= this.handleEditClick.bind(this);
-		this.handleEnableEdit		= this.handleEnableEdit.bind(this);
+		this.handleDeleteClick 		= this.handleDeleteClick.bind(this);
+		this.handleLikeClick		= this.handleLikeClick.bind(this);
 	}
-	handleEnableEdit() {
-		
+	async getUser() {
+		var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
+		this.setState({
+			curUser:	user.username
+		});
+		console.log('Current user is: ' + user.username);
+	}
+	handleLikeClick() {
+		this.setState(prevState => {
+			return {
+				showLiked: !prevState.showLiked
+			}
+		});
 	}
 	handleQuoteClick() {
 		this.setState(prevState => {
@@ -107,6 +121,9 @@ class Post extends Component {
 
 		if( this.state.id !== '' ){ this.pull(); }
 	}
+	handleDeleteClick() {
+		//delete
+	}
 
 	componentDidUpdate(prevProps, prevState, snapshot){
 
@@ -114,16 +131,28 @@ class Post extends Component {
 	}
 
 	createLike = async () => {
+
 		var userid = await Auth.currentAuthenticatedUser({ bypassCache: true });
 		console.log(userid.username);
 		var postid = this.props.id;
 		var likeid = userid.username + postid;
 		var ret = await createLike(JSON.stringify({id: likeid, user: userid.username, post: postid}));
+		if (ret.data.createLike == null) {
+			var ret = await deleteLike(JSON.stringify({id: likeid}));
+		}
 		console.log(ret);
 	}
 
 	render(){
-
+		if(this.state.curUser === ''){
+			this.getUser();
+		}
+		let editDeleteAllow;
+		if(this.state.curUser === this.state.username) {
+			editDeleteAllow = true;
+		} else {
+			editDeleteAllow = false;
+		}
 		const {
 			username,
 			q_username,
@@ -156,11 +185,28 @@ class Post extends Component {
 								<TopicList topics={topics}/>
 							</Row>
 							<Row>
-								<Button variant="primary" size="sm" onClick={this.createLike}>
+								<Button variant="outline-light" size="sm" onClick={this.createLike}>
 	  								Like <Badge variant="light">{this.state.likes.length}</Badge>
 								</Button>
 								<Button variant="outline-info" size="sm" onClick={this.handleQuoteClick}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight} /></Button>
-								<Button variant="outline-warning" size="sm" onClick={this.handleEditClick}><FontAwesomeIcon icon={faEdit} /></Button>
+								{editDeleteAllow ?
+									<Button
+										variant="outline-warning"
+										size="sm"
+										onClick={this.handleEditClick}
+										action={this.handleDeleteClick}>
+										<FontAwesomeIcon icon={faEdit}/>
+									</Button>
+									: null}
+								{editDeleteAllow ?
+									<Button
+										variant="danger"
+										size="sm"
+										onClick={this.handleDeleteClick}
+										style={{ marginLeft: 144}}>
+										<FontAwesomeIcon icon={faTrash}/>
+									</Button>
+									: null}
 							</Row>
 						</Toast.Body>
 					</Toast>

@@ -13,11 +13,11 @@ class Editprocess extends Component {
 			editText		: '',
 			editTopic		: ''
 		}
-		this.handleEditPost 	= this.handleEditPost.bind(this);
-		this.handleEditTopic 	= this.handleEditTopic.bind(this);
+		this.handleEditPost 	        = this.handleEditPost.bind(this);
+		this.handleEditTopic 	        = this.handleEditTopic.bind(this);
 		this.handleTopicNumEdit     	= this.handleTopicNumEdit.bind(this);
 		this.handleLengthEdit       	= this.handleLengthEdit.bind(this);
-		this.handleDouble			= this.handleDouble.bind(this);
+		this.handleDouble			    = this.handleDouble.bind(this);
 	}
     handleDouble(){
         //replace edited post
