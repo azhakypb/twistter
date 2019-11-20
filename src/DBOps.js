@@ -699,15 +699,12 @@ export function createPost(author,topics,text,quoteid=false){
         }
     });
 }
-
 export function searchPost(id){
     return API.graphql(graphqlOperation(postSearchTemplate, JSON.stringify({
     	id: id
     })));
 }
-
 export function createNotification(userid,text){
-
     var month, day, year;
     var today     = new Date();
     var monthNum  = 1 + parseInt(today.getMonth(), 10);
@@ -721,19 +718,16 @@ export function createNotification(userid,text){
     	time: timeid
     })));
 }
-
 export function deleteNotification(id){
     return API.graphql(graphqlOperation(notifDeleteTemplate,JSON.stringify({
     	id: id
     })));
 }
-
 export function searchNotification(id){
     return API.graphql(graphqlOperation(notifSearchTemplate,JSON.stringify({
     	id: id
     })));
 }
-
 export function createTopic(id){
     return API.graphql(graphqlOperation(createTopicTemplate,JSON.stringify({
     	id: id
@@ -836,6 +830,20 @@ export function updatePost(postid,text){
 }
 export function deletePost(postid){
   return true;
+}
+
+export function getUserPost(userid) {
+  const template = `query getUser ($id: ID!){
+    getUser(id: $id) {
+      posts {
+        items {
+          id
+          timestamp
+        }
+      }
+    }
+  }`
+  return API.grapql.(graphqlOperation({id: userid}));
 }
 
 export default DBOps;
