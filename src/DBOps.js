@@ -771,4 +771,18 @@ export function getEngagement(engagementId) {
 export function customQuery(template, params) {
   return API.graphql(graphqlOperation(template, JSON.stringify(params)));
 }
+
+export function getUserPost(userid) {
+  const template = `query getUser ($id: ID!){
+    getUser(id: $id) {
+      posts {
+        items {
+          id
+          timestamp
+        }
+      }
+    }
+  }`
+  return API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
+}
 export default DBOps;
