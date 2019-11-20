@@ -109,7 +109,6 @@ class Search extends Component {
                   }
                 }`
                 var users = await customQuery(searchTemplate, {input: this.state.search + "*"});
-                // const users = ["mark", "awsellers"];
                 console.log(users.data.searchUsers.items);
                 this.setState({posts:[]},()=>{
                     this.setState({posts: users.data.searchUsers.items.map(user => <ListGroup.Item href={'/otherprofile/'+user.id} action key={user.id}>

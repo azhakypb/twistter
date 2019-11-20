@@ -1,11 +1,13 @@
 // react modules
 import React, { Component } from 'react';
-import { Card, Col, Container,  Jumbotron, Row, Image } from 'react-bootstrap';
+import { Button, Card, Col, Container,  Jumbotron, Row, Image, InputGroup, FormControl } from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
-import Navbar from '../components/Navbar.js'
-import FollowList from '../components/FollowList.js'
+import { searchTopic, searchPost, searchUser } from '../DBOps.js'
+import Navbar from '../components/Navbar.js';
+import FollowList from '../components/FollowList.js';
+import Post from '../components/Post.js';
 import { UsernameContext } from '../UsernameContext.js';
 class Profile extends Component {
 
@@ -14,11 +16,49 @@ class Profile extends Component {
         super(props)
         this.state = {
             name        : '',
-            username    : '',
-            url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png'
+			username    : '',
+			sort		: 'time',
+			filterText	: '',
+			filterTopic	: '',
+			myposts		: [
+				<Post/>,
+				<Post/>,
+				<Post/>
+			],
+			url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png'
         }
-        // bind functions
-    }
+		// bind functions
+		this.showPosts = this.showPosts.bind(this);
+		this.handleChangeSort = this.handleChangeSort.bind(this);
+		this.handleChangeText = this.handleChangeText.bind(this);
+		this.handleChangeTopic = this.handleChangeTopic.bind(this);
+	}
+	
+	showPosts(props){
+		
+		searchUser(JSON.stringify({id: this.context.id}))
+			.then((res)=>{
+				console.log(res);
+			})
+		return (
+			<ul>{this.state.myposts}</ul>
+		)
+	}
+
+	handleChangeSort(event){
+		this.setState({ sort: event.target.value });
+		console.log("Set sort state to :" + event.target.value);
+	}
+
+	handleChangeText(event){
+		this.setState({ filterText: event.target.value });
+		console.log("Set filterText state to :" + event.target.value);
+	}
+
+	handleChangeTopic(event){
+		this.setState({ filterTopic: this.state.filterText });
+		console.log("Set filterTopic state to :" + this.state.filterText);
+	}
 
     async componentDidMount(){
 		console.log('Context test 2:', this.context.username);
@@ -57,11 +97,34 @@ class Profile extends Component {
                 		<Container
                     		className="timeline">
                     		<Jumbotron>
-                        		<Image style={{width: '2rem'}}
-                            		src={url}
-                            		roundedCircle
-                        		/>
-                        		<p>{name}<br />@{this.context.username} </p>
+                        		<h3>Your Timeline</h3>
+								<label>
+									Sort by: 
+									<select onChange = {this.handleChangeSort}>
+										<option value="time">Time Posted</option>
+										<option value="relevancy">Relevancy</option>
+										<option value="potential">Engagement Potential</option>
+									</select>
+									<br/>
+									Filter by:
+									<InputGroup
+										className="mb-3"
+										value={this.state.topic}>
+										<FormControl
+											placeholder="insert topic here"
+											aria-label="insert topic here"
+											aria-describedby="basic-addon2"
+											onChange={this.handleChangeText}/>
+									<InputGroup.Append>
+										<Button
+											variant="outline-secondary"
+											onClick={this.handleChangeTopic}>
+											Filter
+										</Button>
+									</InputGroup.Append>
+									</InputGroup>
+								</label>
+								<this.showPosts/>
                     		</Jumbotron>
                 		</Container>
             		</Col>
