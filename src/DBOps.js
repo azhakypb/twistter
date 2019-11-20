@@ -776,7 +776,7 @@ export function getUserPost(userid) {
       }
     }
   }`
-  return API.grapql.(graphqlOperation(template, {id: userid}));
+  return API.grapql(graphqlOperation(template, {id: userid}));
 }
 export function getFollowedPost(userid) {
   // get all posts and return
@@ -818,7 +818,8 @@ export function getFollowedPost(userid) {
        }
      }
    }`
-   var query_ret = API.grapql.(graphqlOperation(followPostTemplate, {id: userid}));
+   var query_ret = API.grapql(graphqlOperation(followPostTemplate, {id: userid}));
+   console.log(query_ret);
 }
 
 export default DBOps;

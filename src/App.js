@@ -12,6 +12,7 @@ import Profile from './pages/Profile.js'
 import Test from './pages/Test.js'
 import Notifications from './pages/Notifications.js'
 import OtherProfile from './pages/OtherProfile.js'
+import KevinTesting from './pages/KevinTesting.js'
 // style sheet
 import './App.css';
 
@@ -19,7 +20,7 @@ import './App.css';
 
 class App extends Component {
 	state = { username: '' };
-	
+
 	async getUser(){
 		var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
 		this.setState({
@@ -58,6 +59,7 @@ class App extends Component {
                         	component = { Notifications }
                     	/>
                     	<Route path="/otherprofile/:id" component={ OtherProfile } />
+											<Route path="/KevinTesting" component={ KevinTesting } />
                 	</Switch>
             	</Router>
 			</UsernameContext.Provider>
