@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import DBOps from '../DBOps.js';
 import TopicView from  '../components/TopicView.js';
-import { createUser, searchUser, deleteUser, createFollow, deleteFollow, createPost, createTopic, searchPost, createNotification, searchNotification, deleteNotification } from '../DBOps.js'
+import { createUser, searchUser, deleteUser, createFollow, deleteFollow, createPost, createTopic, searchPost, createNotification, searchNotification, deleteNotification, customQuery } from '../DBOps.js'
 import Post from '../components/Post.js'
 
 class Test extends Component {
@@ -60,6 +60,10 @@ class Test extends Component {
       tagTopicId: "",
       tagPostId: ""
     }
+    this.wcustate = {
+      input: ""
+    }
+
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
     this.handleFollowee = this.handleFollowee.bind(this);
@@ -76,6 +80,14 @@ class Test extends Component {
     this.handleCTopic = this.handleCTopic.bind(this);
     this.handleCTTag = this.handleCTTag.bind(this);
     this.handleCPTag = this.handleCPTag.bind(this);
+    this.handleWUSearch = this.handleWUSearch.bind(this);
+  }
+
+  /***** User Operations In Testing *****/
+
+  handleCreate(event) {
+    this.createState = {id: event.target.value};
+    console.log("Set createState id to: " + event.target.value);
   }
 
   handleDelete(event) {
@@ -92,15 +104,38 @@ class Test extends Component {
         });
   }
 
-  handleUnfollowInput(event) {
-    this.unfollowState.id = event.target.value;
-    console.log("Set followState followee to: " + event.target.value);
+  handleCreateUser = async () => {
+    createUser(this.createState).then((result) => {
+      console.log("No Error!");
+      console.log(result.data.createUser);
+    }, (error) => {
+      console.log("Error!\n");
+      console.log(error.data.createUser);
+    });
   }
 
-  handleUnFollow = async () => {
-    var temp = await new DBOps().deleteFollow(JSON.stringify(this.unfollowState));
-    console.log(temp);
+
+  handleSearchUser = async () => {
+    searchUser(this.searchState).then((result) => {
+      console.log("No Error!");
+      console.log(result);
+    }, (error) => {
+      console.log("Error!\n");
+      console.log(error);
+    });
   }
+
+  handleDeleteUser = async () => {
+    deleteUser(this.deleteState).then((result) => {
+      console.log("No Error!");
+      console.log(result);
+    }, (error) => {
+      console.log("Error!");
+      console.log(error);
+    })
+  }
+
+  /***** Follow Operations in Testing *****/
 
   handleFollowee(event) {
     this.followState.followFolloweeId = event.target.value;
@@ -110,6 +145,16 @@ class Test extends Component {
   handleFollower(event) {
     this.followState.followFollowerId = event.target.value;
     console.log("Set followState follower to: " + event.target.value);
+  }
+
+  handleUnfollowInput(event) {
+    this.unfollowState.id = event.target.value;
+    console.log("Set followState followee to: " + event.target.value);
+  }
+
+  handleUnFollow = async () => {
+    var temp = await new DBOps().deleteFollow(JSON.stringify(this.unfollowState));
+    console.log(temp);
   }
 
   handleFollow = async () => {
@@ -143,10 +188,7 @@ class Test extends Component {
     console.log("Set searchState id to: " + event.target.value);
   }
 
-  handleSearchUser = async () => {
-    var temp = await searchUser(JSON.stringify(this.searchState));
-    console.log(temp);
-  }
+  /***** Post Operations in Testing *****/
 
   handleCTPost(event) {
     this.createPostState.text = event.target.value;
@@ -161,6 +203,11 @@ class Test extends Component {
   handleCTopPost(event) {
     this.createPostState.topics = event.target.value;
     console.log("Set createPostState topic to: " + event.target.value);
+  }
+
+  handleSPost(event) {
+    this.searchPostState.id = event.target.value;
+    console.log("Set searchPostState id to: " + event.target.value);
   }
 
   handleCreatePost = async () => {
@@ -179,11 +226,6 @@ class Test extends Component {
     //}
   }
 
-  handleSPost(event) {
-    this.searchPostState.id = event.target.value;
-    console.log("Set searchPostState id to: " + event.target.value);
-  }
-
   handleSearchPost = async () => {
     searchPost(this.searchPostState.id).
         then((res)=>{
@@ -192,6 +234,8 @@ class Test extends Component {
             console.log('test','search post','error',err);
         });
   }
+
+  /***** Notification Operations in Testing *****/
 
   handleSNotif(event) {
     this.searchNotifState.id = event.target.value;
@@ -221,14 +265,11 @@ class Test extends Component {
         });
   }
 
+  /***** Topic Operations in Testing *****/
+
   handleSTopic(event) {
     this.searchTopicState.id = event.target.value;
     console.log("Set searchTopicState id to: " + event.target.value);
-  }
-
-  searchTopic = async () => {
-    var temp = await new DBOps().searchTopic(JSON.stringify(this.searchTopicState));
-    console.log(temp);
   }
 
   handleCTopic(event) {
@@ -245,6 +286,8 @@ class Test extends Component {
         });
   }
 
+  /***** Tag Operations in Testing *****/
+
   handleCTTag(event) {
     this.createTagState.tagTopicId = event.target.value;
     console.log("Set createTagState tagTopicId to: " + event.target.value);
@@ -258,6 +301,25 @@ class Test extends Component {
   createTag = async () => {
     var temp = await new DBOps().createTag(JSON.stringify(this.createTagState));
     console.log(temp);
+  }
+
+  /***** WC User Search *****/
+
+  handleWUSearch(event) {
+    this.wcustate.input = event.target.value;
+    console.log("Set wcustate input to: " + event.target.value);
+  }
+
+  WCUSearch = async () => {
+    const template = `query searchUsers($input: ID!) {
+      searchUsers(filter: {id: {wildcard: $input}}) {
+        items {
+          id
+        }
+      }
+    }`
+    var temp = await customQuery(template, {input: this.wcustate.input + "*"});
+    console.log(temp.data.searchUsers.items);
   }
 
   render() {
@@ -307,6 +369,8 @@ class Test extends Component {
         Tag Post ID : <input onChange={this.handleCPTag}/><br/>
         <button onClick={this.createTag}>Create Tag</button><br/>
         <TopicView/>
+        Wild Card User Search : <input onChange={this.handleWUSearch}/>
+        <button onClick={this.WCUSearch}>Search Users with WildCard</button><br/>
       </div>
 
     );
