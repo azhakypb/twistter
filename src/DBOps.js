@@ -843,7 +843,7 @@ export function getUserPost(userid) {
       }
     }
   }`
-  return API.graphql(graphqlOperation(template, {id: userid}));
+  return API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
 }
 
 export default DBOps;
