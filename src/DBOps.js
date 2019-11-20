@@ -603,9 +603,9 @@ export function deleteUser(username){
     return API.graphql(graphqlOperation(userDeletionTemplate, JSON.stringify({id: username})));
 }
 
-export function createFollow(follower, followee){
+export async function createFollow(follower, followee){
 	return new Promise((resolve,reject)=>{
-
+    var userTopics =
 		API.graphql(graphqlOperation(followCreateTemplate, JSON.stringify({
         	id: follower+'-'+followee,
         	followFollowerId: follower,
@@ -639,7 +639,7 @@ export function deleteFollow(follower, followee){
     })));
 }
 
-export function createPost(author,topics,text,quoteid=false){
+export async function createPost(author,topics,text,quoteid=false){
     return new Promise((resolve,reject)=>{
         var month, day, year;
         var today     = new Date();
@@ -657,10 +657,10 @@ export function createPost(author,topics,text,quoteid=false){
                 text: text,
             })))
                 .then((res)=>{
-                    var postid = res.data.createPost.id
+                    var postid = res.data.createPost.id;
                     for(var i=0; i<topics.length;i++){
 
-                        const topic = topics[i]
+                        const topic = topics[i];
                         API.graphql(graphqlOperation(createTopicTemplate, JSON.stringify({
                             id: topic
                         })))
@@ -696,6 +696,10 @@ export function createPost(author,topics,text,quoteid=false){
                 },(err)=>{
                     reject(err)
                 });
+            const getUserTopicTemplate = `query getUser($id: ID!) {getUser(id: $id) {interests {items {id}}}}`;
+            const updateUserTopicTemplate = `mutation updateUser($id: ID!) {
+              updateUser(input: {id: })
+            }`
         }
     });
 }
@@ -778,7 +782,7 @@ export function getUserPost(userid) {
   }`
   return API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
 }
-export function getFollowedPost(userid) {
+export async function getFollowedPost(userid) {
   // get all posts and return
   /* {{
    *  post id,
@@ -818,8 +822,19 @@ export function getFollowedPost(userid) {
        }
      }
    }`
-   var query_ret = API.graphql(graphqlOperation(followPostTemplate, JSON.stringify({id: userid})));
-   console.log(query_ret);
+   var query_ret = await API.graphql(graphqlOperation(followPostTemplate, JSON.stringify({id: userid})));
+   if (query_ret.data.getUser == null) {
+     return {data: null, message: "user does not exist"};
+   }
+   var following = query_ret.data.getUser.following;
+   if (following.length == 0) {
+     return {postid: null, pfe: null, relevance: null, timestamp: null};
+   }
+   for (var i = 0; i < following.length; i++) {
+     var followedTopics = following.followedtopics;
+
+   }
+   return query_ret;
 }
 
 export default DBOps;
