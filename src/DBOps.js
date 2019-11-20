@@ -536,9 +536,9 @@ class DBOps extends Component {
     var temp;
     try {
       temp = await API.graphql(graphqlOperation(searchTopicTemplate, info));
-      return temp.data;
+      return temp;
     } catch (e) {
-      return e.data;
+      return e;
     }
   }
 
@@ -772,4 +772,17 @@ export function customQuery(template, params) {
   return API.graphql(graphqlOperation(template, JSON.stringify(params)));
 }
 
+export function getUserPost(userid) {
+  const template = `query getUser ($id: ID!){
+    getUser(id: $id) {
+      posts {
+        items {
+          id
+          timestamp
+        }
+      }
+    }
+  }`
+  return API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
+}
 export default DBOps;

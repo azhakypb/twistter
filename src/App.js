@@ -65,4 +65,4 @@ class App extends Component {
     }
 }
 
-export default withAuthenticator( App );
+export default withAuthenticator( App )
