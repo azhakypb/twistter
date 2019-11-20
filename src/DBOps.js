@@ -772,58 +772,60 @@ export function getFollowInfo(followerid, followeeid){
     new: ['Topic 9', 'Topic 10']
   };
 }
-export function updateFollowInfo(followerid, followeeid, followed, ignored, new){
+export function updateFollowInfo(followerid, followeeid, followed, ignored){
   return true;
 }
 export function getFollowedPosts(userid){
   return [
     {
-      postid: '0336ce8a-ba43-46b7-bb12-6c581e6f455b'
-      relevance: 45
-      pfe: 25
-      timestamp: 10112019
+      postid: '0336ce8a-ba43-46b7-bb12-6c581e6f455b',
+      relevance: 45,
+      pfe: 25,
+      timestamp: 10112019,
       newTopics: []
     },
     {
-      postid: '0a233038-8dc3-4d4b-bf45-f8ef84424b28'
-      relevance: 55
-      pfe: 40
-      timestamp: 02122019
+      postid: '0a233038-8dc3-4d4b-bf45-f8ef84424b28',
+      relevance: 55,
+      pfe: 40,
+      timestamp: 2122019,
       newTopics: []
     },
     {
-      postid: '434e838b-d2f3-4f57-8679-1da404745d47'
-      relevance: 20
-      pfe: 10
-      timestamp: 04252019
+      postid: '434e838b-d2f3-4f57-8679-1da404745d47',
+      relevance: 20,
+      pfe: 10,
+      timestamp: 4252019,
       newTopics: []
     },
     {
-      postid: '547f8bac-1685-4121-861e-52f494bc0f97'
-      relevance: 15
-      pfe: 15
-      timestamp: 11112019
+      postid: '547f8bac-1685-4121-861e-52f494bc0f97',
+      relevance: 15,
+      pfe: 15,
+      timestamp: 11112019,
       newTopics: []
     },
     {
-      postid: '5c507f05-e5cc-40ca-857b-32d98c8f9855'
-      relevance: 99
-      pfe: 30
-      timestamp: 08282019
+      postid: '5c507f05-e5cc-40ca-857b-32d98c8f9855',
+      relevance: 99,
+      pfe: 30,
+      timestamp: 8282019,
       newTopics: []
     },
     {
-      postid: 'ae9ebccb-1a15-43fb-bf9e-31cb102c0e35'
-      relevance: 85
-      pfe: 35
-      timestamp: 07212019
+      postid: 'ae9ebccb-1a15-43fb-bf9e-31cb102c0e35',
+      relevance: 85,
+      pfe: 35,
+      timestamp: 7212019,
       newTopics: []
     }
   ]
 }
+/*
 export function deleteLike(postid){
   return true;
 }
+*/
 export function updatePost(postid,text){
   return true;
 
@@ -843,7 +845,7 @@ export function getUserPost(userid) {
       }
     }
   }`
-  return API.grapql.(graphqlOperation({id: userid}));
+  return API.graphql(graphqlOperation(template, JSON.stringify(userid)));
 }
 
 export default DBOps;

@@ -121,7 +121,7 @@ class Test extends Component {
 
 
   handleSearchUser = async () => {
-    searchUser(this.searchState).then((result) => {
+    searchUser(this.searchState.id).then((result) => {
       console.log("No Error!");
       console.log(result);
     }, (error) => {
