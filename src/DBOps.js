@@ -776,7 +776,7 @@ export function getUserPost(userid) {
       }
     }
   }`
-  return API.grapql.(graphqlOperation({id: userid}));
+  return API.grapql.(graphqlOperation(template, {id: userid}));
 }
 export function getFollowedPost(userid) {
   // get all posts and return
@@ -787,6 +787,38 @@ export function getFollowedPost(userid) {
    *  timestamp
    * }}
    */
+   const followPostTemplate = `query getFollowingPost($id: ID!) {
+     getUser(id: $id) {
+       following {
+         items {
+           followee {
+             posts {
+               items {
+                 id
+                 topics {
+                   items {
+                     id
+                   }
+                 }
+                 timestamp
+               }
+             }
+           }
+           followedtopics {
+             items {
+               id
+             }
+           }
+           newtopics {
+             items {
+               id
+             }
+           }
+         }
+       }
+     }
+   }`
+   var query_ret = API.grapql.(graphqlOperation(followPostTemplate, {id: userid}));
 }
 
 export default DBOps;
