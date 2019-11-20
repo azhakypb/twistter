@@ -771,6 +771,47 @@ export function getEngagement(engagementId) {
 export function customQuery(template, params) {
   return API.graphql(graphqlOperation(template, JSON.stringify(params)));
 }
+export function getFollowedPosts(userid) {
+
+  return [
+    {
+      postid: '0336ce8a-ba43-46b7-bb12-6c581e6f455b',
+      timestamp: parseInt('01212019'),
+      pfe: parseInt('40'),
+      relevance: parseInt('35')
+    },
+    {
+      postid: '0a233038-8dc3-4d4b-bf45-f8ef84424b28',
+      timestamp: parseInt('05162019'),
+      pfe: parseInt('55'),
+      relevance: parseInt('20')
+    },
+    {
+      postid: '434e838b-d2f3-4f57-8679-1da404745d47',
+      timestamp: parseInt('07192019'),
+      pfe: parseInt('23'),
+      relevance: parseInt('80')
+    },
+    {
+      postid: '547f8bac-1685-4121-861e-52f494bc0f97',
+      timestamp: parseInt('08202019'),
+      pfe: parseInt('33'),
+      relevance: parseInt('101')
+    },
+    {
+      postid: '5c507f05-e5cc-40ca-857b-32d98c8f9855',
+      timestamp: parseInt('09112019'),
+      pfe: parseInt('99'),
+      relevance: parseInt('1')
+    },
+    {
+      postid: 'ae9ebccb-1a15-43fb-bf9e-31cb102c0e35',
+      timestamp: parseInt('11012019'),
+      pfe: parseInt('20'),
+      relevance: parseInt('20')
+    }
+  ]
+}
 
 export function getUserPost(userid) {
   const template = `query getUser ($id: ID!){
