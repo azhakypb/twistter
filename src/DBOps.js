@@ -818,7 +818,7 @@ export function getFollowedPost(userid) {
        }
      }
    }`
-   var query_ret = API.grapql(graphqlOperation(followPostTemplate, {id: userid}));
+   var query_ret = API.graphql(graphqlOperation(followPostTemplate, JSON.stringify({id: userid})));
    console.log(query_ret);
 }
 
