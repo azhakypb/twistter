@@ -36,10 +36,7 @@ class Profile extends Component {
 	
 	showPosts(props){
 		
-		searchUser(JSON.stringify({id: this.context.id}))
-			.then((res)=>{
-				console.log(res);
-			})
+		console.log(this.context.user);
 		return (
 			<ul>{this.state.myposts}</ul>
 		)
