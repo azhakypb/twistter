@@ -71,123 +71,181 @@ class Settings extends Component {
         this.setState({errors: errors});
     }
     async handleSubmitEmail(email){
+		var noError = true;
+		var index = this.state.email.indexOf('@');
     	if(this.state.email==='') {
-            this.addError('cannot change email with an empty input'); 
+            this.addError('Cannot change email with an empty input'); 
         }
+		else if(!this.state.email.includes('@', 1) || !this.state.email.includes('.', index)){
+			this.addError('Email must be a valid format');
+		}
         else {
     	   Auth.currentAuthenticatedUser({ bypassCache: true })
                 .catch((err)=>{
-                    console.log('error getting user',err);
+                    console.log('Error getting user',err);
                     this.addError('Error retrieving user info; try again.');
                 })
                 .then((user)=>{
-                    var req = {email: email};
+                    var req = {email: this.state.email};
+						console.log('email change: ', req);
                     Auth.updateUserAttributes(user,req)
                         .catch((err)=>{
-                            console.log('error updating email',err);
+							noError = false;
+                            console.log('Error updating email',err);
                             this.addError('Error updating user email; try again.');
                         })
                         .then((res)=>{
-                            console.log('successfully updated email',res);
-                            this.addAlert('successfully updated email');
+							if(noError){
+                            	console.log('Successfully updated email',res);
+                            	this.addAlert('Successfully updated email');
+							}
                         });
                 });
     	}
     }
     async handleSubmitPhoneNumber(event){
+		var noError = true;
         if(this.state.phone_number==='') { 
-            this.addError('cannot change phone number with an empty input'); 
+            this.addError('Cannot change phone number with an empty input'); 
         }
 		else if(this.state.phone_number.length !== 10) {
 			this.addError('Phone number must be 10 digits');
+		}
+		else if(this.state.phone_number.search(/[^0-9]/) !== -1){
+			this.addError('Phone number can only contain numbers');
 		}
         else {
             console.log('updating user phone no');
             var user = await Auth.currentAuthenticatedUser({ bypassCache: true })
                 .catch((err) => { 
-                    console.error(err); 
+					noError = false;
+                    console.error(err);
+					this.addError('Error updating phone number; try again.');
                 });
-
-            var res = await Auth.updateUserAttributes(user, {phone_number:this.state.phone_number})
-                .catch((err) => { 
-                    console.error(err); 
-                })
-                .then((res)=>{
-                    this.addAlert('successfully updated phone number');
-                })
-
-            console.log(res);
-        }
+			
+			if(noError){
+            	var res = await Auth.updateUserAttributes(user, {phone_number:this.state.phone_number})
+                	.catch((err) => { 
+						noError = false;
+                    	console.error(err);
+						this.addError('Error updating phone number; try again.'); 
+                	})
+                	.then((res)=>{
+						if(noError){
+                    		this.addAlert('Successfully updated phone number');
+						}
+                	})
+        	}
+		}
     }
     async handleSubmitNewPassword(event){
+		var noError = true;
         if(this.state.old_password==='' || this.state.new_password==='') { 
-            this.addError('cannot change password with empty input'); 
+            this.addError('Cannot change password with empty input'); 
         }
+		else if(this.state.old_password === this.state.new_password){
+			this.addError('New password should not match old password');
+		}
+		else if(this.state.new_password.length < 8){
+			this.addError('New password must be at least 8 characters');
+		}
 	    else {
-        console.log('updating user password');
+        	console.log('updating user password');
 
-        var user = await Auth.currentAuthenticatedUser({ bypassCache: true })
-            .catch((err) => { 
-                console.error(err); 
-            });
-
-        var res = await Auth.changePassword(user, this.state.old_password, this.state.new_password)
-            .catch((err) => { 
-                console.error(err); 
-				this.addAlert('Wrong password');
-            })
-            .then((res) => {
-                this.addAlert('successfully updated password');
-            });
-
-            console.log(res);
-        }
-	
+        	var user = await Auth.currentAuthenticatedUser({ bypassCache: true })
+            	.catch((err) => { 
+                	console.error(err);
+					noError = false;
+					this.addError('Error updating password; try again.');
+            	});
+		
+			if(noError){
+        		var res = await Auth.changePassword(user, this.state.old_password, this.state.new_password)
+            		.catch((err) => { 
+						noError = false;
+                		console.error(err);
+						if(err.code === "NotAuthorizedException"){
+							this.addError('Wrong password');
+						}
+						else{
+							this.addError(err.code);
+						} 
+            		})
+            		.then((res) => {
+						if(noError){
+							this.addAlert('Successfully updated password');
+						}
+            		});
+        	}
+		}	
     }
     async handleSubmitName(event){
+		var noError = true;
         if(this.state.name==='') { 
-            this.addError('cannot change name with empty input');
+            this.addError('Cannot change name with empty input');
         }
+		else if(this.state.name.length > 24){
+			this.addError('Display name must be at most 24 characters');
+		}
         else {
-
-            console.log('updating user name');
-
+			console.log('updating user name');
             var user = await Auth.currentAuthenticatedUser({ bypassCache: true })
-                .catch((err) => { 
-                    console.error(err); 
+                .catch((err) => {
+					noError = false; 
+                    console.error(err);
+					this.addError('Error updating display name; try again.'); 
                 });
-
-            var res = await Auth.updateUserAttributes(user, {name:this.state.name})
-                .catch((err) => { 
-                    console.error(err); 
-                })
-                .then((res)=>{
-                    this.addAlert('successfully updated display name');
-                });
-
-            console.log(res);
+			if(noError){
+            	var res = await Auth.updateUserAttributes(user, {name:this.state.name})
+                	.catch((err) => { 
+						noError = false;
+                    	console.error(err);
+						this.addError('Error updating display name; try again.'); 
+                	})
+                	.then((res)=>{
+						if(noError){
+                    		this.addAlert('Successfully updated display name');
+						}
+                	});
+			}
         }
     }
     async handleSubmitUrl(event){
+		var noError = true;
         if(this.state.url==='') { 
-            this.addError('cannot change picture with empty input');
+            this.addError('Cannot change picture with empty input');
         }
+		else if(this.state.url.length > 2048){
+			this.addError('URL must be 2048 characters or less');
+		}
+		else if(!(this.state.url.includes('.jpg', 8) || this.state.url.includes('.png', 8) || this.state.url.includes('.gif', 8))){
+			this.addError('URL must be a .jpg, .png, or .gif');
+		}
+		else if((this.state.url.search(/(http:\/\/)/) !== 0) && (this.state.url.search(/(https:\/\/)/) !== 0)){
+			this.addError('Must be a valid URL');
+		}
     	else {
-
             console.log('updating user picture');
 
             var user = await Auth.currentAuthenticatedUser({ bypassCache: true })
                 .catch((err) => { 
+					noError = false;
                     console.error(err);
+					this.addError('Error updating image; try again.');
                 });
-
-            var res = await Auth.updateUserAttributes(user,{picture: this.state.url})
-                .catch((err) => { 
-                    console.error(err); 
-                }).then((res) => {
-                    this.addAlert('successfully updated profile picture');
-                });
-    	}
+			if(noError){
+            	var res = await Auth.updateUserAttributes(user,{picture: this.state.url})
+                	.catch((err) => {
+						noError = false; 
+                    	console.error(err);
+						this.addError('Error updating image; try again.'); 
+                	}).then((res) => {
+						if(noError){
+                    		this.addAlert('Successfully updated profile picture');
+						}
+                	});
+    		}
+		}
     }
 
 
