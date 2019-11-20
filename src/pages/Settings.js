@@ -98,6 +98,9 @@ class Settings extends Component {
         if(this.state.phone_number==='') { 
             this.addError('cannot change phone number with an empty input'); 
         }
+		else if(this.state.phone_number.length !== 10) {
+			this.addError('Phone number must be 10 digits');
+		}
         else {
             console.log('updating user phone no');
             var user = await Auth.currentAuthenticatedUser({ bypassCache: true })
@@ -131,6 +134,7 @@ class Settings extends Component {
         var res = await Auth.changePassword(user, this.state.old_password, this.state.new_password)
             .catch((err) => { 
                 console.error(err); 
+				this.addAlert('Wrong password');
             })
             .then((res) => {
                 this.addAlert('successfully updated password');
