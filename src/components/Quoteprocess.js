@@ -17,15 +17,17 @@ class Quoteprocess extends Component {
 		this.handleAddQuoteTopic 	    = this.handleAddQuoteTopic.bind(this);
 		this.handleTopicNumQuote     	= this.handleTopicNumQuote.bind(this);
 		this.handleLengthQuote       	= this.handleLengthQuote.bind(this);
+        this.handleCreatePost           = this.handleCreatePost.bind(this);
 		this.handleDouble			    = this.handleDouble.bind(this);
 	}
     handleDouble(){
         /*Create a quoted post
             should be done Here
         */
+        this.handleCreatePost();
 		console.log(this.state.quoteText);
 		console.log(this.state.quoteTopic);
-        this.props.action();
+        this.props.quoteClick();
 	}
 	handleAddQuotePost (event){
 		this.setState({ quoteText:	event.target.value}
@@ -51,7 +53,18 @@ class Quoteprocess extends Component {
 			return false
 		}
 	}
-
+    handleCreatePost = async () => {
+        Auth.currentAuthenticatedUser({ bypassCache: true })
+            .catch((err)=>{console.log('error getting user', err);})
+            .then((user)=>{
+                createPost(user.username, this.state.quoteTopic, this.state.quoteText, this.props.usernameq)
+                    .then((res)=>{
+                        console.log('single post', 'handle create quoted post', 'success', res);
+                    },(err)=>{
+                        console.log('single post', 'handle create quoted post', 'fail', err);
+                    })
+            });
+    }
     render() {
         const {
             quoteText,
@@ -61,9 +74,9 @@ class Quoteprocess extends Component {
                             this.handleTopicNumQuote(quoteTopic);
         let buttonColor = 	enabled ? "primary" : "secondary"
         return (
-                <Modal show={this.props.showQuote} onHide={this.props.action}>
+                <Modal show={this.props.showQuote} onHide={this.props.quoteClick}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Quoting @{this.props.username}</Modal.Title>
+                        <Modal.Title>Quoting @{this.props.usernameq}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Container>
@@ -111,7 +124,7 @@ class Quoteprocess extends Component {
                         </Container>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="danger" onClick={this.props.action}>
+                        <Button variant="danger" onClick={this.props.quoteClick}>
                             Close
                         </Button>
                         <Button variant={buttonColor} disabled={!enabled} onClick={this.handleDouble} type="submit">

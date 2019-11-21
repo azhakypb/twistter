@@ -27,7 +27,7 @@ class Post extends Component {
 			'username'		: 'Poster Username',
 			'q_username'	: 'Quote Username',
 			'timestamp'		: 'Post Timestamp',
-			'q_timestamp' : 'Quote Timestamp',
+			'q_timestamp' 	: 'Quote Timestamp',
 			'text' 				: 'Post Text Post Text Post Text Post Text Post Text Post Text',
 			'q_text'			: 'Quote Text Quote Text Quote Text Quote Text Quote Text',
 			'topics' 			: [ 'Topic 1', 'Topic 2', 'Topic 3']
@@ -75,8 +75,7 @@ class Post extends Component {
 			showQuote		: false,
 			showEdit		: false,
 			enableEdit		: false,
-			curUser 		: '',
-			liked			: false 
+			curUser 		: ''
 		}
 		if( 'id' in this.props && !(this.props.id === '') ){
 			this.state.id = this.props.id;
@@ -205,7 +204,7 @@ class Post extends Component {
 							</Row>
 						</Toast.Body>
 					</Toast>
-					{this.state.showQuote ? <Quoteprocess action={this.handleQuoteClick} username={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote}/> : null}
+					{this.state.showQuote ? <Quoteprocess quoteClick={this.handleQuoteClick} usernameq={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote}/> : null}
 					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
 				</>
 
