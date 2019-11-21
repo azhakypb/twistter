@@ -685,6 +685,40 @@ export function getEngagement(engagementId) {
 export function customQuery(template, params) {
   return API.graphql(graphqlOperation(template, JSON.stringify(params)));
 }
+export function getUserPosts(userid) {
+  const template = `query getUser ($id: ID!){
+    getUser(id: $id) {
+      posts {
+        items {
+          id
+          timestamp
+        }
+      }
+    }
+  }`
+  return API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
+}
+
+function processDataIntoHashTable(data, topics) {
+  if (data == null) {
+    return topics;
+  }
+  var dataset = data.split(",");
+  for (var i = 0; i < data.length; i++) {
+    topics[dataset[i]] = true;
+  }
+  return topics;
+}
+
+function containsFollowedTopics(postTopics, topics) {
+  for (var i = 0; i < postTopics.length; i++) {
+    if (topics[postTopics[i].topic.id] == true) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export function getFollowedTopics(follower, followee){
     return API.graphql(graphqlOperation(getFollowedTopicsTemplate,JSON.stringify({
         id: follower + '-' + followee
@@ -711,17 +745,54 @@ export function updateNewTopics(follower, followee, newtopics){
     })));
 }
 
-export function getUserPosts(userid) {
-  const template = `query getUser ($id: ID!){
-    getUser(id: $id) {
-      posts {
-        items {
-          id
-          timestamp
+export async function getFollowedPost(userid) {
+  const template = `query getUser($id: ID!) { getUser(id: $id) { following { items { followee { posts { items { id timestamp topics { items { topic { id } } } likes { items { id } } quoted { items { id } } } } } followedtopics unfollowedtopics newtopics } } engagement { items { value topic { id } } } } }`
+
+  var userData = await API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
+  var engagement = userData.data.getUser.engagement.items;
+  var followedUsers = userData.data.getUser.following.items;
+  var topicEngagement = []; // hash table with key as topic id and data as engagment value
+  var allposts = []; // array to store {postid, pfe, relevance, timestamp}
+
+  for (var i = 0; i < engagement.length; i++) {
+    topicEngagement[engagement[i].topic.id] = engagement[i].value;
+  }
+
+  for (var i = 0; i < followedUsers.length; i++) {
+    var followedtopics = (followedUsers[i].followedtopics == null) ? [] : followedUsers[i].followedtopics.split(","); // followed topics from that followed user
+    var newtopics = (followedUsers[i].newtopics == null) ? [] : followedUsers[i].newtopics.split(","); // new topics of that followed user
+    var posts = followedUsers[i].followee.posts.items; // post of that followed user
+    var topics = []; // hash table with key as topic id and data as true
+
+    // add followedtopics to hash table
+    for (var index = 0; index < followedtopics.length; index++) {
+      topics[followedtopics[index]] = true;
+    }
+    // add newtopics to hash table
+    for (var index = 0; index < newtopics.length; index++) {
+      topics[newtopics[index]] = true;
+    }
+
+    for (var j = 0; j < posts.length; j++) {
+      if (containsFollowedTopics(posts[j].topics.items, topics) == false) {
+        continue;
+      }
+      var postid = posts[j].id; // postid
+      var likes = posts[j].likes.items.length; // number of likes the post has
+      var quoted = posts[j].quoted.items.length; // number of times the post has been quoted
+      var timestamp = posts[j].timestamp; // timestamp of the post
+      var postTopics = posts[j].topics.items; // array of topics tagged onto the post
+      var pfe_value = 0; // potential of engagement value
+      for (var k = 0; k < postTopics.length; k++) {
+        if (topicEngagement[postTopics[k].topic.id] != null) {
+          pfe_value = topicEngagement[postTopics[k].topic.id];
         }
       }
+      var data = {id: postid, pfe: pfe_value, relevance: likes + quoted * 5, timestamp: timestamp};
+      allposts.push(data);
     }
-  }`
-  return API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
+
+  }
+  return allposts;
 }
 export default DBOps;
