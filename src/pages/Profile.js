@@ -1,6 +1,6 @@
 // react modules
 import React, { Component } from 'react';
-import { Button, Card, Col, Container,  Jumbotron, Row, Image, InputGroup, FormControl } from 'react-bootstrap';
+import { Button, Card, Col, Container, Dropdown, DropdownButton, Jumbotron, Row, Image, InputGroup, FormControl } from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
@@ -17,7 +17,7 @@ class Profile extends Component {
         this.state = {
             name        : '',
 			username    : '',
-			sort		: 'time',
+			sort		: 'Time Posted',
 			filterText	: '',
 			filterTopic	: '',
 			myposts		: [],
@@ -107,17 +107,31 @@ class Profile extends Component {
 								<hr/>
 								<label>
 									{"Sort by: "}
-									<select onChange = {this.handleChangeSort}>
-										<option value="time">Time Posted</option>
-										<option value="relevancy">Relevancy</option>
-										<option value="potential">Engagement Potential</option>
+									<select onChange={this.handleChangeSort}>
+										<option value="Time Posted">Time Posted</option>
+										<option value="Relevancy">Relevancy</option>
+										<option value="Potential">Engagement Potential</option>
 									</select>
 								</label>
 								<hr/>
 								<label>
-									{"Filter by: "}
-									<input type="text" placeholder="insert topic here" onChange={this.handleChangeText}/>
-									<button type="submit" onClick={this.handleChangeTopic}>Submit</button>
+									{"Filter by:"}
+									<InputGroup
+										className="mb-3"
+										value={this.state.filterText}
+										onChange={this.handleChangeText}>
+										<FormControl
+											placeholder="Type Topic Here"
+											aria-label="Type Topic Here"
+											aria-describedby="basic-addon2"/>
+										<InputGroup.Append>
+											<Button
+												variant="outline-secondary"
+												onClick={this.handleChangeTopic}>
+												Submit
+											</Button>
+										</InputGroup.Append>
+									</InputGroup>
 								</label>
 								<hr/>
 								<this.showPosts/>
@@ -129,8 +143,8 @@ class Profile extends Component {
             			<FollowList username={this.context.username}></FollowList>
             		</Col>
       		</Row>
-    );
-  }
+		);
+	}
 }
 Profile.contextType = UsernameContext;
 export default Profile;
