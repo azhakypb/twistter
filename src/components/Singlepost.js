@@ -87,7 +87,7 @@ class Singlepost extends Component {
                         	placeholder="Write something here before submitting"
                         	as="textarea"
                         	aria-label="With textarea"
-                        	maxlength="407"
+                        	maxLength="407"
                     	/>
                 	</InputGroup>
                 	<InputGroup
@@ -98,7 +98,7 @@ class Singlepost extends Component {
                         	placeholder="Add one to five topics, separate with comma if necessary"
                         	as="textarea"
                         	aria-label="With textarea"
-                        	maxlength="100"
+                        	maxLength="100"
                     	/>
                 	</InputGroup>
                 	<Button

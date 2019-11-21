@@ -19,7 +19,7 @@ type Topic @model(queries: {get: "getTopics"}, mutations: {create: "createTopic"
 type Post @model(queries: {get: "getPost"}, mutations: {create: "createPost", update: "updatePost", delete: "deletePost"}, subscriptions: null) {
   id:   ID!
   text:   String!
-  timestamp:  Int!
+  timestamp:  String!
   author: User! @connection(name: "userPost")
   likes: [Like] @connection(name: "postLikee")
   topics: [Tag] @connection(name: "postTag")
