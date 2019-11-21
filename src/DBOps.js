@@ -200,6 +200,32 @@ const postCreateTemplate = `mutation createPost(
     }
 }`
 
+const deletePostTemplate = `mutation deletePost(
+        $id: ID!
+    ) {
+        deletePost (input:{id: $id}){
+        id,
+        text,
+        timestamp,
+        author {
+            id
+        }
+    }
+}`
+
+const updatePostTemplate = `mutation updatePost(
+        $id: ID!, $text: String!
+    ) {
+        updatePost (input:{id:$id, text:$text}){
+        id,
+        text,
+        timestamp,
+        author {
+            id
+        }
+    }
+}`
+
 const quotePostCreateTemplate = `mutation createPost(
         $text: String!,
         $timestamp: String!,
@@ -601,6 +627,19 @@ export function createPost(author,topics,text,quoteid=false){
 export function searchPost(id){
     return API.graphql(graphqlOperation(postSearchTemplate, JSON.stringify({
     	id: id
+    })));
+}
+
+export function deletePost(id){
+    return API.graphql(graphqlOperation(deletePostTemplate, JSON.stringify({
+        id: id
+    })));
+}
+
+export function updatePost(id, text){
+    return API.graphql(graphqlOperation(updatePostTemplate, JSON.stringify({
+        id: id,
+        text: text
     })));
 }
 

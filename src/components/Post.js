@@ -6,7 +6,7 @@ import { faQuoteRight, faQuoteLeft, faEdit, faTrash, faHeart } from '@fortawesom
 // aws modules
 import { Auth } from 'aws-amplify';
 // custom modules
-import { searchPost, createLike, deleteLike } from '../DBOps.js';
+import { searchPost, createLike, deleteLike, deletePost } from '../DBOps.js';
 import Quoteprocess from  './Quoteprocess'
 import Editprocess from  './Editprocess'
 // globals
@@ -112,7 +112,16 @@ class Post extends Component {
 		if( this.state.id !== '' ){ this.pull(); }
 	}
 	handleDeleteClick() {
-		//delete
+		
+		deletePost(this.props.id)
+			.catch((err)=>{
+				console.log(err);
+			})
+			.then((res)=>{
+				console.log(res);
+				window.location.reload();
+			});
+
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot){
