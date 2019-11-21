@@ -20,11 +20,11 @@ class OtherProfile extends Component {
         //props and stats
         super(props)
         this.state = {
-            name        : '',
-            username    : '',
-            url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png',
-            me          : '',
-            posts       : [],
+            name                : '',
+            username            : '',
+            url                 : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png',
+            me                  : '',
+            posts               : [],
             show        : false
         }
         this.notifState = {
@@ -61,6 +61,7 @@ class OtherProfile extends Component {
             Username: window.location.href.split('/').slice(-1)[0] /* required */
         };
         var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+        await this.setState({me: user.username, username: window.location.href.split('/').slice(-1)[0]});
 
         // redirect if viewing own profile
 		if(this.params.Username === user.username){
@@ -145,7 +146,7 @@ class OtherProfile extends Component {
 
     render() {
 
-        const { show, name, username, url } = this.state
+        const { show, name, username, url, me } = this.state
 
         return (
         <Row>
@@ -189,7 +190,7 @@ class OtherProfile extends Component {
             </Col>
             <Modal show={show} onHide={()=>this.setShow(false)}>
                 <Modal.Body>
-                    <TopicView/>
+                    <TopicView follower={me} followee={username}/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={()=>this.setShow(false)}>

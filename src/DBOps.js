@@ -9,6 +9,22 @@ const userCreationTemplate = `mutation createUser($id: ID!) {
     }
 }`
 
+const getFollowedTopicsTemplate = `query getFollow($id: ID!) {
+    getFollow(id: $id){
+        followedtopics
+        unfollowedtopics
+        newtopics
+    }
+}`
+
+const updateFollowedTopicsTemplate = `mutation updateFollow($id: ID!, $followedtopics: String!, unfollowedtopics: String!, newtopics: String!) {
+    getFollow(id: $id, followedtopics: $followedtopics, unfollowedtopics: $unfollowedtopics, newtopics: $newtopics){
+        followedtopics
+        unfollowedtopics
+        newtopics
+    }
+}`
+
 const getFollowersTemplate = `query getUser($id: ID!) {
     getUser(id: $id){
         followers{
@@ -162,6 +178,27 @@ const postCreateTemplate = `mutation createPost(
         text: $text,
         timestamp: $timestamp,
         postAuthorId: $postAuthorId
+    }){
+        id,
+        text,
+        timestamp,
+        author {
+            id
+        }
+    }
+}`
+
+const quotePostCreateTemplate = `mutation createPost(
+        $text: String!,
+        $timestamp: String!,
+        $postAuthorId: ID!,
+        $quote: ID!
+    ) {
+        createPost (input:{
+        text: $text,
+        timestamp: $timestamp,
+        postAuthorId: $postAuthorId,
+        quote: $quote
     }){
         id,
         text,
@@ -392,220 +429,6 @@ class DBOps extends Component {
     }
     this.return_value = null;
   }
-  /***** BEGIN CREATE USER FUNCTIONS *****/
-
-  createUser = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(userCreationTemplate, info));
-      return temp.data.createUser;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-
-  /***** END CREATE USER FUNCTIONS *****/
-
-  /***** BEGIN SEARCH USER FUNCTIONS *****/
-
-  searchUser = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(userSearchTemplate, info));
-      return temp.data;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END SEARCH USER FUNCTIONS *****/
-
-  /***** BEGIN DELETE USER FUNCTIONS *****/
-
-  deleteUser = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(userDeletionTemplate, info));
-      return temp.data.deleteUser;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END DELETE USER FUNCTIONS *****/
-
-  /***** BEGIN CREATE FOLLOW FUNCTIONS *****/
-
-  createFollow = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(followCreateTemplate, info));
-      return temp.data.createFollow;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END CREATE FOLLOW FUNCTIONS *****/
-
-  /***** BEGIN UNFOLLOW FUNCTIONS *****/
-
-  deleteFollow = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(followDeleteTemplate, info));
-      return temp.data.deleteFollow;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END UNFOLLOW FUNCTIONS *****/
-
-  /***** BEGIN CREATE POST FUNCTIONS *****/
-
-  createPost = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(postCreateTemplate, info));
-      return temp.data.createPost;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END CREATE POST FUNCTIONS *****/
-
-  /***** BEGIN SEARCH POST FUNCTIONS *****/
-
-  searchPost = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(postSearchTemplate, info));
-      return temp.data.getPost;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END SEARCH POST FUNCTIONS *****/
-
-  /***** CREATE NOTIFICATION *****/
-
-  createNotification = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(notifCreateTemplate, info));
-      return temp.data;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END CREATE NOTIFICATION *****/
-
-  /***** SEARCH NOTIFICATION *****/
-
-  searchNotification = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(notifSearchTemplate, info));
-      return temp.data;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END SEARCH NOTIFICATION *****/
-
-  /***** DELETE NOTIFICATION *****/
-
-  deleteNotification = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(notifDeleteTemplate, info));
-      return temp.data.deleteNotification;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END DELETE NOTIFICATION *****/
-
-  /***** CREATE TOPIC *****/
-
-  createTopic = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(createTopicTemplate, info));
-      return temp.data;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END CREATE TOPIC *****/
-
-  /***** SEARCH TOPIC *****/
-
-  searchTopic = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(searchTopicTemplate, info));
-      return temp;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  /***** END SEARCH TOPIC *****/
-
-  /***** CREATE TAG *****/
-
-  createTag = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(createTagTemplate, info));
-      console.log(temp);
-      return temp.data;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  /***** END CREATE TAG *****/
-
-  /***** CREATE LIKE *****/
-
-  createLike = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(createLikeTemplate, info));
-      console.log(temp);
-      return temp.data;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  /***** END CREATE LIKE *****/
-
-  /***** DELETE LIKE *****/
-
-  deleteLike = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(deleteLikeTemplate, info));
-      console.log(temp);
-      return temp.data;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  /***** END CREATE LIKE *****/
-
 }
 
 export function createUser(username){
@@ -665,7 +488,7 @@ export function createPost(author,topics,text,quoteid=false){
 
         if(quoteid){
 
-            API.graphql(graphqlOperation(postCreateTemplate, JSON.stringify({
+            API.graphql(graphqlOperation(quotePostCreateTemplate, JSON.stringify({
                 postAuthorId: author,
                 timestamp: timeid,
                 text: text,
@@ -845,6 +668,19 @@ export function getEngagement(engagementId) {
 }
 export function customQuery(template, params) {
   return API.graphql(graphqlOperation(template, JSON.stringify(params)));
+}
+export function getFollowedTopics(follower, followee){
+    return API.graphql(graphqlOperation(getFollowedTopicsTemplate,JSON.stringify({
+        id: follower + '-' + followee
+    })));
+}
+export function updateFollowedTopics(follower, followee, followedtopics, unfollowedtopics, newtopics){
+    return API.graphql(graphqlOperation(updateFollowedTopicsTemplate,JSON.stringify({
+        id: follower + '-' + followee,
+        followedtopics: followedtopics,
+        unfollowedtopics: unfollowedtopics,
+        newtopics: newtopics
+    })));
 }
 
 export function getUserPosts(userid) {
