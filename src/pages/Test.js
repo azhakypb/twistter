@@ -1,14 +1,9 @@
 
 // react modules
 import React, { Component } from 'react';
-import { createUser, searchUser, deleteUser } from '../DBOps.js'                          // User methods
-import { createPost, searchPost } from '../DBOps.js'                                      // Post methods
-import { createFollow, deleteFollow } from '../DBOps.js'                                  // Follow methods
-import { createNotification, searchNotification, deleteNotification } from '../DBOps.js'  // Noitification methods
-import { createTopic, searchTopic } from '../DBOps.js'                                    // Topic methods
-import { createTag } from '../DBOps.js'                                                   // Tag methods
-import { customQuery } from '../DBOps.js'
-import DBOps from '../DBOps.js'
+import DBOps from '../DBOps.js';
+import TopicView from  '../components/TopicView.js';
+import { createUser, searchUser, deleteUser, createFollow, deleteFollow, createPost, createTopic, searchPost, createNotification, searchNotification, deleteNotification, customQuery } from '../DBOps.js'
 import Post from '../components/Post.js'
 
 class Test extends Component {
@@ -121,7 +116,7 @@ class Test extends Component {
 
 
   handleSearchUser = async () => {
-    searchUser(this.searchState).then((result) => {
+    searchUser(this.searchState.id).then((result) => {
       console.log("No Error!");
       console.log(result);
     }, (error) => {
@@ -373,6 +368,7 @@ class Test extends Component {
         Tag Topic ID : <input onChange={this.handleCTTag}/><br/>
         Tag Post ID : <input onChange={this.handleCPTag}/><br/>
         <button onClick={this.createTag}>Create Tag</button><br/>
+        <TopicView/>
         Wild Card User Search : <input onChange={this.handleWUSearch}/>
         <button onClick={this.WCUSearch}>Search Users with WildCard</button><br/>
       </div>

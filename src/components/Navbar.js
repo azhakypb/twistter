@@ -89,6 +89,16 @@ class Navbar extends Component {
 		    				Settings
 		  				</Button>
 	  				</Link>
+					<Link
+						to= '/notifications'
+						paddingtop="50px">
+						<Button
+							variant="secondary"
+							size="md"
+							block>
+							Notifications
+						</Button>
+					</Link>
 	          		<Link
 	            		to= '/'
 	            		paddingtop="50px">

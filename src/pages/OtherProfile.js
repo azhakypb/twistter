@@ -1,15 +1,17 @@
 // react modules
 import React, { Component } from 'react';
-import {Button, Card, Col, Container, Jumbotron, Row, Image} from 'react-bootstrap';
+import {Button, Card, Col, Container, Jumbotron, Row, Image, Modal} from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
 import DBOps from '../DBOps.js'
-import { createFollow, deleteFollow } from '../DBOps.js'
+import Post from '../components/Post.js'
+import { createFollow, deleteFollow, searchUser } from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
 import FollowList from '../components/FollowList.js'
 import { UsernameContext } from '../UsernameContext.js';
+import TopicView from  '../components/TopicView.js';
 var AWS = require('aws-sdk');
 
 class OtherProfile extends Component {
@@ -21,7 +23,9 @@ class OtherProfile extends Component {
             name        : '',
             username    : '',
             url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png',
-            me          : ''
+            me          : '',
+            posts       : [],
+            show        : false
         }
         this.notifState = {
           userid: "",
@@ -29,9 +33,19 @@ class OtherProfile extends Component {
           time: 0
         }
         // bind functions
+        this.showPosts = this.showPosts.bind(this);
         this.follow = this.follow.bind(this);
         this.unfollow = this.unfollow.bind(this);
+        this.setState = this.setState.bind(this);
     }
+
+    showPosts(props){
+		this.state.posts.sort((a,b) => a.timestamp - b.timestamp);
+		console.log("Sorted by timestamp!");
+		return (
+			<ul>{this.state.posts}</ul>
+		)
+	}
 
     async componentDidMount(){
 
@@ -57,7 +71,11 @@ class OtherProfile extends Component {
         cognitoidentityserviceprovider.adminGetUser(this.params, (err, data) => {
 
             if (err){
-                console.log(err, err.stack); // an error occurred
+			    console.log(err, err.stack); // an error occurred
+				//if user does not exist, redirect to own profile
+				if(err.code === 'UserNotFoundException'){
+					document.location.href = "/";
+				}
             } else{
 
                 this.setState({ username: window.location.href.split('/').slice(-1)[0] });
@@ -75,6 +93,22 @@ class OtherProfile extends Component {
             }
         });
 
+        
+        if(this.state.username !== null) {
+            console.log("Getting posts by...");
+            console.log(window.location.href.split('/').slice(-1)[0]);
+			searchUser(window.location.href.split('/').slice(-1)[0]).then((res) => {
+				console.log("User info: ");
+				console.log(res.data.getUser.posts.items);
+				if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
+					this.setState({posts:[]},()=>{
+						this.setState({ posts: res.data.getUser.posts.items.map( post => <Post key={post.id} id={post.id}/>)});
+					})
+					
+				}
+			})
+		}
+        
     }
 
     async follow(){
@@ -105,9 +139,13 @@ class OtherProfile extends Component {
             });
     }
 
+    setShow(bool){
+        this.setState({show: bool});
+    }
+
     render() {
 
-        const { name, username, url } = this.state
+        const { show, name, username, url } = this.state
 
         return (
         <Row>
@@ -130,17 +168,16 @@ class OtherProfile extends Component {
                         <h2>@{username}</h2>
 						<Button onClick={this.follow} aria-label="Follow">Follow</Button>
 						<Button onClick={this.unfollow} aria-label="Unfollow">Unfollow</Button>
+                        <Button onClick={()=>this.setShow(true)} aria-label="Manage Topics">Manage Topics</Button>
                     </Jumbotron>
                 </Container>
 
                 <Container
                     className="timeline">
                     <Jumbotron>
-                        <Image style={{width: '2rem'}}
-                            src={url}
-                            roundedCircle
-                        />
-                        <p>{name}<br />@{username} </p>
+                        <h3>{username}'s Timeline</h3>
+                        <hr/>
+                        <this.showPosts/>
                     </Jumbotron>
                 </Container>
             </Col>
@@ -150,6 +187,16 @@ class OtherProfile extends Component {
                 <FollowList username={username}></FollowList>
 
             </Col>
+            <Modal show={show} onHide={()=>this.setShow(false)}>
+                <Modal.Body>
+                    <TopicView/>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={()=>this.setShow(false)}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
       </Row>
     );
   }
