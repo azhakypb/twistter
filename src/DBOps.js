@@ -203,7 +203,7 @@ const postCreateTemplate = `mutation createPost(
 const deletePostTemplate = `mutation deletePost(
         $id: ID!
     ) {
-        deletePost (id: $id){
+        deletePost (input:{id: $id}){
         id,
         text,
         timestamp,
