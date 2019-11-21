@@ -85,7 +85,6 @@ class Post extends Component {
 		this.stub 	   				= this.stub.bind(this);
 		this.handleQuoteClick 		= this.handleQuoteClick.bind(this);
 		this.handleEditClick 		= this.handleEditClick.bind(this);
-		this.handleDeleteClick 		= this.handleDeleteClick.bind(this);
 	}
 	async getUser() {
 		var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
@@ -110,9 +109,6 @@ class Post extends Component {
 		async componentDidMount(){
 
 		if( this.state.id !== '' ){ this.pull(); }
-	}
-	handleDeleteClick() {
-		//delete
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot){
@@ -203,7 +199,7 @@ class Post extends Component {
 							</Row>
 						</Toast.Body>
 					</Toast>
-					{this.state.showQuote ? <Quoteprocess quoteClick={this.handleQuoteClick} usernameq={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote}/> : null}
+					{this.state.showQuote ? <Quoteprocess quoteClick={this.handleQuoteClick} usernameq={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote} id={this.props.id}/> : null}
 					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
 				</>
 
@@ -276,7 +272,7 @@ class Post extends Component {
 							</Row>
 						</Toast.Body>
 					</Toast>
-					{this.state.showQuote ? <Quoteprocess action={this.handleQuoteClick} username={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote}/> : null}
+					{this.state.showQuote ? <Quoteprocess action={this.handleQuoteClick} username={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote} id={this.props.id}/> : null}
 					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
 				</>
 			)

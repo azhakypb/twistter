@@ -236,7 +236,7 @@ const quotePostCreateTemplate = `mutation createPost(
         text: $text,
         timestamp: $timestamp,
         postAuthorId: $postAuthorId,
-        quote: $quote
+        postQuoteId: $quote
     }){
         id,
         text,

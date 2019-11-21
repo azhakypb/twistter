@@ -55,7 +55,7 @@ class Quoteprocess extends Component {
         Auth.currentAuthenticatedUser({ bypassCache: true })
             .catch((err)=>{console.log('error getting user', err);})
             .then((user)=>{
-                createPost(user.username, this.state.quoteTopic, this.state.quoteText, this.props.usernameq)
+                createPost(user.username, this.state.quoteTopic, this.state.quoteText, this.props.id)
                     .then((res)=>{
                         console.log('single post', 'handle create quoted post', 'success', res);
                     },(err)=>{
