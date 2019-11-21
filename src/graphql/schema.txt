@@ -1,8 +1,8 @@
 type User @model(queries: {get: "getUser"}, mutations: {create: "createUser", update: "updateUser", delete: "deleteUser"}, subscriptions: null) @searchable {
   id: ID!
   image: String
+  topics: String
   likes:  [Like] @connection(name: "userLiker")
-  interests: [Topic] @connection
   engagement: [Engagement] @connection(name: "userEngagement")
   followers: [Follow] @connection(name: "userFollowee")
   following: [Follow] @connection(name: "userFollower")
@@ -19,7 +19,7 @@ type Topic @model(queries: {get: "getTopics"}, mutations: {create: "createTopic"
 type Post @model(queries: {get: "getPost"}, mutations: {create: "createPost", update: "updatePost", delete: "deletePost"}, subscriptions: null) {
   id:   ID!
   text:   String!
-  timestamp:  Int!
+  timestamp:  String!
   author: User! @connection(name: "userPost")
   likes: [Like] @connection(name: "postLikee")
   topics: [Tag] @connection(name: "postTag")
@@ -31,9 +31,9 @@ type Follow @model(queries: {get: "getFollow"}, mutations: {create: "createFollo
   id: ID!
   follower: User! @connection(name: "userFollower")
   followee: User! @connection(name: "userFollowee")
-  followedtopics: [Topic] @connection
-  unfollowedtopics: [Topic] @connection
-  newtopics: [Topic] @connection
+  followedtopics: String
+  unfollowedtopics: String
+  newtopics: String
 }
 
 type Like @model(queries: {get: "getLike"}, mutations: {create: "createLike", delete: "deleteLike"}, subscriptions: null){
@@ -42,17 +42,17 @@ type Like @model(queries: {get: "getLike"}, mutations: {create: "createLike", de
   likee:    Post! @connection(name: "postLikee")
 }
 
-type Tag @model(queries: {get: "getTag"}, mutations: {create: "createTag", delete: "deleteTag"}, subscriptions: null) {
-  id:   ID!
-  post: Post! @connection(name: "postTag")
-  topic: Topic! @connection(name: "topicTag")
-}
-
 type Engagement @model(queries: {get: "getEngagement"}, mutations: {create: "createEngagement", update: "updateEngagement"}, subscriptions: null) {
   id: ID!
   value: Int!
   topic: Topic! @connection(name: "topicEngagement")
   user: User! @connection(name: "userEngagement")
+}
+
+type Tag @model(queries: {get: "getTag"}, mutations: {create: "createTag", delete: "deleteTag"}, subscriptions: null) {
+  id:   ID!
+  post: Post! @connection(name: "postTag")
+  topic: Topic! @connection(name: "topicTag")
 }
 
 type Notification @model(queries: {get: "getNotification"}, mutations: {create: "createNotification", delete: "deleteNotification"}, subscriptions: null) {

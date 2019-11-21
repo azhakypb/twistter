@@ -29,6 +29,23 @@ const getFollowingTemplate = `query getUser($id: ID!) {
     }
 }`
 
+const getNotificationsTemplate = `query getUser($id: ID!) {
+    getUser(
+        id: $id
+    ){
+        notifications {
+            items {
+                id
+                user {
+                    id
+                }
+                text
+                timestamp
+            }
+        }
+    }
+}`
+
 const userSearchTemplate = `query getUser($id: ID!) {
     getUser(
         id: $id
@@ -138,7 +155,7 @@ const followDeleteTemplate = `mutation deleteFollow($id: ID!) {
 
 const postCreateTemplate = `mutation createPost(
         $text: String!,
-        $timestamp: Int!,
+        $timestamp: String!,
         $postAuthorId: ID!
     ) {
         createPost (input:{
@@ -641,20 +658,66 @@ export function deleteFollow(follower, followee){
 
 export function createPost(author,topics,text,quoteid=false){
     return new Promise((resolve,reject)=>{
-        var month, day, year;
-        var today     = new Date();
-        var monthNum  = 1 + parseInt(today.getMonth(), 10);
-        var dayNum    = parseInt(today.getDate(), 10);
-        var yearNum   = parseInt(today.getFullYear(), 10);
-        var timeid    = monthNum * 1000000 + dayNum * 10000 + yearNum;
+
+        var timeid    = new Date().toString()
+
+        console.log(timeid);
 
         if(quoteid){
 
-        } else{
             API.graphql(graphqlOperation(postCreateTemplate, JSON.stringify({
                 postAuthorId: author,
                 timestamp: timeid,
                 text: text,
+                quote: quoteid
+            })))
+                .then((res)=>{
+                    var postid = res.data.createPost.id
+                    for(var i=0; i<topics.length;i++){
+
+                        const topic = topics[i]
+                        API.graphql(graphqlOperation(createTopicTemplate, JSON.stringify({
+                            id: topic
+                        })))
+                            .then((res)=>{
+
+                                API.graphql(graphqlOperation(createTagTemplate, JSON.stringify({
+                                    tagTopicId: topic,
+                                    tagPostId: postid
+                                }))).catch((err)=>{
+                                        reject(err);
+                                    });
+
+                            },(err)=>{
+
+                                if(err.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException'){
+
+                                    console.log('dbops','create post','topic already exists, ignoring error');
+
+                                    API.graphql(graphqlOperation(createTagTemplate, JSON.stringify({
+                                        tagTopicId: topic,
+                                        tagPostId: postid
+                                    }))).catch((err)=>{
+                                        reject(err);
+                                    });
+
+                                } else {
+                                    console.log('dbops','create post','unhandled error',err);
+                                }
+
+                            });
+                    }
+                    resolve(res)
+                },(err)=>{
+                    reject(err)
+                });
+
+        } else{
+
+            API.graphql(graphqlOperation(postCreateTemplate, JSON.stringify({
+                postAuthorId: author,
+                timestamp: timeid,
+                text: text
             })))
                 .then((res)=>{
                     var postid = res.data.createPost.id
@@ -699,12 +762,15 @@ export function createPost(author,topics,text,quoteid=false){
         }
     });
 }
+
 export function searchPost(id){
     return API.graphql(graphqlOperation(postSearchTemplate, JSON.stringify({
     	id: id
     })));
 }
+
 export function createNotification(userid,text){
+
     var month, day, year;
     var today     = new Date();
     var monthNum  = 1 + parseInt(today.getMonth(), 10);
@@ -718,16 +784,25 @@ export function createNotification(userid,text){
     	time: timeid
     })));
 }
+
 export function deleteNotification(id){
     return API.graphql(graphqlOperation(notifDeleteTemplate,JSON.stringify({
     	id: id
     })));
 }
+
+export function getNotifications(userid){
+    return API.graphql(graphqlOperation(getNotificationsTemplate,JSON.stringify({
+        id: userid
+    })));
+}
+
 export function searchNotification(id){
     return API.graphql(graphqlOperation(notifSearchTemplate,JSON.stringify({
     	id: id
     })));
 }
+
 export function createTopic(id){
     return API.graphql(graphqlOperation(createTopicTemplate,JSON.stringify({
     	id: id
@@ -741,11 +816,17 @@ export function searchTopic(id){
 export function createTag(info){
     return API.graphql(graphqlOperation(createTagTemplate, info));
 }
-export function createLike(info){
-    return API.graphql(graphqlOperation(createLikeTemplate, info));
+export function createLike(userid, postid){
+    return API.graphql(graphqlOperation(createLikeTemplate, JSON.stringify({
+        id: userid + '-' + postid,
+        user: userid,
+        post: postid
+    })));
 }
-export function deleteLike(info){
-    return API.graphql(graphqlOperation(deleteLikeTemplate, info));
+export function deleteLike(userid, postid){
+    return API.graphql(graphqlOperation(deleteLikeTemplate, JSON.stringify({
+        id: userid + '-' + postid
+    })));
 }
 export function getFollowers(userid){
     return API.graphql(graphqlOperation(getFollowersTemplate, JSON.stringify({id: userid})));
@@ -765,76 +846,8 @@ export function getEngagement(engagementId) {
 export function customQuery(template, params) {
   return API.graphql(graphqlOperation(template, JSON.stringify(params)));
 }
-export function getFollowInfo(followerid, followeeid){
-  return {
-    followed: ['Topic 1', 'Topic 2', 'Topic 3', 'Topic 4'],
-    ignored: ['Topic 5', 'Topic 6', 'Topic 7', 'Topic 8'],
-    new: ['Topic 9', 'Topic 10']
-  };
-}
-export function updateFollowInfo(followerid, followeeid, followed, ignored){
-  return true;
-}
-export function getFollowedPosts(userid){
-  return [
-    {
-      postid: '0336ce8a-ba43-46b7-bb12-6c581e6f455b',
-      relevance: 45,
-      pfe: 25,
-      timestamp: 10112019,
-      newTopics: []
-    },
-    {
-      postid: '0a233038-8dc3-4d4b-bf45-f8ef84424b28',
-      relevance: 55,
-      pfe: 40,
-      timestamp: 2122019,
-      newTopics: []
-    },
-    {
-      postid: '434e838b-d2f3-4f57-8679-1da404745d47',
-      relevance: 20,
-      pfe: 10,
-      timestamp: 4252019,
-      newTopics: []
-    },
-    {
-      postid: '547f8bac-1685-4121-861e-52f494bc0f97',
-      relevance: 15,
-      pfe: 15,
-      timestamp: 11112019,
-      newTopics: []
-    },
-    {
-      postid: '5c507f05-e5cc-40ca-857b-32d98c8f9855',
-      relevance: 99,
-      pfe: 30,
-      timestamp: 8282019,
-      newTopics: []
-    },
-    {
-      postid: 'ae9ebccb-1a15-43fb-bf9e-31cb102c0e35',
-      relevance: 85,
-      pfe: 35,
-      timestamp: 7212019,
-      newTopics: []
-    }
-  ]
-}
-/*
-export function deleteLike(postid){
-  return true;
-}
-*/
-export function updatePost(postid,text){
-  return true;
 
-}
-export function deletePost(postid){
-  return true;
-}
-
-export function getUserPost(userid) {
+export function getUserPosts(userid) {
   const template = `query getUser ($id: ID!){
     getUser(id: $id) {
       posts {
@@ -845,7 +858,6 @@ export function getUserPost(userid) {
       }
     }
   }`
-  return API.graphql(graphqlOperation(template, JSON.stringify(userid)));
+  return API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
 }
-
 export default DBOps;

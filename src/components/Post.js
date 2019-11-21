@@ -1,31 +1,36 @@
 // react modules
 import React, { Component } from 'react';
-import { Badge, Button, Row, Toast } from 'react-bootstrap';
+import { Badge, Button, Row, Toast, Modal, InputGroup, FormControl, Container } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faQuoteRight, faQuoteLeft, faEdit, faTrash, faHeart } from '@fortawesome/free-solid-svg-icons'
 // aws modules
 import { Auth } from 'aws-amplify';
 // custom modules
-import { searchPost, createLike, createEngagement, updateEngagement, getEngagement } from '../DBOps.js';
+import { searchPost, createLike, deleteLike } from '../DBOps.js';
+import Quoteprocess from  './Quoteprocess'
+import Editprocess from  './Editprocess'
 // globals
 
 function TopicList(props){
 	const topics = props.topics;
 	const items = topics.map((topic)=>
-		<Badge variant="primary" key={topic}>{topic}</Badge>
+		<Badge pill variant="link" key={topic}>#{topic}</Badge>
 	);
 	return <div>{items}</div>;
 }
 
 class Post extends Component {
 
+
 	stub() {
 		this.setState({
 			'username'		: 'Poster Username',
 			'q_username'	: 'Quote Username',
 			'timestamp'		: 'Post Timestamp',
-			'q_timestamp' 	: 'Quote Timestamp',
-			'text' 			: 'Post Text Post Text Post Text Post Text Post Text Post Text',
-			'q_text'		: 'Quote Text Quote Text Quote Text Quote Text Quote Text',
-			'topics' 		: [ 'Topic 1', 'Topic 2', 'Topic 3']
+			'q_timestamp' : 'Quote Timestamp',
+			'text' 				: 'Post Text Post Text Post Text Post Text Post Text Post Text',
+			'q_text'			: 'Quote Text Quote Text Quote Text Quote Text Quote Text',
+			'topics' 			: [ 'Topic 1', 'Topic 2', 'Topic 3']
 		});
 	}
 
@@ -66,20 +71,49 @@ class Post extends Component {
 			'text'			: '',
 			'q_text'		: '',
 			'topics'		: [],
-			'likes'			: []
+			'likes'			: [],
+			showQuote		: false,
+			showEdit		: false,
+			enableEdit		: false,
+			curUser 		: '',
+			liked			: false 
 		}
-
 		if( 'id' in this.props && !(this.props.id === '') ){
 			this.state.id = this.props.id;
 		}
-		
-		this.pull = this.pull.bind(this);
-		this.stub = this.stub.bind(this);
-	}
 
-	async componentDidMount(){
+		this.pull 	   				= this.pull.bind(this);
+		this.stub 	   				= this.stub.bind(this);
+		this.handleQuoteClick 		= this.handleQuoteClick.bind(this);
+		this.handleEditClick 		= this.handleEditClick.bind(this);
+		this.handleDeleteClick 		= this.handleDeleteClick.bind(this);
+	}
+	async getUser() {
+		var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
+		this.setState({
+			curUser:	user.username
+		});
+	}
+	handleQuoteClick() {
+		this.setState(prevState => {
+			return {
+				showQuote: !prevState.showQuote
+			}
+		});
+	}
+	handleEditClick() {
+		this.setState(prevState => {
+			return {
+				showEdit: !prevState.showEdit
+			}
+		});
+	}
+		async componentDidMount(){
 
 		if( this.state.id !== '' ){ this.pull(); }
+	}
+	handleDeleteClick() {
+		//delete
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot){
@@ -88,29 +122,31 @@ class Post extends Component {
 	}
 
 	createLike = async () => {
-		var userid = await Auth.currentAuthenticatedUser({ bypassCache: true });
-		console.log(userid.username);
+
+		var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+		var userid = user.username;
 		var postid = this.props.id;
-		var likeid = userid.username + postid;
-		var ret = await createLike(JSON.stringify({id: likeid, user: userid.username, post: postid}));
-		// loop to update engagement between user and his/her topics
-		for (var i = 0; i < this.state.topics.length; i++) {
-			var engagement = await getEngagement({id: userid.username + "-" + this.state.topics[i]});
-			if (engagement.data.getEngagement == null) { // creates engagement if user never engaged with that specific topic
-				console.log("Created Engagement: " + JSON.stringify(createEngagement({id: userid.username + "-" + this.state.topics[i],
-																																							value: 1, topicid: this.state.topics[i],
-																																							userid: userid.username})));
-			}
-			else { // user has engaged with topic before
-				updateEngagement({id: engagement.data.getEngagement.id, value: engagement.data.getEngagement.value + 1});
-				console.log("Updated Engagment: " + JSON.stringify(engagement));
-			}
+		try {
+			var ret = await createLike(userid,postid);
+		} catch(e) {
+			console.log(e);
+			var ret = await deleteLike(userid,postid);
 		}
 		console.log(ret);
+		this.pull();
 	}
 
 	render(){
-
+		if(this.state.curUser === ''){
+			this.getUser();
+		}
+		let editDeleteAllow;
+		if(this.state.curUser === this.state.username) {
+			editDeleteAllow = true;
+		} else {
+			editDeleteAllow = false;
+		}
+		//console.log('Like ids :' + this.state.likes.items[0])
 		const {
 			username,
 			q_username,
@@ -118,88 +154,133 @@ class Post extends Component {
 			q_timestamp,
 			text,
 			q_text,
-			topics
+			topics,
 		} = this.state;
 
 		if( q_username === '' ){
 
 			return(
-
-				<Toast>
-	  				<Toast.Header>
-	    				<strong
-	    					onClick={(e) => {
-	    						document.location.href = "/otherprofile/"+username;
-	    					}}
-	    					className="mr-auto">@{username}
-						</strong>
-	    				<small>{timestamp}</small>
-					</Toast.Header>
-					<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
-						<Row style={{ paddingBottom: 5}}>
-							{text}
-						</Row>
-						<Row>
-							<TopicList topics={topics}/>
-						</Row>
-						<Row>
-							<Button variant="primary" onClick={this.createLike}>
-  								Like <Badge variant="light">{this.state.likes.length}</Badge>
-							</Button>
-						</Row>
-					</Toast.Body>
-				</Toast>
+				<>
+					<Toast>
+		  				<Toast.Header>
+		    				<strong
+		    					onClick={(e) => {
+		    						document.location.href = "/otherprofile/"+username;
+		    					}}
+		    					className="mr-auto">@{username}
+							</strong>
+		    				<small>{timestamp}</small>
+						</Toast.Header>
+						<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
+							<Row style={{ paddingBottom: 5}}>
+								{text}
+							</Row>
+							<Row>
+								<TopicList topics={topics}/>
+							</Row>
+							<Row>
+								<Button variant="outline-danger" size="sm" onClick={this.createLike}><FontAwesomeIcon icon={faHeart}/>
+	  							<Badge variant="light">{this.state.likes.length}</Badge>
+								</Button>
+								<Button variant="outline-info" size="sm" onClick={this.handleQuoteClick}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight}/>
+								</Button>
+								{editDeleteAllow ?
+									<Button
+										variant="outline-warning"
+										size="sm"
+										onClick={this.handleEditClick}
+										action={this.handleDeleteClick}>
+										<FontAwesomeIcon icon={faEdit}/>
+									</Button>
+									: null}
+								{editDeleteAllow ?
+									<Button
+										variant="outline-danger"
+										size="sm"
+										onClick={this.handleDeleteClick}
+										style={{ marginLeft: 159}}>
+										<FontAwesomeIcon icon={faTrash}/>
+									</Button>
+									: null}
+							</Row>
+						</Toast.Body>
+					</Toast>
+					{this.state.showQuote ? <Quoteprocess action={this.handleQuoteClick} username={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote}/> : null}
+					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
+				</>
 
 			)
 
 		} else {
 
 			return(
+				<>
+					<Toast>
 
-				<Toast>
+		  				<Toast.Header>
+		    				<strong
+		    					onClick={(e) => document.location.href = "/otherprofile/"+username }
+		    					className="mr-auto">
+		    					@{username}
+		    				</strong>
+		    				<small>{timestamp}</small>
+						</Toast.Header>
 
-	  				<Toast.Header>
-	    				<strong
-	    					onClick={(e) => document.location.href = "/otherprofile/"+username }
-	    					className="mr-auto">
-	    					@{username}
-	    				</strong>
-	    				<small>{timestamp}</small>
-					</Toast.Header>
+						<div style={{ paddingLeft: 5, paddingRight: 5 }}>
+							<Toast>
+								<Toast.Header>
+		    						<strong
+		    							onClick={(e) => document.location.href = "/otherprofile/"+q_username }
+		    							className="mr-auto">
+		    							@{q_username}
+		    						</strong>
+		    						<small>{q_timestamp}</small>
+								</Toast.Header>
+								<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
+									<Row style={{ paddingBottom: 5}} >
+										{q_text}
+									</Row>
+								</Toast.Body>
+							</Toast>
+						</div>
 
-					<div style={{ paddingLeft: 5, paddingRight: 5 }}>
-						<Toast>
-							<Toast.Header>
-	    						<strong
-	    							onClick={(e) => document.location.href = "/otherprofile/"+q_username }
-	    							className="mr-auto">
-	    							@{q_username}
-	    						</strong>
-	    						<small>{q_timestamp}</small>
-							</Toast.Header>
-							<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
-								<Row style={{ paddingBottom: 5}} >
-									{q_text}
-								</Row>
-							</Toast.Body>
-						</Toast>
-					</div>
-
-					<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
-						<Row style={{ paddingBottom: 5}}>
-							{text}
-						</Row>
-						<Row style={{ paddingBottom: 5}}>
-							<TopicList topics={topics}/>
-						</Row>
-						<Row>
-							<Button size="sm"variant="primary" onClick={this.createLike}>
-  								Like <Badge variant="light">{this.state.likes.length}</Badge>
-							</Button>
-						</Row>
-					</Toast.Body>
-
-				</Toast>
+						<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
+							<Row style={{ paddingBottom: 5}}>
+								{text}
+							</Row>
+							<Row style={{ paddingBottom: 5}}>
+								<TopicList topics={topics}/>
+							</Row>
+							<Row>
+								<Button variant="outline-danger" size="sm" onClick={this.createLike}><FontAwesomeIcon icon={faHeart}/>
+								<Badge variant="light">{this.state.likes.length}</Badge>
+								</Button>
+								<Button variant="outline-info" size="sm" onClick={this.handleQuoteClick}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight}/>
+								</Button>
+								{editDeleteAllow ?
+									<Button
+										variant="outline-warning"
+										size="sm"
+										onClick={this.handleEditClick}
+										action={this.handleDeleteClick}>
+										<FontAwesomeIcon icon={faEdit}/>
+									</Button>
+									: null}
+								{editDeleteAllow ?
+									<Button
+										variant="danger"
+										size="sm"
+										onClick={this.handleDeleteClick}
+										style={{ marginLeft: 144}}>
+										<FontAwesomeIcon icon={faTrash}/>
+									</Button>
+									: null}
+							</Row>
+						</Toast.Body>
+					</Toast>
+					{this.state.showQuote ? <Quoteprocess action={this.handleQuoteClick} username={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote}/> : null}
+					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
+				</>
 			)
 		}
 	}

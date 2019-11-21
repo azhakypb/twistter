@@ -91,6 +91,9 @@ class Search extends Component {
                                     this.setState({ posts: res.data.getTopics.posts.items.map( post => <Post key={post.post.id} id={post.post.id}/>)});
                                 });
                         }
+                        else{
+
+                        }
 
                     }, (err) => {console.log(err)});
             }

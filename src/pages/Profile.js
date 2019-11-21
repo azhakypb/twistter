@@ -4,7 +4,7 @@ import { Button, Card, Col, Container, Dropdown, DropdownButton, Jumbotron, Row,
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
-import { searchUser } from '../DBOps.js'
+import { searchUser, getUserPosts } from '../DBOps.js'
 import Navbar from '../components/Navbar.js';
 import FollowList from '../components/FollowList.js';
 import Post from '../components/Post.js';
@@ -61,7 +61,7 @@ class Profile extends Component {
 		if( user.attributes.hasOwnProperty('name'   ) ){ this.setState({name: user.attributes.name   }); }
 		if(user.username !== null) {
 			console.log("Getting posts by ${user.username}");
-			searchUser(user.username).then((res) => {
+			getUserPosts(user.username).then((res) => {
 				console.log("User info: ");
 				console.log(res.data.getUser.posts.items);
 				if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
