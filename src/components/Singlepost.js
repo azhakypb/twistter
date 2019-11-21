@@ -57,14 +57,18 @@ class Singlepost extends Component {
   	}
 
   	handleCreatePost = async () => {
+      const res1 = '';
+      const err1 = '';
     	Auth.currentAuthenticatedUser({ bypassCache: true })
         	.catch((err)=>{console.log('error getting user',err);})
         	.then((user)=>{
             	createPost(user.username,this.state.topics1,this.state.text1)
                     .then((res)=>{
-                        console.log('single post','handle create post','success',res)
+                        res1 = res;
+                        console.log('single post','handle create post','success',res1);
                     },(err)=>{
-                        console.log('single post','handle create post','success',err)
+                        err1 = err;
+                        console.log('single post','handle create post','success',err1);
                     })
         	});
   	}

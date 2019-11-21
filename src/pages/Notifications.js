@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Col, Row, Alert } from 'react-bootstrap';
-import DBOps from '../DBOps.js'
+import DBOps, {getNotifications}  from '../DBOps.js'
 import { Auth } from 'aws-amplify';
 import Navbar from '../components/Navbar.js'
 
@@ -17,8 +17,8 @@ class Notifications extends Component {
   	async componentDidMount(){
     	var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
     	this.setState({user: user.username});
-    	var userData = await new DBOps().searchUser(JSON.stringify({id: this.state.user}));
-    	this.setState({notifications: userData.getUser.notifications.items})
+    	var userData = await getNotifications(this.state.user);
+    	this.setState({notifications: userData.data.getUser.notifications.items})
     	console.log(this.state.notifications);
 
 		for(var i = 0; i < this.state.notifications.length; i++){

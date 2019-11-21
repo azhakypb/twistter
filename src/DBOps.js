@@ -29,6 +29,23 @@ const getFollowingTemplate = `query getUser($id: ID!) {
     }
 }`
 
+const getNotificationsTemplate = `query getUser($id: ID!) {
+    getUser(
+        id: $id
+    ){
+        notifications {
+            items {
+                id
+                user {
+                    id
+                }
+                text
+                timestamp
+            }
+        }
+    }
+}`
+
 const userSearchTemplate = `query getUser($id: ID!) {
     getUser(
         id: $id
@@ -725,6 +742,12 @@ export function createNotification(userid,text){
 export function deleteNotification(id){
     return API.graphql(graphqlOperation(notifDeleteTemplate,JSON.stringify({
     	id: id
+    })));
+}
+
+export function getNotifications(userid){
+    return API.graphql(graphqlOperation(getNotificationsTemplate,JSON.stringify({
+        id: userid
     })));
 }
 
