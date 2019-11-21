@@ -20,7 +20,12 @@ class Editprocess extends Component {
 		this.handleDouble			    = this.handleDouble.bind(this);
 	}
     handleDouble(){
-        //replace edited post
+        /*delete old post:
+            it should be a call from parent group
+          create a new post:
+            it should be a call here
+        */
+
 		console.log(this.state.editText);
 		console.log(this.state.editTopic);
         this.props.action();
@@ -88,7 +93,7 @@ class Editprocess extends Component {
                             </Row>
                             <Row>
                                 <FormControl
-                                    rows='2'
+                                    rows='1'
                                     as='textarea'
                                     value={this.props.topics}
                                     disabled

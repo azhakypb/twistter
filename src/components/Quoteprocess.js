@@ -20,7 +20,9 @@ class Quoteprocess extends Component {
 		this.handleDouble			    = this.handleDouble.bind(this);
 	}
     handleDouble(){
-        //create a quoted post
+        /*Create a quoted post
+            should be done Here
+        */
 		console.log(this.state.quoteText);
 		console.log(this.state.quoteTopic);
         this.props.action();
@@ -82,7 +84,15 @@ class Quoteprocess extends Component {
                                 <FormControl
                                     rows='3'
                                     as='textarea'
-                                    value={this.props.text + "\n\n" + this.props.topics}
+                                    value={this.props.text}
+                                    disabled
+                                />
+                            </Row>
+                            <Row>
+                                <FormControl
+                                    rows='1'
+                                    as='textarea'
+                                    value={this.props.topics}
                                     disabled
                                 />
                             </Row>

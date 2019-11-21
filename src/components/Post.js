@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Badge, Button, Row, Toast, Modal, InputGroup, FormControl, Container } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faQuoteRight, faQuoteLeft, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faQuoteRight, faQuoteLeft, faEdit, faTrash, faHeart } from '@fortawesome/free-solid-svg-icons'
 // aws modules
 import { Auth } from 'aws-amplify';
 // custom modules
@@ -14,7 +14,7 @@ import Editprocess from  './Editprocess'
 function TopicList(props){
 	const topics = props.topics;
 	const items = topics.map((topic)=>
-		<Badge variant="primary" key={topic}>{topic}</Badge>
+		<Badge pill variant="link" key={topic}>#{topic}</Badge>
 	);
 	return <div>{items}</div>;
 }
@@ -75,7 +75,6 @@ class Post extends Component {
 			showQuote		: false,
 			showEdit		: false,
 			enableEdit		: false,
-			showLiked		: false,
 			curUser 		: ''
 		}
 		if( 'id' in this.props && !(this.props.id === '') ){
@@ -87,20 +86,11 @@ class Post extends Component {
 		this.handleQuoteClick 		= this.handleQuoteClick.bind(this);
 		this.handleEditClick 		= this.handleEditClick.bind(this);
 		this.handleDeleteClick 		= this.handleDeleteClick.bind(this);
-		this.handleLikeClick		= this.handleLikeClick.bind(this);
 	}
 	async getUser() {
 		var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
 		this.setState({
 			curUser:	user.username
-		});
-		console.log('Current user is: ' + user.username);
-	}
-	handleLikeClick() {
-		this.setState(prevState => {
-			return {
-				showLiked: !prevState.showLiked
-			}
 		});
 	}
 	handleQuoteClick() {
@@ -136,8 +126,9 @@ class Post extends Component {
 		console.log(userid.username);
 		var postid = this.props.id;
 		var likeid = userid.username + postid;
-		var ret = await createLike(JSON.stringify({id: likeid, user: userid.username, post: postid}));
-		if (ret.data.createLike == null) {
+		try {
+			var ret = await createLike(JSON.stringify({id: likeid, user: userid.username, post: postid}));
+		} catch(e) {
 			var ret = await deleteLike(JSON.stringify({id: likeid}));
 		}
 		console.log(ret);
@@ -153,6 +144,7 @@ class Post extends Component {
 		} else {
 			editDeleteAllow = false;
 		}
+		//console.log('Like ids :' + this.state.likes.items[0])
 		const {
 			username,
 			q_username,
@@ -166,7 +158,7 @@ class Post extends Component {
 		if( q_username === '' ){
 
 			return(
-				<div>
+				<>
 					<Toast>
 		  				<Toast.Header>
 		    				<strong
@@ -185,10 +177,84 @@ class Post extends Component {
 								<TopicList topics={topics}/>
 							</Row>
 							<Row>
-								<Button variant="outline-light" size="sm" onClick={this.createLike}>
-	  								Like <Badge variant="light">{this.state.likes.length}</Badge>
+								<Button variant="outline-danger" size="sm" onClick={this.createLike}><FontAwesomeIcon icon={faHeart}/>
+	  							<Badge variant="light">{this.state.likes.length}</Badge>
 								</Button>
-								<Button variant="outline-info" size="sm" onClick={this.handleQuoteClick}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight} /></Button>
+								<Button variant="outline-info" size="sm" onClick={this.handleQuoteClick}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight}/>
+								</Button>
+								{editDeleteAllow ?
+									<Button
+										variant="outline-warning"
+										size="sm"
+										onClick={this.handleEditClick}
+										action={this.handleDeleteClick}>
+										<FontAwesomeIcon icon={faEdit}/>
+									</Button>
+									: null}
+								{editDeleteAllow ?
+									<Button
+										variant="outline-danger"
+										size="sm"
+										onClick={this.handleDeleteClick}
+										style={{ marginLeft: 159}}>
+										<FontAwesomeIcon icon={faTrash}/>
+									</Button>
+									: null}
+							</Row>
+						</Toast.Body>
+					</Toast>
+					{this.state.showQuote ? <Quoteprocess action={this.handleQuoteClick} username={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote}/> : null}
+					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
+				</>
+
+			)
+
+		} else {
+
+			return(
+				<>
+					<Toast>
+
+		  				<Toast.Header>
+		    				<strong
+		    					onClick={(e) => document.location.href = "/otherprofile/"+username }
+		    					className="mr-auto">
+		    					@{username}
+		    				</strong>
+		    				<small>{timestamp}</small>
+						</Toast.Header>
+
+						<div style={{ paddingLeft: 5, paddingRight: 5 }}>
+							<Toast>
+								<Toast.Header>
+		    						<strong
+		    							onClick={(e) => document.location.href = "/otherprofile/"+q_username }
+		    							className="mr-auto">
+		    							@{q_username}
+		    						</strong>
+		    						<small>{q_timestamp}</small>
+								</Toast.Header>
+								<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
+									<Row style={{ paddingBottom: 5}} >
+										{q_text}
+									</Row>
+								</Toast.Body>
+							</Toast>
+						</div>
+
+						<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
+							<Row style={{ paddingBottom: 5}}>
+								{text}
+							</Row>
+							<Row style={{ paddingBottom: 5}}>
+								<TopicList topics={topics}/>
+							</Row>
+							<Row>
+								<Button variant="outline-danger" size="sm" onClick={this.createLike}><FontAwesomeIcon icon={faHeart}/>
+								<Badge variant="light">{this.state.likes.length}</Badge>
+								</Button>
+								<Button variant="outline-info" size="sm" onClick={this.handleQuoteClick}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight}/>
+								</Button>
 								{editDeleteAllow ?
 									<Button
 										variant="outline-warning"
@@ -212,58 +278,7 @@ class Post extends Component {
 					</Toast>
 					{this.state.showQuote ? <Quoteprocess action={this.handleQuoteClick} username={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote}/> : null}
 					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
-				</div>
-
-			)
-
-		} else {
-
-			return(
-
-				<Toast>
-
-	  				<Toast.Header>
-	    				<strong
-	    					onClick={(e) => document.location.href = "/otherprofile/"+username }
-	    					className="mr-auto">
-	    					@{username}
-	    				</strong>
-	    				<small>{timestamp}</small>
-					</Toast.Header>
-
-					<div style={{ paddingLeft: 5, paddingRight: 5 }}>
-						<Toast>
-							<Toast.Header>
-	    						<strong
-	    							onClick={(e) => document.location.href = "/otherprofile/"+q_username }
-	    							className="mr-auto">
-	    							@{q_username}
-	    						</strong>
-	    						<small>{q_timestamp}</small>
-							</Toast.Header>
-							<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
-								<Row style={{ paddingBottom: 5}} >
-									{q_text}
-								</Row>
-							</Toast.Body>
-						</Toast>
-					</div>
-
-					<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
-						<Row style={{ paddingBottom: 5}}>
-							{text}
-						</Row>
-						<Row style={{ paddingBottom: 5}}>
-							<TopicList topics={topics}/>
-						</Row>
-						<Row>
-							<Button size="sm"variant="primary" onClick={this.createLike}>
-  								Like <Badge variant="light">{this.state.likes.length}</Badge>
-							</Button>
-						</Row>
-					</Toast.Body>
-
-				</Toast>
+				</>
 			)
 		}
 	}
