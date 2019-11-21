@@ -1,6 +1,6 @@
 // react modules
 import React, { Component } from 'react';
-import {Button, Card, Col, Container, Jumbotron, Row, Image} from 'react-bootstrap';
+import {Button, Card, Col, Container, Jumbotron, Row, Image, Modal} from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
@@ -11,6 +11,7 @@ import { createFollow, deleteFollow, searchUser } from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
 import FollowList from '../components/FollowList.js'
 import { UsernameContext } from '../UsernameContext.js';
+import TopicView from  '../components/TopicView.js';
 var AWS = require('aws-sdk');
 
 class OtherProfile extends Component {
@@ -23,7 +24,8 @@ class OtherProfile extends Component {
             username    : '',
             url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png',
             me          : '',
-            posts       : []
+            posts       : [],
+            show        : false
         }
         this.notifState = {
           userid: "",
@@ -34,6 +36,7 @@ class OtherProfile extends Component {
         this.showPosts = this.showPosts.bind(this);
         this.follow = this.follow.bind(this);
         this.unfollow = this.unfollow.bind(this);
+        this.setState = this.setState.bind(this);
     }
 
     showPosts(props){
@@ -136,9 +139,13 @@ class OtherProfile extends Component {
             });
     }
 
+    setShow(bool){
+        this.setState({show: bool});
+    }
+
     render() {
 
-        const { name, username, url } = this.state
+        const { show, name, username, url } = this.state
 
         return (
         <Row>
@@ -161,6 +168,7 @@ class OtherProfile extends Component {
                         <h2>@{username}</h2>
 						<Button onClick={this.follow} aria-label="Follow">Follow</Button>
 						<Button onClick={this.unfollow} aria-label="Unfollow">Unfollow</Button>
+                        <Button onClick={()=>this.setShow(true)} aria-label="Manage Topics">Manage Topics</Button>
                     </Jumbotron>
                 </Container>
 
@@ -179,6 +187,16 @@ class OtherProfile extends Component {
                 <FollowList username={username}></FollowList>
 
             </Col>
+            <Modal show={show} onHide={()=>this.setShow(false)}>
+                <Modal.Body>
+                    <TopicView/>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={()=>this.setShow(false)}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
       </Row>
     );
   }
