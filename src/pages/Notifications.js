@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Col, Row, Alert } from 'react-bootstrap';
-import DBOps, {getNotifications}  from '../DBOps.js'
+import {getNotifications, deleteNotification}  from '../DBOps.js'
 import { Auth } from 'aws-amplify';
 import Navbar from '../components/Navbar.js'
 
@@ -22,7 +22,7 @@ class Notifications extends Component {
 
 		for(var i = 0; i < this.state.notifications.length; i++){
 			var deleteID = this.state.notifications[i].id;
-			await new DBOps().deleteNotification(JSON.stringify({id: deleteID}));
+			await new deleteNotification(deleteID);
 		}
   	}
 

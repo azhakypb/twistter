@@ -1,6 +1,6 @@
 // react modules
 import React, { Component } from 'react';
-import { Alert, Button, Col, FormControl, InputGroup, Jumbotron, Row } from 'react-bootstrap';
+import { Alert, Button, Col, FormControl, InputGroup, Jumbotron, Row, Modal } from 'react-bootstrap';
 // aws modules
 import { Auth } from 'aws-amplify'
 // components
@@ -16,16 +16,19 @@ class Settings extends Component {
             phone_number    : '',
             old_password    : '',
             new_password    : '',
+			confirm_new_password : '',
             name            : '',
             url             : '',
             alerts          : [], 
-            errors          : []       
+            errors          : [],
+			show : false       
         };
 
         // bind functions
         this.handleChangeEmail        = this.handleChangeEmail.bind(this);
         this.handleChangeName         = this.handleChangeName.bind(this);
         this.handleChangeNewPassword  = this.handleChangeNewPassword.bind(this);
+		this.handleChangeConfirmNewPassword = this.handleChangeConfirmNewPassword.bind(this);
         this.handleChangeOldPassword  = this.handleChangeOldPassword.bind(this);
         this.handleChangePhoneNumber  = this.handleChangePhoneNumber.bind(this);
         this.handleChangeUrl          = this.handleChangeUrl.bind(this);
@@ -38,12 +41,28 @@ class Settings extends Component {
         this.removeAlert              = this.removeAlert.bind(this);
         this.addError                 = this.addError.bind(this);
         this.removeError              = this.removeError.bind(this);
+		this.handleShow				  = this.handleShow.bind(this);
+		this.handleClose			  = this.handleClose.bind(this);
         console.log(Auth.currentAuthenticatedUser());
     }
+
+	//password confirm handlers
+	handleShow(){
+		this.setState({
+				show: true
+			});
+	}
+
+	handleClose(){
+		this.setState({
+				show: false
+			});
+	}
     // input field handlers
     handleChangeEmail       (event){this.setState({ email:          event.target.value });}
     handleChangeName        (event){this.setState({ name:           event.target.value });}
     handleChangeNewPassword (event){this.setState({ new_password:   event.target.value });}
+	handleChangeConfirmNewPassword (event){this.setState({ confirm_new_password: event.target.value });}
     handleChangeOldPassword (event){this.setState({ old_password:   event.target.value });}
     handleChangePhoneNumber (event){this.setState({ phone_number:   event.target.value });}
     handleChangeUrl         (event){this.setState({ url:            event.target.value });}
@@ -140,9 +159,12 @@ class Settings extends Component {
     }
     async handleSubmitNewPassword(event){
 		var noError = true;
-        if(this.state.old_password==='' || this.state.new_password==='') { 
+        if(this.state.old_password==='' || this.state.new_password==='' || this.state.confirm_new_password==='') { 
             this.addError('Cannot change password with empty input'); 
         }
+		else if(this.state.new_password !== this.state.confirm_new_password){
+			this.addError('New password must match confirmed password');
+		}
 		else if(this.state.old_password === this.state.new_password){
 			this.addError('New password should not match old password');
 		}
@@ -177,7 +199,8 @@ class Settings extends Component {
 						}
             		});
         	}
-		}	
+		}
+		this.handleClose();	
     }
     async handleSubmitName(event){
 		var noError = true;
@@ -317,25 +340,46 @@ class Settings extends Component {
                         <InputGroup
                             className="mb-3">
                             <FormControl
+								type="password"
                                 value={this.state.old_password}
                                 onChange={this.handleChangeOldPassword}
                                 placeholder="Old Password"
                                 aria-label="Old Password"
                                 aria-describedby="basic-addon2"/>
                             <FormControl
+								type="password"
                                 value={this.state.new_password}
                                 onChange={this.handleChangeNewPassword}
                                 placeholder="New Password"
                                 aria-label="New Password"
                                 aria-describedby="basic-addon2"/>
+							<FormControl
+								type="password"
+								value={this.state.confirm_new_password}
+								onChange={this.handleChangeConfirmNewPassword}
+								placeholder="Confirm New Password"
+								aria-label="Confirm New Password"
+								aria-describedby="basic-addon2"/>
                             <InputGroup.Append>
                                 <Button
                                     variant="outline-secondary"
-                                    onClick={this.handleSubmitNewPassword}>
+                                    onClick={this.handleShow}>
                                     Change Your Password
                                 </Button>
                             </InputGroup.Append>
                         </InputGroup>
+						<Modal show={this.state.show} onHide={this.handleClose}>
+							<Modal.Header>
+								<Modal.Title>Confirm Password Change</Modal.Title>
+							</Modal.Header>
+							<Modal.Body>
+								<p>Are you sure you want to change your password?</p>
+							</Modal.Body>
+							<Modal.Footer>
+								<Button variant="secondary" onClick={this.handleClose}>Cancel</Button>
+								<Button variant="primary" onClick={this.handleSubmitNewPassword}>Confirm</Button>
+							</Modal.Footer>
+						</Modal>
 
                         {/* name input field */}
                         <InputGroup

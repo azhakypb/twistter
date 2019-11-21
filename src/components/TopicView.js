@@ -1,6 +1,7 @@
 
 import { ListGroup } from 'react-bootstrap';
 import React, { Component } from 'react';
+import { getFollowedTopics, updateFollowedTopics, updateUnfollowedTopics, updateNewTopics } from '../DBOps.js'
 
 class TopicView extends Component {
 
@@ -11,13 +12,37 @@ class TopicView extends Component {
 		console.log('topic view','constructor','creating topic view');
 
 		this.state = {
-			'followed': [ 'Dogs', 'Music', 'Science', 'Politics' ],
-			'ignored': [ 'Cats', 'Bikes', 'Country Music', 'Minecraft' ],
+			'follower': this.props.follower,
+			'followee': this.props.followee,
+			'followed': [],
+			'ignored': [],
 			'new': []
 		}
 
 		this.followedToIgnored = this.followedToIgnored.bind(this);
 		this.ignoredToFollowed = this.ignoredToFollowed.bind(this);
+
+		console.log(this.state);
+	}
+
+	async componentDidMount(){
+
+		getFollowedTopics(this.state.follower,this.state.followee)
+			.catch((err)=>{
+				console.log(err);
+			})
+			.then((res)=>{
+				console.log(res);
+				if(res.data.getFollow.followedtopics != null){
+					this.setState({followed: res.data.getFollow.followedtopics.split(',')},()=>console.log(this.state));
+				}
+				if(res.data.getFollow.unfollowedtopics != null){
+					this.setState({ignored:res.data.getFollow.unfollowedtopics.split(',')},()=>console.log(this.state));
+				}
+				if(res.data.getFollow.newtopics != null){
+					this.setState({new:res.data.getFollow.newtopics.split(',')},()=>console.log(this.state));
+				}
+			});
 	}
 
 	followedToIgnored(index){
@@ -46,6 +71,39 @@ class TopicView extends Component {
 			followed: followed,
 			ignored: ignored
 		});
+	}
+
+	async componentWillUnmount(){
+
+		if(this.state.followed.length > 0){
+			updateFollowedTopics(this.state.follower,this.state.followee,this.state.followed.join(','))
+				.catch((err)=>console.log(err))
+				.then((res)=>console.log(res));
+		} else {
+			updateFollowedTopics(this.state.follower,this.state.followee,null)
+				.catch((err)=>console.log(err))
+				.then((res)=>console.log(res));
+		}
+
+		if(this.state.ignored.length > 0){
+			updateUnfollowedTopics(this.state.follower,this.state.followee,this.state.ignored.join(','))
+				.catch((err)=>console.log(err))
+				.then((res)=>console.log(res));
+		} else {
+			updateUnfollowedTopics(this.state.follower,this.state.followee,null)
+				.catch((err)=>console.log(err))
+				.then((res)=>console.log(res));
+		}
+
+		if(this.state.new.length > 0){
+			updateNewTopics(this.state.follower,this.state.followee,this.state.new.join(','))
+				.catch((err)=>console.log(err))
+				.then((res)=>console.log(res));
+		} else {
+			updateNewTopics(this.state.follower,this.state.followee,null)
+				.catch((err)=>console.log(err))
+				.then((res)=>console.log(res));
+		}
 	}
 
 	render(){
