@@ -18,8 +18,7 @@ class Notifications extends Component {
     	var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
     	this.setState({user: user.username});
     	var userData = await getNotifications(this.state.user);
-    	this.setState({notifications: userData.data.getUser.notifications.items})
-    	console.log(this.state.notifications);
+    	this.setState({notifications: userData.data.getUser.notifications.items});
 
 		for(var i = 0; i < this.state.notifications.length; i++){
 			var deleteID = this.state.notifications[i].id;

@@ -57,18 +57,14 @@ class Singlepost extends Component {
   	}
 
   	handleCreatePost = async () => {
-      const res1 = '';
-      const err1 = '';
     	Auth.currentAuthenticatedUser({ bypassCache: true })
         	.catch((err)=>{console.log('error getting user',err);})
         	.then((user)=>{
             	createPost(user.username,this.state.topics1,this.state.text1)
                     .then((res)=>{
-                        res1 = res;
-                        console.log('single post','handle create post','success',res1);
+                        console.log('single post','handle create post','success',res);
                     },(err)=>{
-                        err1 = err;
-                        console.log('single post','handle create post','success',err1);
+                        console.log('single post','handle create post','success',err);
                     })
         	});
   	}
@@ -106,11 +102,12 @@ class Singlepost extends Component {
                     	/>
                 	</InputGroup>
                 	<Button
+                      type='button'
                     	variant={buttonColor}
                     	size="md"
                     	disabled={!enabled}
                     	type="submit"
-                    	onClick={this.handleDouble}
+                    	onClick={this.handleCreatePost}
                     	block>
                     	Submit
                 	</Button>
