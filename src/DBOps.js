@@ -665,6 +665,53 @@ export function createPost(author,topics,text,quoteid=false){
 
         if(quoteid){
 
+            API.graphql(graphqlOperation(postCreateTemplate, JSON.stringify({
+                postAuthorId: author,
+                timestamp: timeid,
+                text: text,
+                quote: quoteid
+            })))
+                .then((res)=>{
+                    var postid = res.data.createPost.id
+                    for(var i=0; i<topics.length;i++){
+
+                        const topic = topics[i]
+                        API.graphql(graphqlOperation(createTopicTemplate, JSON.stringify({
+                            id: topic
+                        })))
+                            .then((res)=>{
+
+                                API.graphql(graphqlOperation(createTagTemplate, JSON.stringify({
+                                    tagTopicId: topic,
+                                    tagPostId: postid
+                                }))).catch((err)=>{
+                                        reject(err);
+                                    });
+
+                            },(err)=>{
+
+                                if(err.errors[0].errorType === 'DynamoDB:ConditionalCheckFailedException'){
+
+                                    console.log('dbops','create post','topic already exists, ignoring error');
+
+                                    API.graphql(graphqlOperation(createTagTemplate, JSON.stringify({
+                                        tagTopicId: topic,
+                                        tagPostId: postid
+                                    }))).catch((err)=>{
+                                        reject(err);
+                                    });
+
+                                } else {
+                                    console.log('dbops','create post','unhandled error',err);
+                                }
+
+                            });
+                    }
+                    resolve(res)
+                },(err)=>{
+                    reject(err)
+                });
+
         } else{
 
             API.graphql(graphqlOperation(postCreateTemplate, JSON.stringify({
