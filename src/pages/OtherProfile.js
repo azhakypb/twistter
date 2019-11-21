@@ -7,7 +7,7 @@ import { Auth } from 'aws-amplify';
 import Navbar from '../components/Navbar.js'
 import DBOps from '../DBOps.js'
 import Post from '../components/Post.js'
-import { createFollow, deleteFollow, searchUser } from '../DBOps.js'
+import { createFollow, deleteFollow, searchUser, getUserPosts } from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
 import FollowList from '../components/FollowList.js'
 import { UsernameContext } from '../UsernameContext.js';
@@ -40,8 +40,10 @@ class OtherProfile extends Component {
     }
 
     showPosts(props){
-		this.state.posts.sort((a,b) => a.timestamp - b.timestamp);
-		console.log("Sorted by timestamp!");
+        console.log("Sorting posts by timestamp");
+        console.log(this.state.posts);
+        if (this.state.posts.length > 1)
+			this.state.posts.sort((a,b) => b.key - a.key);
 		return (
 			<ul>{this.state.posts}</ul>
 		)
@@ -98,12 +100,13 @@ class OtherProfile extends Component {
         if(this.state.username !== null) {
             console.log("Getting posts by...");
             console.log(window.location.href.split('/').slice(-1)[0]);
-			searchUser(window.location.href.split('/').slice(-1)[0]).then((res) => {
+			getUserPosts(window.location.href.split('/').slice(-1)[0]).then((res) => {
 				console.log("User info: ");
 				console.log(res.data.getUser.posts.items);
 				if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
 					this.setState({posts:[]},()=>{
-						this.setState({ posts: res.data.getUser.posts.items.map( post => <Post key={post.id} id={post.id}/>)});
+                        this.setState({ posts: res.data.getUser.posts.items
+                            .map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
 					})
 					
 				}
