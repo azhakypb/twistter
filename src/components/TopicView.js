@@ -1,6 +1,7 @@
 
 import { ListGroup } from 'react-bootstrap';
 import React, { Component } from 'react';
+import { getFollowedTopics, updateFollowedTopics } from '../DBOps.js'
 
 class TopicView extends Component {
 
@@ -11,13 +12,23 @@ class TopicView extends Component {
 		console.log('topic view','constructor','creating topic view');
 
 		this.state = {
-			'followed': [ 'Dogs', 'Music', 'Science', 'Politics' ],
-			'ignored': [ 'Cats', 'Bikes', 'Country Music', 'Minecraft' ],
+			'follower': this.props.follower,
+			'followee': this.props.followee,
+			'followed': [],
+			'ignored': [],
 			'new': []
 		}
 
 		this.followedToIgnored = this.followedToIgnored.bind(this);
 		this.ignoredToFollowed = this.ignoredToFollowed.bind(this);
+
+		console.log(this.state);
+	}
+
+	async componentDidMount(){
+
+		var followed = await getFollowedTopics(this.state.follower,this.state.followee);
+		console.log(followed);
 	}
 
 	followedToIgnored(index){
