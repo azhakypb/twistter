@@ -75,7 +75,8 @@ class Post extends Component {
 			showQuote		: false,
 			showEdit		: false,
 			enableEdit		: false,
-			curUser 		: ''
+			curUser 		: '',
+			liked			: false 
 		}
 		if( 'id' in this.props && !(this.props.id === '') ){
 			this.state.id = this.props.id;
@@ -132,6 +133,7 @@ class Post extends Component {
 			var ret = await deleteLike(userid,postid);
 		}
 		console.log(ret);
+		this.pull();
 	}
 
 	render(){
