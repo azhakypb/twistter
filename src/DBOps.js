@@ -580,15 +580,80 @@ export function getFollowers(userid){
 export function getFollowing(userid){
     return API.graphql(graphqlOperation(getFollowingTemplate, JSON.stringify({id: userid})));
 }
-export function createEngagement(info) {
-  return API.graphql(graphqlOperation(createEngagementTemplate, JSON.stringify(info)));
+
+export function createEngagement(userid, topicid) {
+  return API.graphql(graphqlOperation(createEngagementTemplate, JSON.stringify({
+    id: userid + '-' + topicid,
+    value: parseInt('1'),
+    userid: userid,
+    topicid: topicid
+  })));
 }
-export function updateEngagement(info) {
-  return API.graphql(graphqlOperation(updateEngagementTemplate, JSON.stringify(info)));
+
+export function incrementEngagement(userid, topicid) {
+
+    return new Promise((resolve, reject)=>{
+
+        API.graphql(graphqlOperation(getEngagementTemplate, JSON.stringify({
+            id: userid + '-' + topicid
+        })))
+            .catch((error)=>{
+                reject(error);
+            })
+            .then((result)=>{
+
+                const metric = result.data.getEngagement.value;
+                metric += 1;
+
+                API.graphql(graphqlOperation(updateEngagementTemplate, JSON.stringify({
+                    id: userid + '-' + topicid,
+                    value: metric
+                }))
+                    .catch((error)=>{
+                        reject(error);
+                    })
+                    .then((result)=>{
+                        resolve(result);
+                    });
+            });
+    });
 }
-export function getEngagement(engagementId) {
-  return API.graphql(graphqlOperation(getEngagementTemplate, JSON.stringify(engagementId)));
+
+export function decrementEngagement(userid, topicid) {
+
+    return new Promise((resolve, reject)=>{
+
+        API.graphql(graphqlOperation(getEngagementTemplate, JSON.stringify({
+            id: userid + '-' + topicid
+        })))
+            .catch((error)=>{
+                reject(error);
+            })
+            .then((result)=>{
+
+                const metric = result.data.getEngagement.value;
+                metric -= 1;
+
+                API.graphql(graphqlOperation(updateEngagementTemplate, JSON.stringify({
+                    id: userid + '-' + topicid,
+                    value: metric
+                }))
+                    .catch((error)=>{
+                        reject(error);
+                    })
+                    .then((result)=>{
+                        resolve(result);
+                    });
+            });
+    });
 }
+
+export function getEngagement(userid, topicid) {
+  return API.graphql(graphqlOperation(getEngagementTemplate, JSON.stringify({
+    id: userid + '-' + topicid
+  })));
+}
+
 export function customQuery(template, params) {
   return API.graphql(graphqlOperation(template, JSON.stringify(params)));
 }
