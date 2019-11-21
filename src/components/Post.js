@@ -122,14 +122,14 @@ class Post extends Component {
 
 	createLike = async () => {
 
-		var userid = await Auth.currentAuthenticatedUser({ bypassCache: true });
-		console.log(userid.username);
+		var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+		var userid = user.username;
 		var postid = this.props.id;
-		var likeid = userid.username + postid;
 		try {
-			var ret = await createLike(JSON.stringify({id: likeid, user: userid.username, post: postid}));
+			var ret = await createLike(userid,postid);
 		} catch(e) {
-			var ret = await deleteLike(JSON.stringify({id: likeid}));
+			console.log(e);
+			var ret = await deleteLike(userid,postid);
 		}
 		console.log(ret);
 	}

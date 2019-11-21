@@ -769,11 +769,17 @@ export function searchTopic(id){
 export function createTag(info){
     return API.graphql(graphqlOperation(createTagTemplate, info));
 }
-export function createLike(info){
-    return API.graphql(graphqlOperation(createLikeTemplate, info));
+export function createLike(userid, postid){
+    return API.graphql(graphqlOperation(createLikeTemplate, JSON.stringify({
+        id: userid + '-' + postid,
+        user: userid,
+        post: postid
+    })));
 }
-export function deleteLike(info){
-    return API.graphql(graphqlOperation(deleteLikeTemplate, info));
+export function deleteLike(userid, postid){
+    return API.graphql(graphqlOperation(deleteLikeTemplate, JSON.stringify({
+        id: userid + '-' + postid
+    })));
 }
 export function getFollowers(userid){
     return API.graphql(graphqlOperation(getFollowersTemplate, JSON.stringify({id: userid})));
