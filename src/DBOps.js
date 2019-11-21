@@ -485,6 +485,7 @@ export function createPost(author,topics,text,quoteid=false){
         var timeid    = new Date().toString()
 
         console.log(timeid);
+        console.log('The quote id is: ' + quoteid);
 
         if(quoteid){
 

@@ -29,7 +29,7 @@ class Profile extends Component {
 		this.handleChangeText = this.handleChangeText.bind(this);
 		this.handleChangeTopic = this.handleChangeTopic.bind(this);
 	}
-	
+
 	showPosts(props){
 		if (this.state.myposts.length > 1)
 			this.state.myposts.sort((a,b) => a.timestamp - b.timestamp);
@@ -68,7 +68,7 @@ class Profile extends Component {
 					this.setState({myposts:[]},()=>{
 						this.setState({ myposts: res.data.getUser.posts.items.map( post => <Post key={post.id} id={post.id}/>)});
 					})
-					
+
 				}
 			})
 		}

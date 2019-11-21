@@ -145,7 +145,6 @@ class Post extends Component {
 		} else {
 			editDeleteAllow = false;
 		}
-		//console.log('Like ids :' + this.state.likes.items[0])
 		const {
 			username,
 			q_username,

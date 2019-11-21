@@ -25,8 +25,6 @@ class Quoteprocess extends Component {
             should be done Here
         */
         this.handleCreatePost();
-		console.log(this.state.quoteText);
-		console.log(this.state.quoteTopic);
         this.props.quoteClick();
 	}
 	handleAddQuotePost (event){
