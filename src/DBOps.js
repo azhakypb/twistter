@@ -794,7 +794,7 @@ export function customQuery(template, params) {
   return API.graphql(graphqlOperation(template, JSON.stringify(params)));
 }
 
-export function getUserPost(userid) {
+export function getUserPosts(userid) {
   const template = `query getUser ($id: ID!){
     getUser(id: $id) {
       posts {
