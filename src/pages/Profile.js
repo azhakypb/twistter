@@ -31,8 +31,8 @@ class Profile extends Component {
 	}
 	
 	showPosts(props){
-		this.state.myposts.sort((a,b) => a.timestamp - b.timestamp);
-		console.log("Sorted by timestamp!");
+		if (this.state.myposts.length > 1)
+			this.state.myposts.sort((a,b) => a.timestamp - b.timestamp);
 		return (
 			<ul>{this.state.myposts}</ul>
 		)
@@ -103,33 +103,23 @@ class Profile extends Component {
                 		<Container
                     		className="timeline">
                     		<Jumbotron>
-                        		<h3>Your Timeline</h3>
+								<h3>Your Timeline</h3>
+								<hr/>
 								<label>
-									Sort by: 
+									{"Sort by: "}
 									<select onChange = {this.handleChangeSort}>
 										<option value="time">Time Posted</option>
 										<option value="relevancy">Relevancy</option>
 										<option value="potential">Engagement Potential</option>
 									</select>
-									<br/>
-									Filter by:
-									<InputGroup
-										className="mb-3"
-										value={this.state.topic}>
-										<FormControl
-											placeholder="insert topic here"
-											aria-label="insert topic here"
-											aria-describedby="basic-addon2"
-											onChange={this.handleChangeText}/>
-									<InputGroup.Append>
-										<Button
-											variant="outline-secondary"
-											onClick={this.handleChangeTopic}>
-											Filter
-										</Button>
-									</InputGroup.Append>
-									</InputGroup>
 								</label>
+								<hr/>
+								<label>
+									{"Filter by: "}
+									<input type="text" placeholder="insert topic here" onChange={this.handleChangeText}/>
+									<button type="submit" onClick={this.handleChangeTopic}>Submit</button>
+								</label>
+								<hr/>
 								<this.showPosts/>
                     		</Jumbotron>
                 		</Container>

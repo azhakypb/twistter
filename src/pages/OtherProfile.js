@@ -6,7 +6,8 @@ import { Auth } from 'aws-amplify';
 // components
 import Navbar from '../components/Navbar.js'
 import DBOps from '../DBOps.js'
-import { createFollow, deleteFollow } from '../DBOps.js'
+import Post from '../components/Post.js'
+import { createFollow, deleteFollow, searchUser } from '../DBOps.js'
 import awsmobile from '../aws-exports.js'
 import FollowList from '../components/FollowList.js'
 import { UsernameContext } from '../UsernameContext.js';
@@ -21,7 +22,8 @@ class OtherProfile extends Component {
             name        : '',
             username    : '',
             url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png',
-            me          : ''
+            me          : '',
+            posts       : []
         }
         this.notifState = {
           userid: "",
@@ -29,9 +31,18 @@ class OtherProfile extends Component {
           time: 0
         }
         // bind functions
+        this.showPosts = this.showPosts.bind(this);
         this.follow = this.follow.bind(this);
         this.unfollow = this.unfollow.bind(this);
     }
+
+    showPosts(props){
+		this.state.posts.sort((a,b) => a.timestamp - b.timestamp);
+		console.log("Sorted by timestamp!");
+		return (
+			<ul>{this.state.posts}</ul>
+		)
+	}
 
     async componentDidMount(){
 
@@ -75,6 +86,22 @@ class OtherProfile extends Component {
             }
         });
 
+        
+        if(this.state.username !== null) {
+            console.log("Getting posts by...");
+            console.log(window.location.href.split('/').slice(-1)[0]);
+			searchUser(window.location.href.split('/').slice(-1)[0]).then((res) => {
+				console.log("User info: ");
+				console.log(res.data.getUser.posts.items);
+				if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
+					this.setState({posts:[]},()=>{
+						this.setState({ posts: res.data.getUser.posts.items.map( post => <Post key={post.id} id={post.id}/>)});
+					})
+					
+				}
+			})
+		}
+        
     }
 
     async follow(){
@@ -136,11 +163,9 @@ class OtherProfile extends Component {
                 <Container
                     className="timeline">
                     <Jumbotron>
-                        <Image style={{width: '2rem'}}
-                            src={url}
-                            roundedCircle
-                        />
-                        <p>{name}<br />@{username} </p>
+                        <h3>{username}'s Timeline</h3>
+                        <hr/>
+                        <this.showPosts/>
                     </Jumbotron>
                 </Container>
             </Col>
