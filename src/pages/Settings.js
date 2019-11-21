@@ -135,6 +135,10 @@ class Settings extends Component {
 		}
         else {
             console.log('updating user phone no');
+			//concat phone number with +1 at beginning
+			this.setState({
+					phone_number: '+1'.concat(this.state.phone_number)
+				});
             var user = await Auth.currentAuthenticatedUser({ bypassCache: true })
                 .catch((err) => { 
 					noError = false;
