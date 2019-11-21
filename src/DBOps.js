@@ -558,16 +558,16 @@ export function checkLike(userid, postid){
 }
 
 export function createLike(userid, postid){
-    return API.graphql(graphqlOperation(createLikeTemplate, JSON.stringify{
+    return API.graphql(graphqlOperation(createLikeTemplate, JSON.stringify({
       id: postid + '-' + userid,
       user: userid,
       post: postid
-    }));
+    })));
 }
 export function deleteLike(userid, postid){
-    return API.graphql(graphqlOperation(deleteLikeTemplate, JSON.stringify{
+    return API.graphql(graphqlOperation(deleteLikeTemplate, JSON.stringify({
       id: postid + '-' + userid
-    }));
+    })));
 }
 export function getFollowers(userid){
     return API.graphql(graphqlOperation(getFollowersTemplate, JSON.stringify({id: userid})));
@@ -603,7 +603,7 @@ export function incrementEngagement(userid, topicid) {
                 API.graphql(graphqlOperation(updateEngagementTemplate, JSON.stringify({
                     id: userid + '-' + topicid,
                     value: metric
-                }))
+                })))
                     .catch((error)=>{
                         reject(error);
                     })
@@ -632,7 +632,7 @@ export function decrementEngagement(userid, topicid) {
                 API.graphql(graphqlOperation(updateEngagementTemplate, JSON.stringify({
                     id: userid + '-' + topicid,
                     value: metric
-                }))
+                })))
                     .catch((error)=>{
                         reject(error);
                     })
