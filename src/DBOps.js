@@ -89,11 +89,7 @@ const userSearchTemplate = `query getUser($id: ID!) {
                 id
             }
         }
-        interests {
-            items {
-                id
-            }
-        }
+        topics
         following {
             items {
                 id
