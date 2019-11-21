@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import DBOps from '../DBOps.js'
+import { searchUser } from '../DBOps.js'
 import { Auth } from 'aws-amplify';
 
 class Notifications extends Component {
@@ -15,7 +15,7 @@ class Notifications extends Component {
   async componentDidMount(){
     var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
     this.setState({user: user.username});
-    var userData = await new DBOps().searchUser(JSON.stringify({id: this.state.user}));
+    var userData = await searchUser(this.state.user);
     this.setState({notifications: userData.getUser.notifications.items})
     console.log(this.state.notifications);
   }
