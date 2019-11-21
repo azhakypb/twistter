@@ -68,7 +68,11 @@ class OtherProfile extends Component {
         cognitoidentityserviceprovider.adminGetUser(this.params, (err, data) => {
 
             if (err){
-                console.log(err, err.stack); // an error occurred
+			    console.log(err, err.stack); // an error occurred
+				//if user does not exist, redirect to own profile
+				if(err.code === 'UserNotFoundException'){
+					document.location.href = "/";
+				}
             } else{
 
                 this.setState({ username: window.location.href.split('/').slice(-1)[0] });
