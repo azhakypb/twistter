@@ -17,9 +17,6 @@ class Profile extends Component {
         this.state = {
             name        : '',
 			username    : '',
-			sort		: 'time',
-			filterText	: '',
-			filterTopic	: '',
 			myposts		: [],
 			url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png'
         }
@@ -55,7 +52,7 @@ class Profile extends Component {
 
     async componentDidMount(){
 		console.log('Context test 2:', this.context.username);
-			var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
+		var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
 	  //  this.setState({username: user.username});
         if( user.attributes.hasOwnProperty('picture') ){ this.setState({url : user.attributes.picture}); }
 		if( user.attributes.hasOwnProperty('name'   ) ){ this.setState({name: user.attributes.name   }); }

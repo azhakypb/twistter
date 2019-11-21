@@ -60,9 +60,18 @@ class Navbar extends Component {
 			<div>
 	    		<Jumbotron>
 	    			<h2>Navbar</h2>
+					<Link
+						to= '/'
+						paddingtop='100px'>
+						<Button
+							variant="secondary"
+							size="md"
+							block>
+							Home
+						</Button>
+					</Link>
 	    			<Link
-	    				to= '/'
-	    				paddingtop="100px">
+	    				to= '/profile'>
 		  				<Button
 		  					variant="secondary"
 		  					size="md"

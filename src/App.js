@@ -6,6 +6,7 @@ import { withAuthenticator } from 'aws-amplify-react'
 import { Auth } from 'aws-amplify';
 import { UsernameContext } from './UsernameContext.js';
 // pages
+import Homepage from './pages/Homepage.js'
 import Search from './pages/Search.js'
 import Settings from './pages/Settings.js'
 import Profile from './pages/Profile.js'
@@ -37,8 +38,12 @@ class App extends Component {
 			<UsernameContext.Provider value={{username: this.state.username}}>
             	<Router>
                 	<Switch>
+						<Route
+							exact path="/"
+							component = { Homepage }
+						/>
                     	<Route
-                        	exact path="/"
+                        	exact path="/profile"
                         	component = { Profile }
                     	/>
                     	<Route
