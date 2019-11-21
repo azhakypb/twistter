@@ -4,7 +4,7 @@ import { Button, Card, Col, Container, Dropdown, DropdownButton, Jumbotron, Row,
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
-import { searchUser, getUserPosts } from '../DBOps.js'
+import { searchUser, getUserPosts, searchPost } from '../DBOps.js'
 import Navbar from '../components/Navbar.js';
 import FollowList from '../components/FollowList.js';
 import Post from '../components/Post.js';
@@ -31,8 +31,9 @@ class Profile extends Component {
 	}
 	
 	showPosts(props){
+		console.log("Sorting posts by timestamp");
 		if (this.state.myposts.length > 1)
-			this.state.myposts.sort((a,b) => a.timestamp - b.timestamp);
+			this.state.myposts.sort((a,b) => b.key - a.key);
 		return (
 			<ul>{this.state.myposts}</ul>
 		)
@@ -66,7 +67,8 @@ class Profile extends Component {
 				console.log(res.data.getUser.posts.items);
 				if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
 					this.setState({myposts:[]},()=>{
-						this.setState({ myposts: res.data.getUser.posts.items.map( post => <Post key={post.id} id={post.id}/>)});
+						this.setState({ myposts: res.data.getUser.posts.items
+							.map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
 					})
 					
 				}

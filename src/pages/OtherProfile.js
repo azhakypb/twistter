@@ -41,7 +41,9 @@ class OtherProfile extends Component {
 
     showPosts(props){
 		this.state.posts.sort((a,b) => a.timestamp - b.timestamp);
-		console.log("Sorted by timestamp!");
+        console.log("Sorting posts by timestamp");
+        if (this.state.posts.length > 1)
+			this.state.posts.sort((a,b) => b.key - a.key);
 		return (
 			<ul>{this.state.posts}</ul>
 		)
@@ -102,7 +104,8 @@ class OtherProfile extends Component {
 				console.log(res.data.getUser.posts.items);
 				if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
 					this.setState({posts:[]},()=>{
-						this.setState({ posts: res.data.getUser.posts.items.map( post => <Post key={post.id} id={post.id}/>)});
+                        this.setState({ posts: res.data.getUser.posts.items
+                            .map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
 					})
 					
 				}
