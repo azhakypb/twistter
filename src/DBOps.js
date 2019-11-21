@@ -17,8 +17,24 @@ const getFollowedTopicsTemplate = `query getFollow($id: ID!) {
     }
 }`
 
-const updateFollowedTopicsTemplate = `mutation updateFollow($id: ID!, $followedtopics: String!, unfollowedtopics: String!, newtopics: String!) {
-    getFollow(id: $id, followedtopics: $followedtopics, unfollowedtopics: $unfollowedtopics, newtopics: $newtopics){
+const updateFollowedTopicsTemplate = `mutation updateFollow($id: ID!, $followedtopics: String) {
+    updateFollow( input: { id: $id, followedtopics: $followedtopics}){
+        followedtopics
+        unfollowedtopics
+        newtopics
+    }
+}`
+
+const updateUnfollowedTopicsTemplate = `mutation updateFollow($id: ID!, $unfollowedtopics: String) {
+    updateFollow( input: { id: $id, unfollowedtopics: $unfollowedtopics}){
+        followedtopics
+        unfollowedtopics
+        newtopics
+    }
+}`
+
+const updateNewTopicsTemplate = `mutation updateFollow($id: ID!, $newtopics: String) {
+    updateFollow( input: { id: $id, newtopics: $newtopics }){
         followedtopics
         unfollowedtopics
         newtopics
@@ -674,11 +690,23 @@ export function getFollowedTopics(follower, followee){
         id: follower + '-' + followee
     })));
 }
-export function updateFollowedTopics(follower, followee, followedtopics, unfollowedtopics, newtopics){
+export function updateFollowedTopics(follower, followee, followedtopics){
     return API.graphql(graphqlOperation(updateFollowedTopicsTemplate,JSON.stringify({
         id: follower + '-' + followee,
-        followedtopics: followedtopics,
-        unfollowedtopics: unfollowedtopics,
+        followedtopics: followedtopics
+    })));
+}
+
+export function updateUnfollowedTopics(follower, followee, unfollowedtopics){
+    return API.graphql(graphqlOperation(updateUnfollowedTopicsTemplate,JSON.stringify({
+        id: follower + '-' + followee,
+        unfollowedtopics: unfollowedtopics
+    })));
+}
+
+export function updateNewTopics(follower, followee, newtopics){
+    return API.graphql(graphqlOperation(updateNewTopicsTemplate,JSON.stringify({
+        id: follower + '-' + followee,
         newtopics: newtopics
     })));
 }
