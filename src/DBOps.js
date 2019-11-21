@@ -703,54 +703,24 @@ function containsFollowedTopics(postTopics, topics) {
   return false;
 }
 
+export function getFollowedTopics(follower, followee){
+    return API.graphql(graphqlOperation(getFollowedTopicsTemplate,JSON.stringify({
+        id: follower + '-' + followee
+    })));
+}
+export function updateFollowedTopics(follower, followee, followedtopics, unfollowedtopics, newtopics){
+    return API.graphql(graphqlOperation(updateFollowedTopicsTemplate,JSON.stringify({
+        id: follower + '-' + followee,
+        followedtopics: followedtopics,
+        unfollowedtopics: unfollowedtopics,
+        newtopics: newtopics
+    })));
+}
+
 export async function getFollowedPost(userid) {
-  const template = `query getUser($id: ID!) {
-    getUser(id: $id) {
-      following {
-        items {
-          followee {
-            id
-            posts {
-              items {
-                id
-                timestamp
-                topics {
-                  items {
-                    topic {
-                      id
-                    }
-                  }
-                }
-                likes {
-                  items {
-                    id
-                  }
-                }
-                quoted {
-                  items {
-                    id
-                  }
-                }
-              }
-            }
-          }
-          followedtopics
-          unfollowedtopics
-          newtopics
-        }
-      }
-      engagement {
-        items {
-          value
-          topic {
-            id
-          }
-        }
-      }
-    }
-  }`
+  const template = `query getUser($id: ID!) { getUser(id: $id) { following { items { followee { posts { items { id timestamp topics { items { topic { id } } } likes { items { id } } quoted { items { id } } } } } followedtopics unfollowedtopics newtopics } } engagement { items { value topic { id } } } } }`
+
   var userData = await API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
-  console.log(userData);
   var engagement = userData.data.getUser.engagement.items;
   var followedUsers = userData.data.getUser.following.items;
   var topicEngagement = []; // hash table with key as topic id and data as engagment value
@@ -759,9 +729,6 @@ export async function getFollowedPost(userid) {
   for (var i = 0; i < engagement.length; i++) {
     topicEngagement[engagement[i].topic.id] = engagement[i].value;
   }
-
-  console.log(followedUsers);
-  console.log(engagement);
 
   for (var i = 0; i < followedUsers.length; i++) {
     var followedtopics = (followedUsers[i].followedtopics == null) ? [] : followedUsers[i].followedtopics.split(","); // followed topics from that followed user
@@ -778,11 +745,7 @@ export async function getFollowedPost(userid) {
       topics[newtopics[index]] = true;
     }
 
-    console.log("Checking user: " + followedUsers[i].followee.id);
-    console.log(topics);
-    console.log("Posts: "+ JSON.stringify(posts));
     for (var j = 0; j < posts.length; j++) {
-      console.log(containsFollowedTopics(posts[j].topics.items, topics));
       if (containsFollowedTopics(posts[j].topics.items, topics) == false) {
         continue;
       }
@@ -798,9 +761,7 @@ export async function getFollowedPost(userid) {
         }
       }
       var data = {id: postid, pfe: pfe_value, relevance: likes + quoted * 5, timestamp: timestamp};
-      console.log("Adding to allpost: " + JSON.stringify(data));
       allposts.push(data);
-      console.log(allposts);
     }
 
   }
