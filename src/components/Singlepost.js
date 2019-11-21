@@ -57,7 +57,7 @@ class Singlepost extends Component {
   	}
 
   	handleCreatePost = async () => {
-    	Auth.currentAuthenticatedUser({ bypassCache: true })
+    	await Auth.currentAuthenticatedUser({ bypassCache: true })
         	.catch((err)=>{console.log('error getting user',err);})
         	.then((user)=>{
             	createPost(user.username,this.state.topics1,this.state.text1)
