@@ -61,7 +61,7 @@ class Profile extends Component {
         if( user.attributes.hasOwnProperty('picture') ){ this.setState({url : user.attributes.picture}); }
 		if( user.attributes.hasOwnProperty('name'   ) ){ this.setState({name: user.attributes.name   }); }
 		if(user.username !== null) {
-			console.log("Getting posts by ${user.username}");
+			console.log("Getting posts by user");
 			getUserPosts(user.username).then((res) => {
 				console.log("User info: ");
 				console.log(res.data.getUser.posts.items);
