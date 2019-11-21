@@ -78,7 +78,7 @@ class Search extends Component {
             if (this.state.searchType == "#") {
                 console.log("Searching for posts w/ topic\n" +
                     "Topic = " + this.state.search);
-                searchTopic(JSON.stringify({id: this.state.search}))
+                searchTopic(this.state.search)
                     .then((res)=>{
                         console.log("Search page\n" +
                             "handleChangeText function\n" +

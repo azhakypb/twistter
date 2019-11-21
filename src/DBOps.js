@@ -150,7 +150,7 @@ const followDeleteTemplate = `mutation deleteFollow($id: ID!) {
 
 const postCreateTemplate = `mutation createPost(
         $text: String!,
-        $timestamp: Int!,
+        $timestamp: String!,
         $postAuthorId: ID!
     ) {
         createPost (input:{
@@ -450,12 +450,7 @@ export function deleteFollow(follower, followee){
 export function createPost(author,topics,text,quoteid=false){
     return new Promise((resolve,reject)=>{
         var month, day, year;
-        var today     = new Date();
-        var monthNum  = 1 + parseInt(today.getMonth(), 10);
-        var dayNum    = parseInt(today.getDate(), 10);
-        var yearNum   = parseInt(today.getFullYear(), 10);
-        var timeid    = monthNum * 1000000 + dayNum * 10000 + yearNum;
-
+        var timeid     = new Date().getTime().toString();
         if(quoteid){
 
         } else{
