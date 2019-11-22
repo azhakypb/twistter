@@ -203,7 +203,7 @@ const postCreateTemplate = `mutation createPost(
 const deletePostTemplate = `mutation deletePost(
         $id: ID!
     ) {
-        deletePost (id: $id){
+        deletePost (input:{id: $id}){
         id,
         text,
         timestamp,
@@ -236,7 +236,7 @@ const quotePostCreateTemplate = `mutation createPost(
         text: $text,
         timestamp: $timestamp,
         postAuthorId: $postAuthorId,
-        quote: $quote
+        postQuoteId: $quote
     }){
         id,
         text,
@@ -252,6 +252,13 @@ const postSearchTemplate = `query getPost(
   ) {
   getPost (id: $id){
     id,
+    quote{
+        text,
+        timestamp,
+        author{
+            id
+        }
+    }
     text,
     timestamp,
     author {
@@ -523,6 +530,7 @@ export function createPost(author,topics,text,quoteid=false){
         var timeid    = new Date().toString()
 
         console.log(timeid);
+        console.log('The quote id is: ' + quoteid);
 
         if(quoteid){
 
