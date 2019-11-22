@@ -10,12 +10,9 @@ class Quoteprocess extends Component {
 		// props and states
 		super(props);
 		this.state = {
-			quoteText		: '',
-			quoteTopic		: ''
+			quoteText		: ''
 		}
 		this.handleAddQuotePost 	    = this.handleAddQuotePost.bind(this);
-		this.handleAddQuoteTopic 	    = this.handleAddQuoteTopic.bind(this);
-		this.handleTopicNumQuote     	= this.handleTopicNumQuote.bind(this);
 		this.handleLengthQuote       	= this.handleLengthQuote.bind(this);
         this.handleCreatePost           = this.handleCreatePost.bind(this);
 		this.handleDouble			    = this.handleDouble.bind(this);
@@ -31,20 +28,9 @@ class Quoteprocess extends Component {
 		this.setState({ quoteText:	event.target.value}
 		);
 	}
-	handleAddQuoteTopic (event){
-		event.target.value = (event.target.value.replace(/\s+/g, ''));
-      	this.setState({ quoteTopic:   event.target.value.split(",")});
-	}
-    handleTopicNumQuote(quoteTopic) {
-		if(quoteTopic.length > 5) {
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
+
 	handleLengthQuote(quoteText, quoteTopic) {
-		if(quoteText.length > 0 && quoteTopic.length > 0) {
+		if(quoteText.length > 0) {
 			return true;
 		} else {
 			console.log('Post and Topic Forms Require a text');
@@ -55,9 +41,10 @@ class Quoteprocess extends Component {
         Auth.currentAuthenticatedUser({ bypassCache: true })
             .catch((err)=>{console.log('error getting user', err);})
             .then((user)=>{
-                createPost(user.username, this.state.quoteTopic, this.state.quoteText, this.props.id)
+                createPost(user.username, this.props.topics, this.state.quoteText, this.props.id)
                     .then((res)=>{
                         console.log('single post', 'handle create quoted post', 'success', res);
+                        window.location.reload();
                     },(err)=>{
                         console.log('single post', 'handle create quoted post', 'fail', err);
                     })
@@ -68,8 +55,7 @@ class Quoteprocess extends Component {
             quoteText,
             quoteTopic
         } = this.state;
-        const enabled 	= 	this.handleLengthQuote(quoteText, quoteTopic) &&
-                            this.handleTopicNumQuote(quoteTopic);
+        const enabled 	= 	this.handleLengthQuote(quoteText, quoteTopic)
         let buttonColor = 	enabled ? "primary" : "secondary"
         return (
                 <Modal show={this.props.showQuote} onHide={this.props.quoteClick}>
@@ -98,26 +84,6 @@ class Quoteprocess extends Component {
                                     value={this.props.text}
                                     disabled
                                 />
-                            </Row>
-                            <Row>
-                                <FormControl
-                                    rows='1'
-                                    as='textarea'
-                                    value={this.props.topics}
-                                    disabled
-                                />
-                            </Row>
-                            <Row>
-                                <InputGroup
-                                    value={this.state.quoteTopic}
-                                    onChange={this.handleAddQuoteTopic}>
-                                    <FormControl
-                                        rows='2'
-                                        as='textarea'
-                                        placeHolder="Add one to five topics, separate with comma if necessary"
-                                        maxlength="100"
-                                    />
-                                </InputGroup>
                             </Row>
                         </Container>
                     </Modal.Body>

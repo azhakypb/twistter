@@ -50,6 +50,14 @@ class Post extends Component {
 				likes: 			res.likes.items
 			});
 
+			if(res.quote != null){
+				this.setState({
+					q_username: res.quote.author.id,
+					q_text: res.quote.text,
+					q_timestamp: res.quote.timestamp
+				});
+			}
+
 
 		}).catch((err)=>{
 
@@ -85,6 +93,7 @@ class Post extends Component {
 		this.stub 	   				= this.stub.bind(this);
 		this.handleQuoteClick 		= this.handleQuoteClick.bind(this);
 		this.handleEditClick 		= this.handleEditClick.bind(this);
+		this.handleDeleteClick		= this.handleDeleteClick.bind(this);
 	}
 	async getUser() {
 		var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
@@ -111,6 +120,7 @@ class Post extends Component {
 		if( this.state.id !== '' ){ this.pull(); }
 	}
 	handleDeleteClick() {
+
 		deletePost(this.props.id)
 			.catch((err)=>{
 				console.log(err);
@@ -166,7 +176,7 @@ class Post extends Component {
 			return(
 				<div>
 					<Toast>
-		  				<Toast.Header>
+		  				<Toast.Header closeButton={false}>
 		    				<strong
 		    					onClick={(e) => {
 		    						document.location.href = "/otherprofile/"+username;
@@ -180,7 +190,7 @@ class Post extends Component {
 
 						 	<div style={{ paddingLeft: 5, paddingRight: 5 }}>
 								<Toast>
-									<Toast.Header>
+									<Toast.Header closeButton={false}>
 			    						<strong
 			    							onClick={(e) => document.location.href = "/otherprofile/"+q_username }
 			    							className="mr-auto">
