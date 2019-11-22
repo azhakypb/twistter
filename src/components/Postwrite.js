@@ -18,7 +18,7 @@ class Postwrite extends Component {
 			}
 		})
 	}
-  
+
 
 	render() {
 		let buttonText = this.state.show ? "Cancel" : "Write a Post"

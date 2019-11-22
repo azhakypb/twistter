@@ -27,7 +27,7 @@ class Post extends Component {
 			'username'		: 'Poster Username',
 			'q_username'	: 'Quote Username',
 			'timestamp'		: 'Post Timestamp',
-			'q_timestamp' : 'Quote Timestamp',
+			'q_timestamp' 	: 'Quote Timestamp',
 			'text' 				: 'Post Text Post Text Post Text Post Text Post Text Post Text',
 			'q_text'			: 'Quote Text Quote Text Quote Text Quote Text Quote Text',
 			'topics' 			: [ 'Topic 1', 'Topic 2', 'Topic 3']
@@ -49,6 +49,14 @@ class Post extends Component {
 				topics: 		res.topics.items.map((topic)=>topic.topic.id),
 				likes: 			res.likes.items
 			});
+
+			if(res.quote != null){
+				this.setState({
+					q_username: res.quote.author.id,
+					q_text: res.quote.text,
+					q_timestamp: res.quote.timestamp
+				});
+			}
 
 
 		}).catch((err)=>{
@@ -86,7 +94,6 @@ class Post extends Component {
 		this.stub 	   				= this.stub.bind(this);
 		this.handleQuoteClick 		= this.handleQuoteClick.bind(this);
 		this.handleEditClick 		= this.handleEditClick.bind(this);
-		this.handleDeleteClick 		= this.handleDeleteClick.bind(this);
 	}
 	async getUser() {
 		var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
@@ -165,13 +172,13 @@ class Post extends Component {
 		if(this.state.curUser === ''){
 			this.getUser();
 		}
+		console.log(this.state);
 		let editDeleteAllow;
 		if(this.state.curUser === this.state.username) {
 			editDeleteAllow = true;
 		} else {
 			editDeleteAllow = false;
 		}
-		//console.log('Like ids :' + this.state.likes.items[0])
 		const {
 			username,
 			q_username,
@@ -182,10 +189,8 @@ class Post extends Component {
 			topics,
 		} = this.state;
 
-		if( q_username === '' ){
-
 			return(
-				<>
+				<div>
 					<Toast>
 		  				<Toast.Header>
 		    				<strong
@@ -196,6 +201,27 @@ class Post extends Component {
 							</strong>
 		    				<small>{timestamp}</small>
 						</Toast.Header>
+
+						{ (q_username === '' ) ? null :
+
+						 	<div style={{ paddingLeft: 5, paddingRight: 5 }}>
+								<Toast>
+									<Toast.Header>
+			    						<strong
+			    							onClick={(e) => document.location.href = "/otherprofile/"+q_username }
+			    							className="mr-auto">
+			    							@{q_username}
+			    						</strong>
+			    						<small>{q_timestamp}</small>
+									</Toast.Header>
+									<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
+										<Row style={{ paddingBottom: 5}} >
+											{q_text}
+										</Row>
+									</Toast.Body>
+								</Toast>
+							</div> }
+
 						<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
 							<Row style={{ paddingBottom: 5}}>
 								{text}
@@ -230,84 +256,10 @@ class Post extends Component {
 							</Row>
 						</Toast.Body>
 					</Toast>
-					{this.state.showQuote ? <Quoteprocess action={this.handleQuoteClick} username={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote}/> : null}
+					{this.state.showQuote ? <Quoteprocess quoteClick={this.handleQuoteClick} usernameq={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote} id={this.props.id}/> : null}
 					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
-				</>
-
+				</div>
 			)
-
-		} else {
-
-			return(
-				<>
-					<Toast>
-
-		  				<Toast.Header>
-		    				<strong
-		    					onClick={(e) => document.location.href = "/otherprofile/"+username }
-		    					className="mr-auto">
-		    					@{username}
-		    				</strong>
-		    				<small>{timestamp}</small>
-						</Toast.Header>
-
-						<div style={{ paddingLeft: 5, paddingRight: 5 }}>
-							<Toast>
-								<Toast.Header>
-		    						<strong
-		    							onClick={(e) => document.location.href = "/otherprofile/"+q_username }
-		    							className="mr-auto">
-		    							@{q_username}
-		    						</strong>
-		    						<small>{q_timestamp}</small>
-								</Toast.Header>
-								<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
-									<Row style={{ paddingBottom: 5}} >
-										{q_text}
-									</Row>
-								</Toast.Body>
-							</Toast>
-						</div>
-
-						<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
-							<Row style={{ paddingBottom: 5}}>
-								{text}
-							</Row>
-							<Row style={{ paddingBottom: 5}}>
-								<TopicList topics={topics}/>
-							</Row>
-							<Row>
-								<Button variant="outline-danger" size="sm" onClick={this.createLike}><FontAwesomeIcon icon={faHeart}/>
-								<Badge variant="light">{this.state.likes.length}</Badge>
-								</Button>
-								<Button variant="outline-info" size="sm" onClick={this.handleQuoteClick}><FontAwesomeIcon icon={faQuoteLeft} /><FontAwesomeIcon icon={faQuoteRight}/>
-								</Button>
-								{editDeleteAllow ?
-									<Button
-										variant="outline-warning"
-										size="sm"
-										onClick={this.handleEditClick}
-										action={this.handleDeleteClick}>
-										<FontAwesomeIcon icon={faEdit}/>
-									</Button>
-									: null}
-								{editDeleteAllow ?
-									<Button
-										variant="danger"
-										size="sm"
-										onClick={this.handleDeleteClick}
-										style={{ marginLeft: 144}}>
-										<FontAwesomeIcon icon={faTrash}/>
-									</Button>
-									: null}
-							</Row>
-						</Toast.Body>
-					</Toast>
-					{this.state.showQuote ? <Quoteprocess action={this.handleQuoteClick} username={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote}/> : null}
-					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
-				</>
-			)
-		}
 	}
 }
 

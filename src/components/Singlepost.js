@@ -29,6 +29,7 @@ class Singlepost extends Component {
   	//handlers
   	handleDouble() {
     	this.handleCreatePost();
+        //window.location.reload();
   	}
   	handleAddPost (event){
     	this.setState({ text1:     event.target.value}
@@ -108,7 +109,7 @@ class Singlepost extends Component {
                     	size="md"
                     	disabled={!enabled}
                     	type="submit"
-                    	onClick={this.handleCreatePost}
+                    	onClick={this.handleDouble}
                     	block>
                     	Submit
                 	</Button>
