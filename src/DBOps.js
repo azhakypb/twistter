@@ -136,6 +136,44 @@ const userSearchTemplate = `query getUser($id: ID!) {
     }
 }`
 
+const userSearchForDeleteTemplate = `query getUser($id: ID!) {
+    getUser(
+        id: $id
+    ){
+        id
+        likes {
+            items {
+                id
+            }
+        }
+        following {
+            items {
+                id
+            }
+        }
+        followers {
+            items {
+                id
+            }
+        }
+        posts {
+            items {
+                id
+                topics {
+                    items {
+                        id
+                    }
+                }
+            }
+        }
+        notifications {
+            items {
+                id
+            }
+        }
+    }
+}`
+
 const userDeletionTemplate = `mutation deleteUser($id: ID!) {
     deleteUser(input: {
         id: $id
@@ -401,6 +439,14 @@ const createTagTemplate = `mutation createTag(
   }
 }`
 
+const deleteTagTemplate = `mutation deleteTag(
+  $id: ID!
+) {
+  deleteTag(input: {id: $id}) {
+    id
+  }
+}`
+
 const createLikeTemplate = `mutation createLike(
   $id: ID!,
   $user: ID!,
@@ -484,8 +530,89 @@ export function searchUser(username) {
     return API.graphql(graphqlOperation(userSearchTemplate, JSON.stringify({id:username})));
 }
 
-export function deleteUser(username){
-    return API.graphql(graphqlOperation(userDeletionTemplate, JSON.stringify({id: username})));
+export async function deleteUser(username){
+
+    console.log('looking for user:',username);
+
+    var user = await API.graphql(graphqlOperation(userSearchForDeleteTemplate, JSON.stringify({id: username})))
+
+    console.log('delete user object',user);
+
+    user = user.data.getUser;
+
+    var likes = user.likes.items.map((like)=>like.id);
+    console.log('likes',likes);
+
+    var follows = []
+    for(const follow of user.following.items){
+        follows.push(follow.id);
+    }
+    for(const follow of user.followers.items){
+        follows.push(follow.id);
+    }
+    console.log('follows',follows);
+
+    var posts = user.posts.items.map((post)=>post.id);
+    console.log('posts',posts);
+
+    var tags = [];
+    for(var i=0; i<user.posts.items.length; i++){
+
+        for(var j=0; j<user.posts.items[i].topics.items.length; j++){
+
+            tags.push(user.posts.items[i].topics.items[j].id);
+
+        }
+    }
+    console.log('tags',tags);
+    var notifications = user.notifications.items;
+
+    console.log('notifications',notifications);
+
+    var returnObj = {
+        likeResults: [],
+        followResults: [],
+        postResults: [],
+        tagResults: [],
+        notificationResults: []
+    }
+
+    for(const like of likes){
+        var likeResult = await API.graphql(graphqlOperation(deleteLikeTemplate, JSON.stringify({
+                            id: like
+                        })));
+        returnObj.likeResults.push(likeResult);
+    }
+
+    for(const follow of follows){
+        var followResult = await API.graphql(graphqlOperation(followDeleteTemplate, JSON.stringify({
+                            id: follow
+                        })));
+        returnObj.followResults.push(followResult);
+    }
+
+    for(const post of posts){
+        var postResult = await API.graphql(graphqlOperation(deletePostTemplate, JSON.stringify({
+                            id: post
+                        })));
+        returnObj.postResults.push(postResult);
+    }
+
+    for(const tag of tags){
+        var tagResult = await API.graphql(graphqlOperation(deleteTagTemplate,JSON.stringify({
+                            id: tag
+                        })));
+        returnObj.tagResults.push(tagResult);
+    }
+
+    for(const notification of notifications){
+        var notificationResult = await API.graphql(graphqlOperation(notifDeleteTemplate,JSON.stringify({
+                            id: notification
+                        })));
+        returnObj.notificationResults.push(notificationResult);
+    }
+
+    return returnObj;
 }
 
 export function createFollow(follower, followee){
