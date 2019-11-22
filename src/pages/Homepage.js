@@ -71,22 +71,31 @@ class Homepage extends Component {
 
     async componentDidMount(){
         console.log("Context test:", this.context.username);
-		var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-        if(user.username !== null) {
-			console.log("Getting user posts for user");
-			console.log(user.username);
-			
-			getUserPosts(user.username).then((res) => {
-				console.log("User info: ");
-				console.log(res.data.getUser.posts.items);
-				if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
-					this.setState({myposts:[]},()=>{
-						this.setState({ myposts: res.data.getUser.posts.items
-							.map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
-					})
-					
-				}
+		Auth.currentAuthenticatedUser({ bypassCache: true })
+			.catch((err)=>{
+				console.log('Homepage.js Error getting user', err);
 			})
+			.then((user)=>{
+				console.log('Homepage.js got authenticated user', user);
+        		if(user.username !== null) {
+					console.log("Getting user posts for user");
+					console.log(user.username);
+					
+					getUserPosts(user.username)
+						.catch((err)=>{
+							console.log('Homepage.js error getting posts', err);
+						})
+						.then((res) => {
+							console.log("User info: ");
+							console.log(res.data.getUser.posts.items);
+							if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
+								this.setState({myposts:[]},()=>{
+								this.setState({ myposts: res.data.getUser.posts.items
+									.map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
+								})
+					
+							}
+						});
 			
 			/*
 			getFollowedPost(user.username).then((res) => {
@@ -99,7 +108,8 @@ class Homepage extends Component {
                 <Post/>,<Post/>,<Post/>
 			]})
 			*/
-        }
+        		}	
+			});
     }
     
     render() {

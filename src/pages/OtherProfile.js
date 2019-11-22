@@ -62,65 +62,71 @@ class OtherProfile extends Component {
             UserPoolId: awsmobile.aws_user_pools_id, /* required */
             Username: window.location.href.split('/').slice(-1)[0] /* required */
         };
-        var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-        await this.setState({me: user.username, username: window.location.href.split('/').slice(-1)[0]});
-
-        // redirect if viewing own profile
-		if(this.params.Username === user.username){
-          	document.location.href = "/";
-		}
-
-
-        cognitoidentityserviceprovider.adminGetUser(this.params, (err, data) => {
-
-            if (err){
-			    console.log(err, err.stack); // an error occurred
-				//if user does not exist, redirect to own profile
-				if(err.code === 'UserNotFoundException'){
-					document.location.href = "/";
-				}
-            } else{
-
-                this.setState({ username: window.location.href.split('/').slice(-1)[0] });
-
-                for(var i = 0; i < data.UserAttributes.length; i++ ){
-                    if( data.UserAttributes[i].Name === 'name'){
-                        this.setState({name:data.UserAttributes[i].Value})
-                    }
-                    else if(data.UserAttributes[i].Name === 'picture'){
-                        this.setState({url:data.UserAttributes[i].Value})
-                    }
-
-                }
-
-            }
-        });
-
-        
-        if(this.state.username !== null) {
-            console.log("Getting posts by...");
-            console.log(window.location.href.split('/').slice(-1)[0]);
-			getUserPosts(window.location.href.split('/').slice(-1)[0]).then((res) => {
-				console.log("User info: ");
-				console.log(res.data.getUser.posts.items);
-				if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
-					this.setState({posts:[]},()=>{
-                        this.setState({ posts: res.data.getUser.posts.items
-                            .map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
-					})
-					
-				}
+        Auth.currentAuthenticatedUser({ bypassCache: true })
+			.catch((err)=>{
+				console.log('OtherProfile.js error getting user', err);
 			})
-		}
+			.then((user)=>{
+        		this.setState({me: user.username, username: window.location.href.split('/').slice(-1)[0]});
+
+        		// redirect if viewing own profile
+				if(this.params.Username === user.username){
+          			document.location.href = "/";
+				}
+
+
+        		cognitoidentityserviceprovider.adminGetUser(this.params, (err, data) => {
+
+            		if (err){
+			    		console.log(err, err.stack); // an error occurred
+						//if user does not exist, redirect to own profile
+						if(err.code === 'UserNotFoundException'){
+							document.location.href = "/";
+						}
+            		} 
+					else{
+						this.setState({ username: window.location.href.split('/').slice(-1)[0] });
+
+                		for(var i = 0; i < data.UserAttributes.length; i++ ){
+                    		if( data.UserAttributes[i].Name === 'name'){
+                        		this.setState({name:data.UserAttributes[i].Value})
+                    		}
+                    		else if(data.UserAttributes[i].Name === 'picture'){
+                        		this.setState({url:data.UserAttributes[i].Value})
+                    		}
+
+                		}
+
+            		}
+        		});
+
         
+        		if(this.state.username !== null) {
+            		console.log("Getting posts by...");
+            		console.log(window.location.href.split('/').slice(-1)[0]);
+					getUserPosts(window.location.href.split('/').slice(-1)[0])
+						.catch((err)=>{
+							console.log('OtherProfile.js error getting posts', err);
+						})
+						.then((res) => {
+							console.log("User info: ");
+							console.log(res.data.getUser.posts.items);
+							if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
+								this.setState({posts:[]},()=>{
+                        			this.setState({ posts: res.data.getUser.posts.items
+                            			.map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
+								})
+					
+							}
+						});
+				}
+		
+        	});
     }
 
     async follow(){
 
-        var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-        var username = user.username;
-
-        createFollow(username,this.state.username)
+        createFollow(this.context.username,this.state.username)
             .then((res)=>{
                 console.log('other profile','follow','success',res);
             })
@@ -130,9 +136,6 @@ class OtherProfile extends Component {
     }
 
     async unfollow(){
-
-       // var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-       // var username = user.username;
 
         deleteFollow(this.context.username,this.state.username)
             .then((res)=>{

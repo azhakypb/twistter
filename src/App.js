@@ -22,11 +22,16 @@ class App extends Component {
 	state = { username: '' };
 	
 	async getUser(){
-		var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
-		this.setState({
-			username: user.username
-		});
-		console.log('Context test:', user.username);
+		Auth.currentAuthenticatedUser({ bypassCache: true})
+			.catch((err)=>{
+				console.log('Error getting user', err);
+			})
+			.then((user)=>{
+				this.setState({
+					username: user.username
+				});
+				console.log('Context test:', user.username);
+			});
   	}
 
     render() {

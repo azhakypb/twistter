@@ -58,7 +58,7 @@ class Singlepost extends Component {
   	}
 
   	handleCreatePost = async () => {
-    	await Auth.currentAuthenticatedUser({ bypassCache: true })
+    	Auth.currentAuthenticatedUser({ bypassCache: true })
         	.catch((err)=>{console.log('error getting user',err);})
         	.then((user)=>{
             	createPost(user.username,this.state.topics1,this.state.text1)
@@ -89,7 +89,7 @@ class Singlepost extends Component {
                         	placeholder="Write something here before submitting"
                         	as="textarea"
                         	aria-label="With textarea"
-                        	maxlength="407"
+                        	maxLength="407"
                     	/>
                 	</InputGroup>
                 	<InputGroup
@@ -100,7 +100,7 @@ class Singlepost extends Component {
                         	placeholder="Add one to five topics, separate with comma if necessary"
                         	as="textarea"
                         	aria-label="With textarea"
-                        	maxlength="100"
+                        	maxLength="100"
                     	/>
                 	</InputGroup>
                 	<Button

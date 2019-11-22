@@ -139,26 +139,28 @@ class Settings extends Component {
 			this.setState({
 					phone_number: '+1'.concat(this.state.phone_number)
 				});
-            var user = await Auth.currentAuthenticatedUser({ bypassCache: true })
+            Auth.currentAuthenticatedUser({ bypassCache: true })
                 .catch((err) => { 
 					noError = false;
-                    console.error(err);
+                    console.error('Error getting user', err);
 					this.addError('Error updating phone number; try again.');
-                });
-			
-			if(noError){
-            	var res = await Auth.updateUserAttributes(user, {phone_number:this.state.phone_number})
-                	.catch((err) => { 
-						noError = false;
-                    	console.error(err);
-						this.addError('Error updating phone number; try again.'); 
-                	})
-                	.then((res)=>{
-						if(noError){
-                    		this.addAlert('Successfully updated phone number');
-						}
-                	})
-        	}
+                })
+				.then((user)=>{
+					if(noError){
+            			Auth.updateUserAttributes(user, {phone_number:this.state.phone_number})
+                			.catch((err) => { 
+								noError = false;
+                    			console.error('Error updating phone num', err);
+								this.addError('Error updating phone number; try again.'); 
+                			})
+                			.then((res)=>{
+								if(noError){
+									console.log('Updated phone num', res);
+                    				this.addAlert('Successfully updated phone number');
+								}
+                			})
+        			}
+				});
 		}
     }
     async handleSubmitNewPassword(event){
@@ -178,31 +180,33 @@ class Settings extends Component {
 	    else {
         	console.log('updating user password');
 
-        	var user = await Auth.currentAuthenticatedUser({ bypassCache: true })
+        	Auth.currentAuthenticatedUser({ bypassCache: true })
             	.catch((err) => { 
-                	console.error(err);
+                	console.error('Error getting user', err);
 					noError = false;
 					this.addError('Error updating password; try again.');
-            	});
-		
-			if(noError){
-        		var res = await Auth.changePassword(user, this.state.old_password, this.state.new_password)
-            		.catch((err) => { 
-						noError = false;
-                		console.error(err);
-						if(err.code === "NotAuthorizedException"){
-							this.addError('Wrong password');
-						}
-						else{
-							this.addError(err.code);
-						} 
-            		})
-            		.then((res) => {
-						if(noError){
-							this.addAlert('Successfully updated password');
-						}
-            		});
-        	}
+            	})
+				.then((user)=>{
+					if(noError){
+        				Auth.changePassword(user, this.state.old_password, this.state.new_password)
+            				.catch((err) => { 
+								noError = false;
+                				console.error(err);
+								if(err.code === "NotAuthorizedException"){
+									this.addError('Wrong password');
+								}
+								else{
+									this.addError(err.code);
+								} 
+            				})
+            				.then((res) => {
+								if(noError){
+									console.log('Updated password', res);
+									this.addAlert('Successfully updated password');
+								}
+            				});
+        			}
+				});	
 		}
 		this.handleClose();	
     }
@@ -216,25 +220,28 @@ class Settings extends Component {
 		}
         else {
 			console.log('updating user name');
-            var user = await Auth.currentAuthenticatedUser({ bypassCache: true })
+            Auth.currentAuthenticatedUser({ bypassCache: true })
                 .catch((err) => {
 					noError = false; 
-                    console.error(err);
+                    console.error('Error getting user', err);
 					this.addError('Error updating display name; try again.'); 
-                });
-			if(noError){
-            	var res = await Auth.updateUserAttributes(user, {name:this.state.name})
-                	.catch((err) => { 
-						noError = false;
-                    	console.error(err);
-						this.addError('Error updating display name; try again.'); 
-                	})
-                	.then((res)=>{
-						if(noError){
-                    		this.addAlert('Successfully updated display name');
-						}
-                	});
-			}
+                })
+				.then((user)=>{
+					if(noError){
+            			Auth.updateUserAttributes(user, {name:this.state.name})
+                			.catch((err) => { 
+								noError = false;
+                    			console.error('Error updating display name', err);
+								this.addError('Error updating display name; try again.'); 
+                			})
+                			.then((res)=>{
+								if(noError){
+									console.log('Updated display name', res);
+                    				this.addAlert('Successfully updated display name');
+								}
+                			});
+					}
+				});
         }
     }
     async handleSubmitUrl(event){
@@ -254,24 +261,27 @@ class Settings extends Component {
     	else {
             console.log('updating user picture');
 
-            var user = await Auth.currentAuthenticatedUser({ bypassCache: true })
+            Auth.currentAuthenticatedUser({ bypassCache: true })
                 .catch((err) => { 
 					noError = false;
-                    console.error(err);
+                    console.error('Error getting user', err);
 					this.addError('Error updating image; try again.');
-                });
-			if(noError){
-            	var res = await Auth.updateUserAttributes(user,{picture: this.state.url})
-                	.catch((err) => {
-						noError = false; 
-                    	console.error(err);
-						this.addError('Error updating image; try again.'); 
-                	}).then((res) => {
-						if(noError){
-                    		this.addAlert('Successfully updated profile picture');
-						}
-                	});
-    		}
+                })
+				.then((user)=>{
+					if(noError){
+            			Auth.updateUserAttributes(user,{picture: this.state.url})
+                			.catch((err) => {
+								noError = false; 
+                    			console.error('Error updating image', err);
+								this.addError('Error updating image; try again.'); 
+                			})
+							.then((res) => {
+								if(noError){
+                    				this.addAlert('Successfully updated profile picture');
+								}
+                			});
+    				}
+				});
 		}
     }
 
