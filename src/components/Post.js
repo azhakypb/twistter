@@ -111,7 +111,6 @@ class Post extends Component {
 		if( this.state.id !== '' ){ this.pull(); }
 	}
 	handleDeleteClick() {
-
 		deletePost(this.props.id)
 			.catch((err)=>{
 				console.log(err);
