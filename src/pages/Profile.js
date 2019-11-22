@@ -26,7 +26,7 @@ class Profile extends Component {
 		this.handleChangeText = this.handleChangeText.bind(this);
 		this.handleChangeTopic = this.handleChangeTopic.bind(this);
 	}
-	
+
 	showPosts(props){
 		console.log("Sorting posts by timestamp");
 		if (this.state.myposts.length > 1)
@@ -67,7 +67,7 @@ class Profile extends Component {
 						this.setState({ myposts: res.data.getUser.posts.items
 							.map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
 					})
-					
+
 				}
 			})
 		}
