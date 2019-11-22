@@ -32,7 +32,6 @@ class App extends Component {
 		if(this.state.username === ''){
 			this.getUser();
 		}
-		//console.log('Context test:', user.username);
 		return (
 			<UsernameContext.Provider value={{username: this.state.username}}>
             	<Router>
