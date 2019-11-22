@@ -119,9 +119,8 @@ class FollowList extends Component {
     return(
         <div>
             <Button onClick={this.handleFollowerClick}>{numFollowers} Followers</Button>
-            <br />
-            <br />
-            <Button onClick ={this.handleFollowingClick}>{numFollowing} Following</Button>
+           	&nbsp; 
+			<Button onClick ={this.handleFollowingClick}>{numFollowing} Following</Button>
             <br />
             <br />
             <h5>{header}</h5>

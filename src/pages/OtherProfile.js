@@ -171,7 +171,9 @@ class OtherProfile extends Component {
                         <h1>{name}</h1>
                         <h2>@{username}</h2>
 						<Button onClick={this.follow} aria-label="Follow">Follow</Button>
+						&nbsp;
 						<Button onClick={this.unfollow} aria-label="Unfollow">Unfollow</Button>
+						&nbsp;
                         <Button onClick={()=>this.setShow(true)} aria-label="Manage Topics">Manage Topics</Button>
                     </Jumbotron>
                 </Container>
@@ -187,9 +189,9 @@ class OtherProfile extends Component {
             </Col>
 
             <Col>
-
-                <FollowList username={username}></FollowList>
-
+				<Jumbotron>
+                	<FollowList username={username}></FollowList>
+				</Jumbotron>
             </Col>
             <Modal show={show} onHide={()=>this.setShow(false)}>
                 <Modal.Body>
