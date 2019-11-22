@@ -4,7 +4,7 @@ import { Button, Card, Col, Container,  Jumbotron, Row, Image, InputGroup, FormC
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
-import DBOps from '../DBOps.js'
+import DBOps, { getFollowedPost } from '../DBOps.js'
 import { searchUser, getUserPosts } from '../DBOps.js'
 import Navbar from '../components/Navbar.js';
 import FollowList from '../components/FollowList.js';
@@ -33,15 +33,17 @@ class Homepage extends Component {
 		if (this.state.myposts.length > 1) {
             if (this.state.sort === 'time') {
                 console.log("Sorting posts by time posted");
-    			this.state.myposts.sort((a,b) => a.timestamp - b.timestamp);
+    			this.state.myposts.sort((a,b) => b.key - a.key);
             }
             else if (this.state.sort === 'relevancy') {
-                console.log("Sorting posts by relevancy to user");
+				console.log("Sorting posts by relevancy to user");
+				this.state.myposts.sort((a,b) => a.key - b.key);
             }
             else if (this.state.sort === 'potential') {
                 console.log("Sorting posts by potential for engagement");
             }
-        }
+		}
+		console.log(this.state.myposts);
 		return (
 			<ul>{this.state.myposts}</ul>
 		)
@@ -66,10 +68,31 @@ class Homepage extends Component {
         console.log("Context test:", this.context.username);
 		var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
         if(user.username !== null) {
-            console.log("Getting user posts for user");
-            this.setState({myposts: [
+			console.log("Getting user posts for user");
+			console.log(user.username);
+			console.log(getFollowedPost(user.username));
+			getUserPosts(user.username).then((res) => {
+				console.log("User info: ");
+				console.log(res.data.getUser.posts.items);
+				if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
+					this.setState({myposts:[]},()=>{
+						this.setState({ myposts: res.data.getUser.posts.items
+							.map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
+					})
+					
+				}
+			})
+			/*
+			getFollowedPost(user.username).then((res) => {
+				console.log("Followed posts: ");
+				console.log(res);
+			})
+			*/
+			/*
+			this.setState({myposts: [
                 <Post/>,<Post/>,<Post/>
-            ]})
+			]})
+			*/
         }
     }
     
