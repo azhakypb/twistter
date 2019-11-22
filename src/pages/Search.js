@@ -108,16 +108,21 @@ class Search extends Component {
                     }
                   }
                 }`
-                var users = await customQuery(searchTemplate, {input: this.state.search + "*"});
-                console.log(users.data.searchUsers.items);
-                this.setState({posts:[]},()=>{
-                    this.setState({posts: users.data.searchUsers.items.map(user => <ListGroup.Item href={'/otherprofile/'+user.id} action key={user.id}>
-                        {user.id}
-                    </ListGroup.Item>)})
-                })
-                // this.setState({posts:[<ListGroup.Item href={'/testing'} action>
-                //     Check back soon for working version</ListGroup.Item>]});
-            }
+                var users = await customQuery(searchTemplate, {input: this.state.search + "*"})
+					.catch((err)=>{
+						console.log('Search.js error searching users', err);
+					})
+					.then((users)=>{
+                		console.log('Search.js success searching users', users.data.searchUsers.items);
+                		this.setState({posts:[]},()=>{
+                    		this.setState({posts: users.data.searchUsers.items.map(user => <ListGroup.Item href={'/otherprofile/'+user.id} action key={user.id}>
+                        	{user.id}
+                    		</ListGroup.Item>)})
+                		})
+               		 	// this.setState({posts:[<ListGroup.Item href={'/testing'} action>
+                		//     Check back soon for working version</ListGroup.Item>]});
+					});
+            }	
 
             else
             {

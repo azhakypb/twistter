@@ -17,9 +17,6 @@ class Profile extends Component {
         this.state = {
             name        : '',
 			username    : '',
-			sort		: 'Time Posted',
-			filterText	: '',
-			filterTopic	: '',
 			myposts		: [],
 			url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png'
         }
@@ -55,25 +52,34 @@ class Profile extends Component {
 	}
 
     async componentDidMount(){
-		console.log('Context test 2:', this.context.username);
-			var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-	  //  this.setState({username: user.username});
-        if( user.attributes.hasOwnProperty('picture') ){ this.setState({url : user.attributes.picture}); }
-		if( user.attributes.hasOwnProperty('name'   ) ){ this.setState({name: user.attributes.name   }); }
-		if(user.username !== null) {
-			console.log("Getting posts by user");
-			getUserPosts(user.username).then((res) => {
-				console.log("User info: ");
-				console.log(res.data.getUser.posts.items);
-				if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
-					this.setState({myposts:[]},()=>{
-						this.setState({ myposts: res.data.getUser.posts.items
-							.map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
-					})
-
-				}
+		Auth.currentAuthenticatedUser({ bypassCache: true })
+			.catch((err)=>{
+				console.log('Profile.js error getting user', err);
 			})
-		}
+			.then((user)=>{
+				console.log('Profile.js got user', user);
+	  			this.setState({username: user.username});
+        		if( user.attributes.hasOwnProperty('picture') ){ this.setState({url : user.attributes.picture}); }
+				if( user.attributes.hasOwnProperty('name'   ) ){ this.setState({name: user.attributes.name   }); }
+				if(user.username !== null) {
+					console.log("Getting posts by user");
+					getUserPosts(user.username)
+						.catch((err)=>{
+							console.log('Profile.js error getting posts', err);
+						})
+						.then((res) => {
+							console.log("User info: ");
+							console.log(res.data.getUser.posts.items);
+							if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
+								this.setState({myposts:[]},()=>{
+								this.setState({ myposts: res.data.getUser.posts.items
+									.map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
+								})
+
+							}
+						});
+				}
+			});
 	}
 
     render() {
@@ -142,7 +148,9 @@ class Profile extends Component {
             		</Col>
 
             		<Col>
-            			<FollowList username={this.context.username}></FollowList>
+						<Jumbotron>
+            				<FollowList username={this.context.username}></FollowList>
+						</Jumbotron>
             		</Col>
       		</Row>
 		);

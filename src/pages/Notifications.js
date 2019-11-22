@@ -15,15 +15,33 @@ class Notifications extends Component {
   	}
 
   	async componentDidMount(){
-    	var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
-    	this.setState({user: user.username});
-    	var userData = await getNotifications(this.state.user);
-    	this.setState({notifications: userData.data.getUser.notifications.items});
+    	Auth.currentAuthenticatedUser({ bypassCache: true })
+			.catch((err)=>{
+				console.log('Notifications.js error getting user', err);
+			})
+			.then((user)=>{
+				console.log('Notifications.js got user', user);
+    			this.setState({user: user.username});
+    			getNotifications(this.state.user)
+					.catch((err)=>{
+						console.log('Notifications.js error getting notifications', err);
+					})
+					.then((userData)=>{
+						console.log('Notifications.js got notifications', userData);
+    					this.setState({notifications: userData.data.getUser.notifications.items});
 
-		for(var i = 0; i < this.state.notifications.length; i++){
-			var deleteID = this.state.notifications[i].id;
-			await new deleteNotification(deleteID);
-		}
+						for(var i = 0; i < this.state.notifications.length; i++){
+						var deleteID = this.state.notifications[i].id;
+						new deleteNotification(deleteID)
+							.catch((err)=>{
+								console.log('Notifications.js error deleting notification', err);
+							})
+							.then((ret)=>{
+								console.log('Notifications.js deleted notification', ret);
+							});
+						}
+					});
+			});		
   	}
 
   	render() {

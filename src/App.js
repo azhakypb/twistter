@@ -6,6 +6,7 @@ import { withAuthenticator } from 'aws-amplify-react'
 import { Auth } from 'aws-amplify';
 import { UsernameContext } from './UsernameContext.js';
 // pages
+import Homepage from './pages/Homepage.js'
 import Search from './pages/Search.js'
 import Settings from './pages/Settings.js'
 import Profile from './pages/Profile.js'
@@ -21,24 +22,32 @@ class App extends Component {
 	state = { username: '' };
 	
 	async getUser(){
-		var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
-		this.setState({
-			username: user.username
-		});
-		console.log('Context test:', user.username);
+		Auth.currentAuthenticatedUser({ bypassCache: true})
+			.catch((err)=>{
+				console.log('Error getting user', err);
+			})
+			.then((user)=>{
+				this.setState({
+					username: user.username
+				});
+				console.log('Context test:', user.username);
+			});
   	}
 
     render() {
 		if(this.state.username === ''){
 			this.getUser();
 		}
-		//console.log('Context test:', user.username);
 		return (
 			<UsernameContext.Provider value={{username: this.state.username}}>
             	<Router>
                 	<Switch>
+						<Route
+							exact path="/"
+							component = { Homepage }
+						/>
                     	<Route
-                        	exact path="/"
+                        	exact path="/profile"
                         	component = { Profile }
                     	/>
                     	<Route

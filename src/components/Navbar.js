@@ -1,6 +1,6 @@
 // react modules
 import React, { Component, } from 'react';
-import { Button, Jumbotron } from 'react-bootstrap';
+import { Button, Jumbotron, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 // aws modules
 import { Auth } from 'aws-amplify';
@@ -14,9 +14,14 @@ class Navbar extends Component {
 	constructor(props){
 		// props and states
     	super(props);
+		this.state = {
+			show : false
+		};
     	// bind functions
 		//  this.displayUserAttributes 	=	this.displayUserAttributes	.bind(this);
 	    this.deleteUser				=	this.deleteUser.bind(this);
+		this.handleShow				= 	this.handleShow.bind(this);
+		this.handleClose			= 	this.handleClose.bind(this);
   	}
 
   	// async displayUserAttributes(){
@@ -25,33 +30,45 @@ class Navbar extends Component {
   	// 	console.log(user.attributes);
   	// }
 
+	handleShow(){
+		this.setState({
+				show: true
+			});
+	}
+
+	handleClose(){
+		this.setState({
+				show: false
+			});
+	}
+
   	async deleteUser(){
 
-        var username = Auth.currentAuthenticatedUser().username;
+        var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
+        console.log(user);
+        var username = user.username;
 
-  		Auth
-            .currentAuthenticatedUser()
-            .then((user: CognitoUser) => new Promise((resolve, reject) => {
-                user.deleteUser(error => {
-                    if (error) {
-                        return reject(error);
-                    }
-                    if (this.props.onSessionChange) {
-                        this.props.onSessionChange();
-                    }
-                    deleteUser(username)
-                    	.then((res)=>{
-                    		console.log('navbar','delete user','success',res)
-                    		document.location.href = "/login";
-                    		resolve();
-                    	},(err)=>{
-                    		console.log('navbar','delete user','error',err)
-                    		document.location.href = "/login";
-                    		resolve();
+        deleteUser(username)
+        	.catch((err)=>console.log(err))
+        	.then((res)=>{
+        		console.log(res);
+
+        		
+        		Auth.currentAuthenticatedUser()
+        			.then((user: CognitoUser) =>{
+
+                		user.deleteUser(error => {
+                    		if (error) { console.log(error); }
+
+                    		if (this.props.onSessionChange) {
+                        		this.props.onSessionChange();
+                        	}
+
+                        	document.location.href = "/login";
+
                     	});
-                });
-            }))
-            .catch(this.onError);
+                    });
+            });
   	}
 
 	render() {
@@ -60,9 +77,18 @@ class Navbar extends Component {
 			<div>
 	    		<Jumbotron>
 	    			<h2>Navbar</h2>
+					<Link
+						to= '/'
+						paddingtop='100px'>
+						<Button
+							variant="secondary"
+							size="md"
+							block>
+							Home
+						</Button>
+					</Link>
 	    			<Link
-	    				to= '/'
-	    				paddingtop="100px">
+	    				to= '/profile'>
 		  				<Button
 		  					variant="secondary"
 		  					size="md"
@@ -113,12 +139,24 @@ class Navbar extends Component {
 	  				<Button
 	  					variant="secondary"
 	  					size="md"
-	  					onClick ={this.deleteUser}
+	  					onClick ={this.handleShow}
 	  					block>
 	    				Delete User
 	  				</Button>
 	  				<Postwrite username={this.props.username}></Postwrite>
 	    		</Jumbotron>
+			<Modal show={this.state.show} onHide={this.handleClose}>
+				<Modal.Header>
+					<Modal.Title>Confirm Account Deletion</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<p>Are you sure you want to delete your account? This cannot be undone!</p>
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="secondary" onClick={this.handleClose}>Cancel</Button>
+					<Button variant="primary" onClick={this.deleteUser}>Confirm</Button>
+				</Modal.Footer>
+			</Modal>
 			</div>
     	);
   	}

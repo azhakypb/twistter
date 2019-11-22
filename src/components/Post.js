@@ -6,7 +6,7 @@ import { faQuoteRight, faQuoteLeft, faEdit, faTrash, faHeart } from '@fortawesom
 // aws modules
 import { Auth } from 'aws-amplify';
 // custom modules
-import { searchPost, createLike, deleteLike, deletePost } from '../DBOps.js';
+import { searchPost, createLike, deleteLike, deletePost, getEngagement, createEngagement, updateEngagement } from '../DBOps.js';
 import Quoteprocess from  './Quoteprocess'
 import Editprocess from  './Editprocess'
 // globals
@@ -38,7 +38,7 @@ class Post extends Component {
 
 		searchPost(this.state.id).then((res) => {
 
-			console.log(res);
+			console.log('Post pull', res);
 			res 		= res.data.getPost;
 			res.author 	= res.author.id
 
@@ -83,7 +83,8 @@ class Post extends Component {
 			showQuote		: false,
 			showEdit		: false,
 			enableEdit		: false,
-			curUser 		: ''
+			curUser 		: '',
+			liked			: false
 		}
 		if( 'id' in this.props && !(this.props.id === '') ){
 			this.state.id = this.props.id;
@@ -93,13 +94,18 @@ class Post extends Component {
 		this.stub 	   				= this.stub.bind(this);
 		this.handleQuoteClick 		= this.handleQuoteClick.bind(this);
 		this.handleEditClick 		= this.handleEditClick.bind(this);
-		this.handleDeleteClick		= this.handleDeleteClick.bind(this);
+		this.handleDeleteClick 			= this.handleDeleteClick.bind(this);
 	}
 	async getUser() {
-		var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
-		this.setState({
-			curUser:	user.username
-		});
+		Auth.currentAuthenticatedUser({ bypassCache: true})
+			.catch((err)=>{
+				console.log('Error getting user', err);
+			})
+			.then((user)=>{
+				this.setState({
+					curUser:	user.username
+				});
+			});
 	}
 	handleQuoteClick() {
 		this.setState(prevState => {
@@ -123,10 +129,10 @@ class Post extends Component {
 
 		deletePost(this.props.id)
 			.catch((err)=>{
-				console.log(err);
+				console.log('Error deleting post', err);
 			})
 			.then((res)=>{
-				console.log(res);
+				console.log('Deleting post', res);
 				window.location.reload();
 			});
 
@@ -141,12 +147,28 @@ class Post extends Component {
 
 		var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
 		var userid = user.username;
+		console.log('Userid:', userid);
 		var postid = this.props.id;
 		try {
-			var ret = await createLike(userid,postid);
+			var ret = await createLike(userid, postid);
+			for (var i = 0; i < this.state.topics.length; i++) {
+				var engagement = await getEngagement({id: userid + "-" + this.state.topics[i]});
+				if (engagement.data.getEngagement == null) {
+					console.log(JSON.stringify({id: userid + "-" + this.state.topics[i], value: 1, topicid: this.state.topics[i], userid: userid}));
+					console.log(await createEngagement({id: userid + "-" + this.state.topics[i], value: 1, topicid: this.state.topics[i], userid: userid}));
+				}
+				else {
+					console.log(JSON.stringify({id: engagement.data.getEngagement.id, value: engagement.data.getEngagement.value + 1}));
+					console.log(await updateEngagement({id: engagement.data.getEngagement.id, value: engagement.data.getEngagement.value + 1}));
+				}
+			}
 		} catch(e) {
 			console.log(e);
 			var ret = await deleteLike(userid,postid);
+			for (var i = 0; i < this.state.topics.length; i++) {
+				var engagement = await getEngagement({id: userid + "-" + this.state.topics[i]});
+				console.log(await updateEngagement({id: engagement.data.getEngagement.id, value: engagement.data.getEngagement.value - 1}));
+			}
 		}
 		console.log(ret);
 		this.pull();
