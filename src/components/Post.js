@@ -76,7 +76,7 @@ class Post extends Component {
 			showEdit		: false,
 			enableEdit		: false,
 			curUser 		: '',
-			liked			: false 
+			liked			: false
 		}
 		if( 'id' in this.props && !(this.props.id === '') ){
 			this.state.id = this.props.id;
@@ -113,7 +113,7 @@ class Post extends Component {
 		if( this.state.id !== '' ){ this.pull(); }
 	}
 	handleDeleteClick() {
-		
+
 		deletePost(this.props.id)
 			.catch((err)=>{
 				console.log(err);
@@ -134,12 +134,28 @@ class Post extends Component {
 
 		var user = await Auth.currentAuthenticatedUser({ bypassCache: true });
 		var userid = user.username;
+		console.log(userid);
 		var postid = this.props.id;
 		try {
-			var ret = await createLike(userid,postid);
+			var ret = await createLike(userid, postid);
+			for (var i = 0; i < this.state.topics.length; i++) {
+				var engagement = await getEngagement({id: userid + "-" + this.state.topics[i]});
+				if (engagement.data.getEngagement == null) {
+					console.log(JSON.stringify({id: userid + "-" + this.state.topics[i], value: 1, topicid: this.state.topics[i], userid: userid}));
+					console.log(await createEngagement({id: userid + "-" + this.state.topics[i], value: 1, topicid: this.state.topics[i], userid: userid}));
+				}
+				else {
+					console.log(JSON.stringify({id: engagement.data.getEngagement.id, value: engagement.data.getEngagement.value + 1}));
+					console.log(await updateEngagement({id: engagement.data.getEngagement.id, value: engagement.data.getEngagement.value + 1}));
+				}
+			}
 		} catch(e) {
 			console.log(e);
 			var ret = await deleteLike(userid,postid);
+			for (var i = 0; i < this.state.topics.length; i++) {
+				var engagement = await getEngagement({id: userid + "-" + this.state.topics[i]});
+				console.log(await updateEngagement({id: engagement.data.getEngagement.id, value: engagement.data.getEngagement.value - 1}));
+			}
 		}
 		console.log(ret);
 		this.pull();
