@@ -147,7 +147,9 @@ class Homepage extends Component {
             		</Col>
 
             		<Col>
-            			<FollowList username={this.context.username}></FollowList>
+						<Jumbotron>
+            				<FollowList username={this.context.username}></FollowList>
+						</Jumbotron>
             		</Col>
       		</Row>
     );
