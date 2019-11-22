@@ -1,7 +1,7 @@
 import React, { Component, } from 'react';
 import { Button, InputGroup, FormControl, Form, Row, Modal, Container} from 'react-bootstrap';
 import DBOps from '../DBOps.js'
-import { createPost } from '../DBOps.js'
+import { createPost, updatePost } from '../DBOps.js'
 import { Auth } from 'aws-amplify'
 
 
@@ -10,12 +10,9 @@ class Editprocess extends Component {
 		// props and states
 		super(props);
 		this.state = {
-			editText		: '',
-			editTopic		: ''
+			editText		: ''
 		}
 		this.handleEditPost 	        = this.handleEditPost.bind(this);
-		this.handleEditTopic 	        = this.handleEditTopic.bind(this);
-		this.handleTopicNumEdit     	= this.handleTopicNumEdit.bind(this);
 		this.handleLengthEdit       	= this.handleLengthEdit.bind(this);
 		this.handleDouble			    = this.handleDouble.bind(this);
 	}
@@ -25,6 +22,14 @@ class Editprocess extends Component {
           create a new post:
             it should be a call here
         */
+        updatePost(this.props.id, this.state.editText)
+            .catch((err)=>{
+                console.log('Error deleting post', err);
+            })
+            .then((res)=>{
+                console.log('Deleting post', res);
+                window.location.reload();
+            });
 
 		console.log(this.state.editText);
 		console.log(this.state.editTopic);
@@ -34,20 +39,8 @@ class Editprocess extends Component {
 		this.setState({ editText:	event.target.value}
 		);
 	}
-	handleEditTopic (event){
-		event.target.value = (event.target.value.replace(/\s+/g, ''));
-      	this.setState({ editTopic:   event.target.value.split(",")});
-	}
-    handleTopicNumEdit(editTopic) {
-		if(editTopic.length > 5) {
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
-	handleLengthEdit(editText, editTopic) {
-		if(editText.length > 0 && editTopic.length > 0) {
+	handleLengthEdit(editText) {
+		if(editText.length > 0) {
 			return true;
 		} else {
 			console.log('Post and Topic Forms Require a text');
@@ -57,11 +50,9 @@ class Editprocess extends Component {
 
     render() {
         const {
-            editText,
-            editTopic
+            editText
         } = this.state;
-        const enabled 	= 	this.handleLengthEdit(editText, editTopic) &&
-                            this.handleTopicNumEdit(editTopic);
+        const enabled 	= 	this.handleLengthEdit(editText)
         let buttonColor = 	enabled ? "primary" : "secondary"
         return (
                 <Modal show={this.props.showEdit} onHide={this.props.action}>
@@ -87,7 +78,6 @@ class Editprocess extends Component {
                                         as='textarea'
                                         maxlength="407"
                                         placeholder="Edit your post here"
-
                                     />
                                 </InputGroup>
                             </Row>
@@ -98,18 +88,6 @@ class Editprocess extends Component {
                                     value={this.props.topics}
                                     disabled
                                 />
-                            </Row>
-                            <Row>
-                                <InputGroup
-                                    value={this.state.editTopic}
-                                    onChange={this.handleEditTopic}>
-                                    <FormControl
-                                        rows='2'
-                                        as='textarea'
-                                        placeHolder="Edit your topics here, remember max limit is 5 topics"
-                                        maxlength="100"
-                                    />
-                                </InputGroup>
                             </Row>
                         </Container>
                     </Modal.Body>
