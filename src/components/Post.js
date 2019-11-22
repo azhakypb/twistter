@@ -94,6 +94,7 @@ class Post extends Component {
 		this.stub 	   				= this.stub.bind(this);
 		this.handleQuoteClick 		= this.handleQuoteClick.bind(this);
 		this.handleEditClick 		= this.handleEditClick.bind(this);
+		this.handleDeleteClick 			= this.handleDeleteClick.bind(this);
 	}
 	async getUser() {
 		Auth.currentAuthenticatedUser({ bypassCache: true})
