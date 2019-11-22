@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import DBOps from '../DBOps.js';
 import TopicView from  '../components/TopicView.js';
-import { createUser, searchUser, deleteUser, createFollow, deleteFollow, createPost, createTopic, searchPost, createNotification, searchNotification, deleteNotification, customQuery } from '../DBOps.js'
+import { createUser, searchUser, deleteUser, createFollow, deleteFollow, createPost, createTopic, searchPost, createNotification, searchNotification, deleteNotification, customQuery, getFollowedPost } from '../DBOps.js'
 import Post from '../components/Post.js'
 
 class Test extends Component {
@@ -64,6 +64,10 @@ class Test extends Component {
       input: ""
     }
 
+    this.followedPostState = {
+      userid: ""
+    }
+
     this.handleSearch = this.handleSearch.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
     this.handleFollowee = this.handleFollowee.bind(this);
@@ -81,6 +85,7 @@ class Test extends Component {
     this.handleCTTag = this.handleCTTag.bind(this);
     this.handleCPTag = this.handleCPTag.bind(this);
     this.handleWUSearch = this.handleWUSearch.bind(this);
+    this.handleFollowedPost = this.handleFollowedPost.bind(this);
   }
 
   /***** User Operations In Testing *****/
@@ -322,6 +327,16 @@ class Test extends Component {
     console.log(temp.data.searchUsers.items);
   }
 
+  handleFollowedPost(event) {
+    this.followedPostState.userid = event.target.value;
+    console.log("Set followedPostState userid to: " + event.target.value);
+  }
+
+  followPost = async () => {
+    var temp = await getFollowedPost(this.followedPostState.userid);
+    console.log(temp);
+  }
+
   render() {
 
     const {id} = this.state;
@@ -371,6 +386,11 @@ class Test extends Component {
         <TopicView/>
         Wild Card User Search : <input onChange={this.handleWUSearch}/>
         <button onClick={this.WCUSearch}>Search Users with WildCard</button><br/>
+        <br/>
+        <br/>
+        getFollowedPost : <input onChange={this.handleFollowedPost}/>
+        <button onClick={this.followPost}>getFollowedPost</button><br/>
+        <br/>
       </div>
 
     );

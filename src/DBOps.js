@@ -9,6 +9,38 @@ const userCreationTemplate = `mutation createUser($id: ID!) {
     }
 }`
 
+const getFollowedTopicsTemplate = `query getFollow($id: ID!) {
+    getFollow(id: $id){
+        followedtopics
+        unfollowedtopics
+        newtopics
+    }
+}`
+
+const updateFollowedTopicsTemplate = `mutation updateFollow($id: ID!, $followedtopics: String) {
+    updateFollow( input: { id: $id, followedtopics: $followedtopics}){
+        followedtopics
+        unfollowedtopics
+        newtopics
+    }
+}`
+
+const updateUnfollowedTopicsTemplate = `mutation updateFollow($id: ID!, $unfollowedtopics: String) {
+    updateFollow( input: { id: $id, unfollowedtopics: $unfollowedtopics}){
+        followedtopics
+        unfollowedtopics
+        newtopics
+    }
+}`
+
+const updateNewTopicsTemplate = `mutation updateFollow($id: ID!, $newtopics: String) {
+    updateFollow( input: { id: $id, newtopics: $newtopics }){
+        followedtopics
+        unfollowedtopics
+        newtopics
+    }
+}`
+
 const getFollowersTemplate = `query getUser($id: ID!) {
     getUser(id: $id){
         followers{
@@ -57,11 +89,7 @@ const userSearchTemplate = `query getUser($id: ID!) {
                 id
             }
         }
-        interests {
-            items {
-                id
-            }
-        }
+        topics
         following {
             items {
                 id
@@ -162,6 +190,53 @@ const postCreateTemplate = `mutation createPost(
         text: $text,
         timestamp: $timestamp,
         postAuthorId: $postAuthorId
+    }){
+        id,
+        text,
+        timestamp,
+        author {
+            id
+        }
+    }
+}`
+
+const deletePostTemplate = `mutation deletePost(
+        $id: ID!
+    ) {
+        deletePost (input:{id: $id}){
+        id,
+        text,
+        timestamp,
+        author {
+            id
+        }
+    }
+}`
+
+const updatePostTemplate = `mutation updatePost(
+        $id: ID!, $text: String!
+    ) {
+        updatePost (input:{id:$id, text:$text}){
+        id,
+        text,
+        timestamp,
+        author {
+            id
+        }
+    }
+}`
+
+const quotePostCreateTemplate = `mutation createPost(
+        $text: String!,
+        $timestamp: String!,
+        $postAuthorId: ID!,
+        $quote: ID!
+    ) {
+        createPost (input:{
+        text: $text,
+        timestamp: $timestamp,
+        postAuthorId: $postAuthorId,
+        quote: $quote
     }){
         id,
         text,
@@ -392,220 +467,6 @@ class DBOps extends Component {
     }
     this.return_value = null;
   }
-  /***** BEGIN CREATE USER FUNCTIONS *****/
-
-  createUser = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(userCreationTemplate, info));
-      return temp.data.createUser;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-
-  /***** END CREATE USER FUNCTIONS *****/
-
-  /***** BEGIN SEARCH USER FUNCTIONS *****/
-
-  searchUser = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(userSearchTemplate, info));
-      return temp.data;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END SEARCH USER FUNCTIONS *****/
-
-  /***** BEGIN DELETE USER FUNCTIONS *****/
-
-  deleteUser = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(userDeletionTemplate, info));
-      return temp.data.deleteUser;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END DELETE USER FUNCTIONS *****/
-
-  /***** BEGIN CREATE FOLLOW FUNCTIONS *****/
-
-  createFollow = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(followCreateTemplate, info));
-      return temp.data.createFollow;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END CREATE FOLLOW FUNCTIONS *****/
-
-  /***** BEGIN UNFOLLOW FUNCTIONS *****/
-
-  deleteFollow = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(followDeleteTemplate, info));
-      return temp.data.deleteFollow;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END UNFOLLOW FUNCTIONS *****/
-
-  /***** BEGIN CREATE POST FUNCTIONS *****/
-
-  createPost = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(postCreateTemplate, info));
-      return temp.data.createPost;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END CREATE POST FUNCTIONS *****/
-
-  /***** BEGIN SEARCH POST FUNCTIONS *****/
-
-  searchPost = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(postSearchTemplate, info));
-      return temp.data.getPost;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END SEARCH POST FUNCTIONS *****/
-
-  /***** CREATE NOTIFICATION *****/
-
-  createNotification = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(notifCreateTemplate, info));
-      return temp.data;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END CREATE NOTIFICATION *****/
-
-  /***** SEARCH NOTIFICATION *****/
-
-  searchNotification = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(notifSearchTemplate, info));
-      return temp.data;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END SEARCH NOTIFICATION *****/
-
-  /***** DELETE NOTIFICATION *****/
-
-  deleteNotification = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(notifDeleteTemplate, info));
-      return temp.data.deleteNotification;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END DELETE NOTIFICATION *****/
-
-  /***** CREATE TOPIC *****/
-
-  createTopic = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(createTopicTemplate, info));
-      return temp.data;
-    } catch (e) {
-      return e.data;
-    }
-  }
-
-  /***** END CREATE TOPIC *****/
-
-  /***** SEARCH TOPIC *****/
-
-  searchTopic = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(searchTopicTemplate, info));
-      return temp;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  /***** END SEARCH TOPIC *****/
-
-  /***** CREATE TAG *****/
-
-  createTag = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(createTagTemplate, info));
-      console.log(temp);
-      return temp.data;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  /***** END CREATE TAG *****/
-
-  /***** CREATE LIKE *****/
-
-  createLike = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(createLikeTemplate, info));
-      console.log(temp);
-      return temp.data;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  /***** END CREATE LIKE *****/
-
-  /***** DELETE LIKE *****/
-
-  deleteLike = async (info) => {
-    var temp;
-    try {
-      temp = await API.graphql(graphqlOperation(deleteLikeTemplate, info));
-      console.log(temp);
-      return temp.data;
-    } catch (e) {
-      return e;
-    }
-  }
-
-  /***** END CREATE LIKE *****/
-
 }
 
 export function createUser(username){
@@ -665,7 +526,7 @@ export function createPost(author,topics,text,quoteid=false){
 
         if(quoteid){
 
-            API.graphql(graphqlOperation(postCreateTemplate, JSON.stringify({
+            API.graphql(graphqlOperation(quotePostCreateTemplate, JSON.stringify({
                 postAuthorId: author,
                 timestamp: timeid,
                 text: text,
@@ -769,6 +630,19 @@ export function searchPost(id){
     })));
 }
 
+export function deletePost(id){
+    return API.graphql(graphqlOperation(deletePostTemplate, JSON.stringify({
+        id: id
+    })));
+}
+
+export function updatePost(id, text){
+    return API.graphql(graphqlOperation(updatePostTemplate, JSON.stringify({
+        id: id,
+        text: text
+    })));
+}
+
 export function createNotification(userid,text){
 
     var month, day, year;
@@ -846,7 +720,6 @@ export function getEngagement(engagementId) {
 export function customQuery(template, params) {
   return API.graphql(graphqlOperation(template, JSON.stringify(params)));
 }
-
 export function getUserPosts(userid) {
   const template = `query getUser ($id: ID!){
     getUser(id: $id) {
@@ -859,5 +732,102 @@ export function getUserPosts(userid) {
     }
   }`
   return API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
+}
+
+function processDataIntoHashTable(data, topics) {
+  if (data == null) {
+    return topics;
+  }
+  var dataset = data.split(",");
+  for (var i = 0; i < data.length; i++) {
+    topics[dataset[i]] = true;
+  }
+  return topics;
+}
+
+function containsFollowedTopics(postTopics, topics) {
+  for (var i = 0; i < postTopics.length; i++) {
+    if (topics[postTopics[i].topic.id] == true) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function getFollowedTopics(follower, followee){
+    return API.graphql(graphqlOperation(getFollowedTopicsTemplate,JSON.stringify({
+        id: follower + '-' + followee
+    })));
+}
+export function updateFollowedTopics(follower, followee, followedtopics){
+    return API.graphql(graphqlOperation(updateFollowedTopicsTemplate,JSON.stringify({
+        id: follower + '-' + followee,
+        followedtopics: followedtopics
+    })));
+}
+
+export function updateUnfollowedTopics(follower, followee, unfollowedtopics){
+    return API.graphql(graphqlOperation(updateUnfollowedTopicsTemplate,JSON.stringify({
+        id: follower + '-' + followee,
+        unfollowedtopics: unfollowedtopics
+    })));
+}
+
+export function updateNewTopics(follower, followee, newtopics){
+    return API.graphql(graphqlOperation(updateNewTopicsTemplate,JSON.stringify({
+        id: follower + '-' + followee,
+        newtopics: newtopics
+    })));
+}
+
+export async function getFollowedPost(userid) {
+  const template = `query getUser($id: ID!) { getUser(id: $id) { following { items { followee { posts { items { id timestamp topics { items { topic { id } } } likes { items { id } } quoted { items { id } } } } } followedtopics unfollowedtopics newtopics } } engagement { items { value topic { id } } } } }`
+
+  var userData = await API.graphql(graphqlOperation(template, JSON.stringify({id: userid})));
+  var engagement = userData.data.getUser.engagement.items;
+  var followedUsers = userData.data.getUser.following.items;
+  var topicEngagement = []; // hash table with key as topic id and data as engagment value
+  var allposts = []; // array to store {postid, pfe, relevance, timestamp}
+
+  for (var i = 0; i < engagement.length; i++) {
+    topicEngagement[engagement[i].topic.id] = engagement[i].value;
+  }
+
+  for (var i = 0; i < followedUsers.length; i++) {
+    var followedtopics = (followedUsers[i].followedtopics == null) ? [] : followedUsers[i].followedtopics.split(","); // followed topics from that followed user
+    var newtopics = (followedUsers[i].newtopics == null) ? [] : followedUsers[i].newtopics.split(","); // new topics of that followed user
+    var posts = followedUsers[i].followee.posts.items; // post of that followed user
+    var topics = []; // hash table with key as topic id and data as true
+
+    // add followedtopics to hash table
+    for (var index = 0; index < followedtopics.length; index++) {
+      topics[followedtopics[index]] = true;
+    }
+    // add newtopics to hash table
+    for (var index = 0; index < newtopics.length; index++) {
+      topics[newtopics[index]] = true;
+    }
+
+    for (var j = 0; j < posts.length; j++) {
+      if (containsFollowedTopics(posts[j].topics.items, topics) == false) {
+        continue;
+      }
+      var postid = posts[j].id; // postid
+      var likes = posts[j].likes.items.length; // number of likes the post has
+      var quoted = posts[j].quoted.items.length; // number of times the post has been quoted
+      var timestamp = posts[j].timestamp; // timestamp of the post
+      var postTopics = posts[j].topics.items; // array of topics tagged onto the post
+      var pfe_value = 0; // potential of engagement value
+      for (var k = 0; k < postTopics.length; k++) {
+        if (topicEngagement[postTopics[k].topic.id] != null) {
+          pfe_value = topicEngagement[postTopics[k].topic.id];
+        }
+      }
+      var data = {id: postid, pfe: pfe_value, relevance: likes + quoted * 5, timestamp: timestamp};
+      allposts.push(data);
+    }
+
+  }
+  return allposts;
 }
 export default DBOps;
