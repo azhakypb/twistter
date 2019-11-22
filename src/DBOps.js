@@ -252,6 +252,13 @@ const postSearchTemplate = `query getPost(
   ) {
   getPost (id: $id){
     id,
+    quote{
+        text,
+        timestamp,
+        author{
+            id
+        }
+    }
     text,
     timestamp,
     author {

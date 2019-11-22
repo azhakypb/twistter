@@ -50,6 +50,14 @@ class Post extends Component {
 				likes: 			res.likes.items
 			});
 
+			if(res.quote != null){
+				this.setState({
+					q_username: res.quote.author.id,
+					q_text: res.quote.text,
+					q_timestamp: res.quote.timestamp
+				});
+			}
+
 
 		}).catch((err)=>{
 
