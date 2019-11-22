@@ -4,7 +4,7 @@ import { Button, Card, Col, Container,  Jumbotron, Row, Image, InputGroup, FormC
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
-import DBOps, { getFollowedPost } from '../DBOps.js'
+import DBOps, { getFollowedPost, searchPost } from '../DBOps.js'
 import { searchUser, getUserPosts } from '../DBOps.js'
 import Navbar from '../components/Navbar.js';
 import FollowList from '../components/FollowList.js';
@@ -30,22 +30,27 @@ class Homepage extends Component {
     }
 
     showPosts(props){
-		if (this.state.myposts.length > 1) {
+		var posts = [].concat(this.state.myposts);
+		if (posts.length > 1) {
             if (this.state.sort === 'time') {
                 console.log("Sorting posts by time posted");
-    			this.state.myposts.sort((a,b) => b.key - a.key);
+    			posts.sort((a,b) => b.key - a.key);
             }
             else if (this.state.sort === 'relevancy') {
 				console.log("Sorting posts by relevancy to user");
-				this.state.myposts.sort((a,b) => a.key - b.key);
+				posts.sort((a,b) => a.key - b.key);
             }
             else if (this.state.sort === 'potential') {
                 console.log("Sorting posts by potential for engagement");
-            }
+				posts.sort((a,b) => b.id - a.id);
+			}
 		}
-		console.log(this.state.myposts);
+		if (this.state.filterTopic !== null) {
+			// filter topics
+		}
+		console.log(posts);
 		return (
-			<ul>{this.state.myposts}</ul>
+			<ul>{posts}</ul>
 		)
 	}
 
@@ -70,7 +75,7 @@ class Homepage extends Component {
         if(user.username !== null) {
 			console.log("Getting user posts for user");
 			console.log(user.username);
-			console.log(getFollowedPost(user.username));
+			
 			getUserPosts(user.username).then((res) => {
 				console.log("User info: ");
 				console.log(res.data.getUser.posts.items);
@@ -82,6 +87,7 @@ class Homepage extends Component {
 					
 				}
 			})
+			
 			/*
 			getFollowedPost(user.username).then((res) => {
 				console.log("Followed posts: ");
