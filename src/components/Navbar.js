@@ -44,32 +44,31 @@ class Navbar extends Component {
 
   	async deleteUser(){
 
-        var username = Auth.currentAuthenticatedUser().username;
+        var user = await Auth.currentAuthenticatedUser({ bypassCache: true});
+        console.log(user);
+        var username = user.username;
 
-  		Auth
-            .currentAuthenticatedUser()
-            .then((user: CognitoUser) => new Promise((resolve, reject) => {
-                user.deleteUser(error => {
-                    if (error) {
-                        return reject(error);
-                    }
-                    if (this.props.onSessionChange) {
-                        this.props.onSessionChange();
-                    }
-                    deleteUser(username)
-                    	.then((res)=>{
-                    		console.log('navbar','delete user','success',res)
-                    		document.location.href = "/login";
-                    		resolve();
-                    	},(err)=>{
-                    		console.log('navbar','delete user','error',err)
-                    		document.location.href = "/login";
-                    		resolve();
+        deleteUser(username)
+        	.catch((err)=>console.log(err))
+        	.then((res)=>{
+        		console.log(res);
+
+        		
+        		Auth.currentAuthenticatedUser()
+        			.then((user: CognitoUser) =>{
+
+                		user.deleteUser(error => {
+                    		if (error) { console.log(error); }
+
+                    		if (this.props.onSessionChange) {
+                        		this.props.onSessionChange();
+                        	}
+
+                        	document.location.href = "/login";
+
                     	});
-                });
-            }))
-            .catch(this.onError);
-		this.handleClose();
+                    });
+            });
   	}
 
 	render() {
