@@ -522,12 +522,18 @@ class DBOps extends Component {
   }
 }
 
+// only for use as testing function
 export function createUser(username){
-    return API.graphql(graphqlOperation(userCreationTemplate, JSON.stringify({id:username})));
+    return API.graphql(graphqlOperation(userCreationTemplate, JSON.stringify({
+        id: username
+    })));
 }
 
+// only for use as testing function
 export function searchUser(username) {
-    return API.graphql(graphqlOperation(userSearchTemplate, JSON.stringify({id:username})));
+    return API.graphql(graphqlOperation(userSearchTemplate, JSON.stringify({
+        id:username
+    })));
 }
 
 export async function deleteUser(username){
@@ -769,10 +775,24 @@ export function searchPost(id){
     })));
 }
 
-export function deletePost(id){
-    return API.graphql(graphqlOperation(deletePostTemplate, JSON.stringify({
-        id: id
-    })));
+export function deletePost(postid){
+
+    return new Promise( async (resolve,reject)=>{
+
+        var res = await searchPost(postid);
+        var tags = res.data.getPost.topics.items.map((tag)=>tag.id);
+
+        for( const tag of tags ){
+            await API.graphql(graphqlOperation(deleteTagTemplate, JSON.stringify({
+                id: tag
+            })));
+        }
+
+        var res2 = await API.graphql(graphqlOperation(deletePostTemplate, JSON.stringify({
+            id: postid
+        })));
+
+    });
 }
 
 export function updatePost(id, text){
