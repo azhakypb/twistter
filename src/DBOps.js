@@ -682,7 +682,8 @@ export function createPost(author,topics,text,quoteid=false){
                                     tagPostId: postid
                                 }))).catch((err)=>{
                                         reject(err);
-                                    });
+                                    })
+                                    .then((res)=>console.log('created tag',topic,postid));
 
                             },(err)=>{
 
@@ -695,7 +696,8 @@ export function createPost(author,topics,text,quoteid=false){
                                         tagPostId: postid
                                     }))).catch((err)=>{
                                         reject(err);
-                                    });
+                                    })
+                                        .then((res)=>console.log('created tag',topic,postid));
 
                                 } else {
                                     console.log('dbops','create post','unhandled error',err);
@@ -730,7 +732,8 @@ export function createPost(author,topics,text,quoteid=false){
                                     tagPostId: postid
                                 }))).catch((err)=>{
                                         reject(err);
-                                    });
+                                    })
+                                    .then((res)=>console.log('created tag',topic,postid));
 
                             },(err)=>{
 
@@ -743,7 +746,8 @@ export function createPost(author,topics,text,quoteid=false){
                                         tagPostId: postid
                                     }))).catch((err)=>{
                                         reject(err);
-                                    });
+                                    })
+                                        .then((res)=>console.log('created tag',topic,postid));
 
                                 } else {
                                     console.log('dbops','create post','unhandled error',err);

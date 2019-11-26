@@ -33,14 +33,16 @@ class TopicView extends Component {
 			})
 			.then((res)=>{
 				console.log(res);
-				if(res.data.getFollow.followedtopics != null){
-					this.setState({followed: res.data.getFollow.followedtopics.split(',')},()=>console.log(this.state));
-				}
-				if(res.data.getFollow.unfollowedtopics != null){
-					this.setState({ignored:res.data.getFollow.unfollowedtopics.split(',')},()=>console.log(this.state));
-				}
-				if(res.data.getFollow.newtopics != null){
-					this.setState({new:res.data.getFollow.newtopics.split(',')},()=>console.log(this.state));
+				if(res.data.getFollow != null){
+					if(res.data.getFollow.followedtopics != null){
+						this.setState({followed: res.data.getFollow.followedtopics.split(',')},()=>console.log(this.state));
+					}
+					if(res.data.getFollow.unfollowedtopics != null){
+						this.setState({ignored:res.data.getFollow.unfollowedtopics.split(',')},()=>console.log(this.state));
+					}
+					if(res.data.getFollow.newtopics != null){
+						this.setState({new:res.data.getFollow.newtopics.split(',')},()=>console.log(this.state));
+					}
 				}
 			});
 	}
