@@ -77,47 +77,17 @@ class TopicView extends Component {
 
 	async componentWillUnmount(){
 
-		if(this.state.followed.length > 0){
-			updateFollowedTopics(this.state.follower,this.state.followee,this.state.followed.join(','))
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-			updateUnfollowedTopics(this.state.follower,this.state.followee,(this.state.ignored.length > 0) ? this.state.ignored.join(',') : null)
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		} else {
-			updateFollowedTopics(this.state.follower,this.state.followee,null)
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-			updateUnfollowedTopics(this.state.follower,this.state.followee,(this.state.ignored.length > 0) ? this.state.ignored.join(',') : null)
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		}
+		updateFollowedTopics(this.state.follower,this.state.followee,(this.state.followed.length > 0) ? this.state.followed.join(',') : null)
+			.catch((err)=>console.log(err))
+			.then((res)=>console.log(res));
 
-		if(this.state.ignored.length > 0){
-			updateFollowedTopics(this.state.follower,this.state.followee,(this.state.followed.length > 0) ? this.state.followed.join(',') : null)
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-			updateUnfollowedTopics(this.state.follower,this.state.followee,this.state.ignored.join(','))
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		} else {
-			updateUnfollowedTopics(this.state.follower,this.state.followee,null)
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-			updateFollowedTopics(this.state.follower,this.state.followee,(this.state.followed.length > 0) ? this.state.followed.join(',') : null)
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		}
+		updateUnfollowedTopics(this.state.follower,this.state.followee,(this.state.ignored.length > 0) ? this.state.ignored.join(',') : null)
+			.catch((err)=>console.log(err))
+			.then((res)=>console.log(res));
 
-		if(this.state.new.length > 0){
-			updateNewTopics(this.state.follower,this.state.followee,this.state.new.join(','))
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		} else {
-			updateNewTopics(this.state.follower,this.state.followee,null)
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		}
+		updateNewTopics(this.state.follower,this.state.followee,(this.state.new.length > 0) ? this.state.new.join(',') : null)
+			.catch((err)=>console.log(err))
+			.then((res)=>console.log(res));
 	}
 
 	render(){
