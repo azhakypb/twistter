@@ -30,24 +30,35 @@ class Homepage extends Component {
     }
 
     showPosts(props){
-		var posts = [].concat(this.state.myposts);
-		if (posts.length > 1) {
+		if (this.state.myposts.length > 1) {
             if (this.state.sort === 'time') {
                 console.log("Sorting posts by time posted");
-    			posts.sort((a,b) => b.key - a.key);
+				this.state.myposts.sort((a,b) => new Date(b.timestamp).getTime()
+					- new Date(a.timestamp).getTime());
             }
             else if (this.state.sort === 'relevancy') {
 				console.log("Sorting posts by relevancy to user");
-				posts.sort((a,b) => a.key - b.key);
-            }
+				this.state.myposts.sort((a,b) => b.relevance - a.relevance);
+				
+			}
             else if (this.state.sort === 'potential') {
                 console.log("Sorting posts by potential for engagement");
-				posts.sort((a,b) => b.id - a.id);
+				this.state.myposts.sort((a,b) => b.pfe - a.pfe);
 			}
 		}
 		if (this.state.filterTopic !== null) {
-			// filter topics
+			console.log(this.state.filterTopic);
+			
 		}
+		console.log(this.state.myposts);
+		var posts;
+		posts = this.state.myposts.map(post => <Post
+				key={new Date(post.timestamp).getTime()}
+				id={post.id}/>);
+		/*if (this.state.filterTopic !== null) {
+			posts = posts.filter(post =>
+				{return searchPost(post)})
+		}*/
 		console.log(posts);
 		return (
 			<ul>{posts}</ul>
@@ -81,33 +92,19 @@ class Homepage extends Component {
 					console.log("Getting user posts for user");
 					console.log(user.username);
 
-					getUserPosts(user.username)
-						.catch((err)=>{
-							console.log('Homepage.js error getting posts', err);
+					getFollowedPost(user.username).then((res) => {
+						console.log("Followed posts: ");
+						console.log(res);
+						
+						this.setState({myposts:[]},()=>{
+							this.setState({myposts: res
+								/*.map(post => <Post
+									key={new Date(post.timestamp).getTime()}
+									id={post.id}/>)*/
+								});
 						})
-						.then((res) => {
-							console.log("User info: ");
-							console.log(res.data.getUser.posts.items);
-							if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
-								this.setState({myposts:[]},()=>{
-								this.setState({ myposts: res.data.getUser.posts.items
-									.map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
-								})
 
-							}
-						});
-
-
-			getFollowedPost(user.username).then((res) => {
-				console.log("Followed posts: ");
-				console.log(res);
-			})
-			
-			/*
-			this.setState({myposts: [
-                <Post/>,<Post/>,<Post/>
-			]})
-			*/
+					})
         		}
 			});
     }
