@@ -19,7 +19,7 @@ class Homepage extends Component {
             username    : '',
             sort        : 'time',
             filterText  : '',
-            filterTopic : '',
+			filterTopic : '',
             myposts     : []
         }
         // bind functions
@@ -48,17 +48,28 @@ class Homepage extends Component {
 		}
 		if (this.state.filterTopic !== null) {
 			console.log(this.state.filterTopic);
-			
 		}
+		console.log("myposts");
 		console.log(this.state.myposts);
+		var a = this.state.myposts.map(post => post.topics.map(obj => obj.topic.id));
+		console.log(a);
 		var posts;
-		posts = this.state.myposts.map(post => <Post
+		if (this.state.filterTopic === '') {
+			posts = this.state.myposts.map(post => <Post
 				key={new Date(post.timestamp).getTime()}
 				id={post.id}/>);
-		/*if (this.state.filterTopic !== null) {
-			posts = posts.filter(post =>
-				{return searchPost(post)})
-		}*/
+			}
+		else {
+			posts = this.state.myposts
+				.filter(post => {
+					var topics = post.topics.map(obj => obj.topic.id);
+					return topics.includes(this.state.filterTopic);
+				})
+				.map(post => <Post
+					key={new Date(post.timestamp).getTime()}
+					id={post.id}/>);
+		}
+		console.log("posts")
 		console.log(posts);
 		return (
 			<ul>{posts}</ul>
@@ -92,19 +103,19 @@ class Homepage extends Component {
 					console.log("Getting user posts for user");
 					console.log(user.username);
 
-					getFollowedPost(user.username).then((res) => {
-						console.log("Followed posts: ");
-						console.log(res);
-						
-						this.setState({myposts:[]},()=>{
-							this.setState({myposts: res
-								/*.map(post => <Post
-									key={new Date(post.timestamp).getTime()}
-									id={post.id}/>)*/
-								});
-						})
-
+					getFollowedPost(user.username)
+					.catch((err)=>{
+						console.log('Homepage.js error getting posts', err);
 					})
+					.then((res) => {
+						console.log("User info: ");
+						if ( res !== null && res.length > 0){
+							console.log(res);
+							this.setState({myposts:[]},()=>{
+								this.setState({myposts: res})
+							});
+						}
+					});
         		}
 			});
     }
