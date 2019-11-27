@@ -1081,7 +1081,7 @@ export async function getFollowedPost(userid) {
           pfe_value = topicEngagement[postTopics[k].topic.id];
         }
       }
-      var data = {id: postid, pfe: pfe_value, relevance: likes + quoted * 5, timestamp: timestamp};
+      var data = {id: postid, pfe: pfe_value, relevance: likes + quoted * 5, timestamp: timestamp, topics: postTopics};
       allposts.push(data);
     }
 
