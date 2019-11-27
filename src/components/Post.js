@@ -38,7 +38,7 @@ class Post extends Component {
 
 		searchPost(this.state.id).then((res) => {
 
-			console.log('Post pull', res);
+			//console.log('Post pull', res);
 			res 		= res.data.getPost;
 			res.author 	= res.author.id
 
@@ -156,7 +156,7 @@ class Post extends Component {
 				if (engagement.data.getEngagement == null) {
 					console.log(JSON.stringify({id: userid + "-" + this.state.topics[i], value: 1, topicid: this.state.topics[i], userid: userid}));
 					console.log(await createEngagement({id: userid + "-" + this.state.topics[i], value: 1, topicid: this.state.topics[i], userid: userid}));
-				}		
+				}
 				else {
 					console.log(JSON.stringify({id: engagement.data.getEngagement.id, value: engagement.data.getEngagement.value + 1}));
 					console.log(await updateEngagement({id: engagement.data.getEngagement.id, value: engagement.data.getEngagement.value + 1}));
@@ -178,7 +178,7 @@ class Post extends Component {
 		if(this.state.curUser === ''){
 			this.getUser();
 		}
-		console.log(this.state);
+		//console.log(this.state);
 		let editDeleteAllow;
 		if(this.state.curUser === this.state.username) {
 			editDeleteAllow = true;

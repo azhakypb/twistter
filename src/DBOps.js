@@ -657,10 +657,99 @@ export function deleteFollow(follower, followee){
     })));
 }
 
+async function addTopics(author, topics) {
+  const getUserTemplate = `query getUser($id: ID!) {
+    getUser(id: $id) {
+      topics
+      followers {
+        items {
+          follower {
+            id
+          }
+        }
+      }
+    }
+  }`
+  const updateUserTopicsTemplate = `mutation updateUser($id: ID!, $topics: String) {
+    updateUser(input: {id: $id, topics: $topics}) {
+      id
+      topics
+    }
+  }`
+  var userData = await API.graphql(graphqlOperation(getUserTemplate, JSON.stringify({id: author})));
+  console.log(userData);
+  console.log(topics);
+  var userTopics = (userData.data.getUser.topics == null) ? "" : userData.data.getUser.topics;
+  var userTopicsArr = (userTopics.length == 0) ? [] : userTopics.split(",");
+  var userTopicsHash = [];
+  for (var i = 0; i < userTopicsArr; i++) {
+    userTopicsHash[userTopicsArr[i]] = true;
+  }
+  if (userTopics.length != 0) {
+    userTopics = userTopics + ",";
+  }
+  // add the new topics to user topics field
+  for (var i = 0; i < topics.length; i++) {
+    if (userTopicsHash[topics[i]] == true) {
+      continue; // skip if the topic already is in the topics field
+    }
+    else if (i == topics.length - 1) {
+      userTopics = userTopics + topics[i];
+    }
+    else {
+      userTopics = userTopics + topics[i] + ",";
+    }
+  }
+  // add new topics to each user
+  var followers = userData.data.getUser.followers.items;
+  for (var i = 0; i < followers.length; i++) {
+    var follow = await getFollowedTopics(followers[i].follower.id, author);
+    var followerFTopics = (follow.data.getFollow.followedtopics == null) ? "" : follow.data.getFollow.followedtopics; // followed topics
+    var followerNTopics = (follow.data.getFollow.newtopics == null) ? "" : follow.data.getFollow.newtopics; // new topics
+    var followerUTopics = (follow.data.getFollow.unfollowedtopics == null) ? "" : follow.data.getFollow.unfollowedtopics; // unfollowed topics
+    var followerFTopicsArr = followerFTopics.split(",");
+    var followerNTopicsArr = followerNTopics.split(",");
+    var followerUTopicsArr = followerUTopics.split(",");
+    var allTopicsHash = [];
+
+    for (var j = 0; j < followerFTopicsArr.length; j++) {
+      allTopicsHash[followerFTopicsArr[j]] = true;
+    }
+    for (var j = 0; j < followerNTopicsArr.length; j++) {
+      allTopicsHash[followerNTopicsArr[j]] = true;
+    }
+    for (var j = 0; j < followerUTopicsArr.length; j++) {
+      allTopicsHash[followerUTopicsArr[j]] = true;
+    }
+
+    if (followerNTopics.length != 0) {
+      followerNTopics = followerNTopics + ",";
+    }
+
+    for (var j = 0; j < topics.length; j++) {
+      if (allTopicsHash[topics[j]] == true) {
+        continue;
+      }
+      else if (j == topics.length - 1) {
+        followerNTopics = followerNTopics + topics[j];
+      }
+      else {
+        followerNTopics = followerNTopics + topics[j] + ",";
+      }
+    }
+
+    var prom = updateNewTopics(followers[i].follower.id, author, followerNTopics);
+    var updatedTopics = API.graphql(graphqlOperation(updateUserTopicsTemplate, JSON.stringify({id: author, topics: userTopics})));
+  }
+}
+
+
 export function createPost(author,topics,text,quoteid=false){
     return new Promise((resolve,reject)=>{
 
         var timeid    = new Date().toString()
+
+        addTopics(author, topics);
 
         console.log(timeid);
         console.log('The quote id is: ' + quoteid);
