@@ -30,7 +30,7 @@ class Homepage extends Component {
     }
 
     showPosts(props){
-		var posts = [].concat(this.state.myposts);
+		var posts = this.state.myposts;
 		if (posts.length > 1) {
             if (this.state.sort === 'time') {
                 console.log("Sorting posts by time posted");
@@ -50,7 +50,7 @@ class Homepage extends Component {
 		}
 		console.log(posts);
 		return (
-			<ul>{posts}</ul>
+			<ul>{posts.map((post)=><Post key={post.id} id={post.id}/>  )}</ul>
 		)
 	}
 
@@ -77,37 +77,23 @@ class Homepage extends Component {
 			})
 			.then((user)=>{
 				console.log('Homepage.js got authenticated user', user);
+
         		if(user.username !== null) {
 					console.log("Getting user posts for user");
 					console.log(user.username);
 
-					getUserPosts(user.username)
+					getFollowedPost(user.username)
 						.catch((err)=>{
 							console.log('Homepage.js error getting posts', err);
 						})
 						.then((res) => {
 							console.log("User info: ");
-							console.log(res.data.getUser.posts.items);
-							if (!(res.data.getUser === null) && res.data.getUser.posts.items.length > 0){
-								this.setState({myposts:[]},()=>{
-								this.setState({ myposts: res.data.getUser.posts.items
-									.map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
-								})
+							if ( res !== null && res.length > 0){
+								console.log(res);
+								this.setState({myposts: res });
 
 							}
 						});
-
-
-			getFollowedPost(user.username).then((res) => {
-				console.log("Followed posts: ");
-				console.log(res);
-			})
-			
-			/*
-			this.setState({myposts: [
-                <Post/>,<Post/>,<Post/>
-			]})
-			*/
         		}
 			});
     }
