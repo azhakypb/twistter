@@ -55,7 +55,7 @@ class TopicView extends Component {
 		ignored.push( followed[index] );
 		followed.splice( index, 1 );
 
-		this.setState({ 
+		this.setState({
 			followed: followed,
 			ignored: ignored
 		});
@@ -81,18 +81,30 @@ class TopicView extends Component {
 			updateFollowedTopics(this.state.follower,this.state.followee,this.state.followed.join(','))
 				.catch((err)=>console.log(err))
 				.then((res)=>console.log(res));
+			updateUnfollowedTopics(this.state.follower,this.state.followee,(this.state.ignored.length > 0) ? this.state.ignored.join(',') : null)
+				.catch((err)=>console.log(err))
+				.then((res)=>console.log(res));
 		} else {
 			updateFollowedTopics(this.state.follower,this.state.followee,null)
+				.catch((err)=>console.log(err))
+				.then((res)=>console.log(res));
+			updateUnfollowedTopics(this.state.follower,this.state.followee,(this.state.ignored.length > 0) ? this.state.ignored.join(',') : null)
 				.catch((err)=>console.log(err))
 				.then((res)=>console.log(res));
 		}
 
 		if(this.state.ignored.length > 0){
+			updateFollowedTopics(this.state.follower,this.state.followee,(this.state.followed.length > 0) ? this.state.followed.join(',') : null)
+				.catch((err)=>console.log(err))
+				.then((res)=>console.log(res));
 			updateUnfollowedTopics(this.state.follower,this.state.followee,this.state.ignored.join(','))
 				.catch((err)=>console.log(err))
 				.then((res)=>console.log(res));
 		} else {
 			updateUnfollowedTopics(this.state.follower,this.state.followee,null)
+				.catch((err)=>console.log(err))
+				.then((res)=>console.log(res));
+			updateFollowedTopics(this.state.follower,this.state.followee,(this.state.followed.length > 0) ? this.state.followed.join(',') : null)
 				.catch((err)=>console.log(err))
 				.then((res)=>console.log(res));
 		}
@@ -127,7 +139,7 @@ class TopicView extends Component {
 				<h2>Ignored Topics</h2>
 
 				<ListGroup>
-					{ignored.map( (topic, index) => 
+					{ignored.map( (topic, index) =>
 						<ListGroup.Item key={index} onClick={()=>this.ignoredToFollowed(index)}>
 							{topic}
 						</ListGroup.Item>
