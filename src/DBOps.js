@@ -186,12 +186,14 @@ const userDeletionTemplate = `mutation deleteUser($id: ID!) {
 const followCreateTemplate = `mutation createFollow(
     $id: ID!,
     $followFollowerId: ID!,
-    $followFolloweeId: ID!
+    $followFolloweeId: ID!,
+    $followedtopics: String
     ) {
     createFollow(input: {
         id: $id,
         followFollowerId: $followFollowerId,
-        followFolloweeId: $followFolloweeId
+        followFolloweeId: $followFolloweeId,
+        followedtopics: $followedtopics
     }) {
         id
         followee {
@@ -622,12 +624,20 @@ export async function deleteUser(username){
 }
 
 export function createFollow(follower, followee){
-	return new Promise((resolve,reject)=>{
+	return new Promise(async (resolve,reject)=>{
+    const getUserTemplate = `query getUser($id: ID!) {
+      getUser(id: $id) {
+        topics
+      }
+    }`
+    var userData = await API.graphql(graphqlOperation(getUserTemplate, JSON.stringify({id: followee})));
+    var userTopics = userData.data.getUser.topics;
 
 		API.graphql(graphqlOperation(followCreateTemplate, JSON.stringify({
         	id: follower+'-'+followee,
         	followFollowerId: follower,
-        	followFolloweeId: followee
+        	followFolloweeId: followee,
+          followedtopics: userTopics
     	}))).then((res)=>{
 
     		const res1 = res;

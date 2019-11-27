@@ -80,7 +80,7 @@ class Homepage extends Component {
         		if(user.username !== null) {
 					console.log("Getting user posts for user");
 					console.log(user.username);
-					
+
 					getUserPosts(user.username)
 						.catch((err)=>{
 							console.log('Homepage.js error getting posts', err);
@@ -93,25 +93,25 @@ class Homepage extends Component {
 								this.setState({ myposts: res.data.getUser.posts.items
 									.map( post => <Post key={new Date(post.timestamp).getTime()} id={post.id}/>)});
 								})
-					
+
 							}
 						});
-			
-			/*
+
+
 			getFollowedPost(user.username).then((res) => {
 				console.log("Followed posts: ");
 				console.log(res);
 			})
-			*/
+			
 			/*
 			this.setState({myposts: [
                 <Post/>,<Post/>,<Post/>
 			]})
 			*/
-        		}	
+        		}
 			});
     }
-    
+
     render() {
 
         const { name, url} = this.state
