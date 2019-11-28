@@ -64,7 +64,6 @@ class Singlepost extends Component {
             	createPost(user.username,this.state.topics1,this.state.text1)
                     .then((res)=>{
                         console.log('single post','handle create post','success',res);
-                        window.location.reload();
                     },(err)=>{
                         console.log('single post','handle create post','success',err);
                     })

@@ -6,17 +6,23 @@ import { faQuoteRight, faQuoteLeft, faEdit, faTrash, faHeart } from '@fortawesom
 // aws modules
 import { Auth } from 'aws-amplify';
 // custom modules
-import { searchPost, createLike, deleteLike, deletePost, getEngagement, createEngagement, updateEngagement } from '../DBOps.js';
+import { searchPost, createLike, deleteLike, deletePost, getEngagement, createEngagement, updateEngagement, getFollowedTopics, updateNewTopics, updateFollowedTopics } from '../DBOps.js';
 import Quoteprocess from  './Quoteprocess'
 import Editprocess from  './Editprocess'
 // globals
 
 function TopicList(props){
 	const topics = props.topics;
+	const new_topics = props.new_topics;
+	console.log(topics,new_topics);
 	const items = topics.map((topic)=>
-		<Badge pill variant="link" key={topic}>#{topic}</Badge>
+		<Badge pill variant="primary" key={topic}>#{topic}</Badge>
 	);
-	return <div>{items}</div>;
+
+	const items2 = new_topics.map((topic)=>
+		<Badge pill variant="danger" key={topic}>#{topic}</Badge>
+	);
+	return <div>{items}{items2}</div>;
 }
 
 class Post extends Component {
@@ -36,35 +42,94 @@ class Post extends Component {
 
 	async pull(){
 
-		searchPost(this.state.id).then((res) => {
+		Auth.currentAuthenticatedUser({ bypassCache: true})
+			.catch((err)=>{
+				console.log('Error getting user', err);
+			})
+			.then((user)=>{
 
-			console.log('Post pull', res);
-			res 		= res.data.getPost;
-			res.author 	= res.author.id
-
-			this.setState({
-				username: 		res.author,
-				timestamp: 		res.timestamp,
-				text: 			res.text,
-				topics: 		res.topics.items.map((topic)=>topic.topic.id),
-				likes: 			res.likes.items
-			});
-
-			if(res.quote != null){
 				this.setState({
-					q_username: res.quote.author.id,
-					q_text: res.quote.text,
-					q_timestamp: res.quote.timestamp
+					curUser:	user.username
 				});
-			}
 
+				searchPost(this.state.id)
+					.then((res) => {
 
-		}).catch((err)=>{
+						res 		= res.data.getPost;
+						res.author 	= res.author.id
 
-			console.log('pull error',err);
+						getFollowedTopics(user.username,res.author)
+							.then((tres)=>{
 
-		});
+								console.log(tres);
+								var allPostTopics = res.topics.items.map((topic)=>topic.topic.id);
+								var postTopics = [];
+								var newTopics = [];
+								if(tres.data.getFollow !== null){
+									if(tres.data.getFollow.newtopics !== null){
+										var followNewTopics = tres.data.getFollow.newtopics.split(',');
+									} else {
+										var followNewTopics = [];
+									}
 
+									if(tres.data.getFollow.followedtopics !== null){
+										var followFollowedTopics = tres.data.getFollow.followedtopics.split(',');
+									} else {
+										var followNewTopics = [];
+									}
+								} else {
+									var followNewTopics = null;
+									var followFollowedTopics = null;
+								}
+
+								if(followNewTopics !== null){
+									for(const topic of allPostTopics){
+
+										if(followNewTopics.includes(topic)){
+
+											newTopics.push(topic);
+											followFollowedTopics.push(topic);
+											followNewTopics.splice(followNewTopics.indexOf(topic),1);
+										} else {
+
+											postTopics.push(topic);
+										}
+									}
+								}else{
+									postTopics = allPostTopics;
+								}
+
+								if(followFollowedTopics !== null){
+									updateFollowedTopics(user.username,res.author,(followFollowedTopics.length > 0) ? followFollowedTopics.join(',') : null);
+								}
+
+								if(followNewTopics !== null){
+									updateNewTopics(user.username,res.author,(followNewTopics.length > 0) ? followNewTopics.join(',') : null);
+								}
+
+								this.setState({
+									username: 		res.author,
+									timestamp: 		res.timestamp,
+									text: 			res.text,
+									topics: 		postTopics,
+									new_topics: 	newTopics,
+									likes: 			res.likes.items
+								});
+
+								if(res.quote != null){
+									this.setState({
+										q_username: res.quote.author.id,
+										q_text: res.quote.text,
+										q_timestamp: res.quote.timestamp
+									});
+								}
+							});
+					})
+					.catch((err)=>{
+						console.log('pull error',err);
+					});
+
+			});
 	}
 
 	constructor(props){
@@ -79,6 +144,7 @@ class Post extends Component {
 			'text'			: '',
 			'q_text'		: '',
 			'topics'		: [],
+			'new_topics'	: [],
 			'likes'			: [],
 			showQuote		: false,
 			showEdit		: false,
@@ -95,17 +161,6 @@ class Post extends Component {
 		this.handleQuoteClick 		= this.handleQuoteClick.bind(this);
 		this.handleEditClick 		= this.handleEditClick.bind(this);
 		this.handleDeleteClick 			= this.handleDeleteClick.bind(this);
-	}
-	async getUser() {
-		Auth.currentAuthenticatedUser({ bypassCache: true})
-			.catch((err)=>{
-				console.log('Error getting user', err);
-			})
-			.then((user)=>{
-				this.setState({
-					curUser:	user.username
-				});
-			});
 	}
 	handleQuoteClick() {
 		this.setState(prevState => {
@@ -175,10 +230,7 @@ class Post extends Component {
 	}
 
 	render(){
-		if(this.state.curUser === ''){
-			this.getUser();
-		}
-		console.log(this.state);
+		//console.log(this.state);
 		let editDeleteAllow;
 		if(this.state.curUser === this.state.username) {
 			editDeleteAllow = true;
@@ -193,6 +245,7 @@ class Post extends Component {
 			text,
 			q_text,
 			topics,
+			new_topics
 		} = this.state;
 
 			return(
@@ -233,7 +286,7 @@ class Post extends Component {
 								{text}
 							</Row>
 							<Row>
-								<TopicList topics={topics}/>
+								<TopicList topics={topics} new_topics={new_topics}/>
 							</Row>
 							<Row>
 								<Button variant="outline-danger" size="sm" onClick={this.createLike}><FontAwesomeIcon icon={faHeart}/>

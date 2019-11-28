@@ -33,14 +33,16 @@ class TopicView extends Component {
 			})
 			.then((res)=>{
 				console.log(res);
-				if(res.data.getFollow.followedtopics != null){
-					this.setState({followed: res.data.getFollow.followedtopics.split(',')},()=>console.log(this.state));
-				}
-				if(res.data.getFollow.unfollowedtopics != null){
-					this.setState({ignored:res.data.getFollow.unfollowedtopics.split(',')},()=>console.log(this.state));
-				}
-				if(res.data.getFollow.newtopics != null){
-					this.setState({new:res.data.getFollow.newtopics.split(',')},()=>console.log(this.state));
+				if(res.data.getFollow != null){
+					if(res.data.getFollow.followedtopics != null){
+						this.setState({followed: res.data.getFollow.followedtopics.split(',')},()=>console.log(this.state));
+					}
+					if(res.data.getFollow.unfollowedtopics != null){
+						this.setState({ignored:res.data.getFollow.unfollowedtopics.split(',')},()=>console.log(this.state));
+					}
+					if(res.data.getFollow.newtopics != null){
+						this.setState({new:res.data.getFollow.newtopics.split(',')},()=>console.log(this.state));
+					}
 				}
 			});
 	}
@@ -53,7 +55,7 @@ class TopicView extends Component {
 		ignored.push( followed[index] );
 		followed.splice( index, 1 );
 
-		this.setState({ 
+		this.setState({
 			followed: followed,
 			ignored: ignored
 		});
@@ -75,35 +77,17 @@ class TopicView extends Component {
 
 	async componentWillUnmount(){
 
-		if(this.state.followed.length > 0){
-			updateFollowedTopics(this.state.follower,this.state.followee,this.state.followed.join(','))
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		} else {
-			updateFollowedTopics(this.state.follower,this.state.followee,null)
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		}
+		updateFollowedTopics(this.state.follower,this.state.followee,(this.state.followed.length > 0) ? this.state.followed.join(',') : null)
+			.catch((err)=>console.log(err))
+			.then((res)=>console.log(res));
 
-		if(this.state.ignored.length > 0){
-			updateUnfollowedTopics(this.state.follower,this.state.followee,this.state.ignored.join(','))
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		} else {
-			updateUnfollowedTopics(this.state.follower,this.state.followee,null)
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		}
+		updateUnfollowedTopics(this.state.follower,this.state.followee,(this.state.ignored.length > 0) ? this.state.ignored.join(',') : null)
+			.catch((err)=>console.log(err))
+			.then((res)=>console.log(res));
 
-		if(this.state.new.length > 0){
-			updateNewTopics(this.state.follower,this.state.followee,this.state.new.join(','))
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		} else {
-			updateNewTopics(this.state.follower,this.state.followee,null)
-				.catch((err)=>console.log(err))
-				.then((res)=>console.log(res));
-		}
+		updateNewTopics(this.state.follower,this.state.followee,(this.state.new.length > 0) ? this.state.new.join(',') : null)
+			.catch((err)=>console.log(err))
+			.then((res)=>console.log(res));
 	}
 
 	render(){
@@ -125,7 +109,7 @@ class TopicView extends Component {
 				<h2>Ignored Topics</h2>
 
 				<ListGroup>
-					{ignored.map( (topic, index) => 
+					{ignored.map( (topic, index) =>
 						<ListGroup.Item key={index} onClick={()=>this.ignoredToFollowed(index)}>
 							{topic}
 						</ListGroup.Item>
