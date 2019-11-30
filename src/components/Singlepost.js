@@ -29,6 +29,7 @@ class Singlepost extends Component {
   	//handlers
   	handleDouble() {
     	this.handleCreatePost();
+        window.location.reload();
         //window.location.reload();
   	}
   	handleAddPost (event){

@@ -251,7 +251,7 @@ class Post extends Component {
 			return(
 				<div>
 					<Toast>
-		  				<Toast.Header closeButton={false}>
+		  				<Toast.Header>
 		    				<strong
 		    					onClick={(e) => {
 		    						document.location.href = "/otherprofile/"+username;
@@ -265,7 +265,7 @@ class Post extends Component {
 
 						 	<div style={{ paddingLeft: 5, paddingRight: 5 }}>
 								<Toast>
-									<Toast.Header closeButton={false}>
+									<Toast.Header>
 			    						<strong
 			    							onClick={(e) => document.location.href = "/otherprofile/"+q_username }
 			    							className="mr-auto">
@@ -316,7 +316,7 @@ class Post extends Component {
 						</Toast.Body>
 					</Toast>
 					{this.state.showQuote ? <Quoteprocess quoteClick={this.handleQuoteClick} usernameq={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote} id={this.props.id}/> : null}
-					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit} id={this.props.id}/> : null}
+					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
 				</div>
 			)
 	}

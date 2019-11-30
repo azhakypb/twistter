@@ -18,13 +18,15 @@ class Profile extends Component {
             name        : '',
 			username    : '',
 			myposts		: [],
-			url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png'
+			url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png',
+            followlist  : []
         }
 		// bind functions
 		this.showPosts = this.showPosts.bind(this);
 		this.handleChangeSort = this.handleChangeSort.bind(this);
 		this.handleChangeText = this.handleChangeText.bind(this);
 		this.handleChangeTopic = this.handleChangeTopic.bind(this);
+        this.getFollowList      = this.getFollowList.bind(this);
 	}
 
 	showPosts(props){
@@ -50,6 +52,12 @@ class Profile extends Component {
 		this.setState({ filterTopic: this.state.filterText });
 		console.log("Set filterTopic state to :" + this.state.filterText);
 	}
+
+    getFollowList() {
+        
+    }
+
+
 
     async componentDidMount(){
 		Auth.currentAuthenticatedUser({ bypassCache: true })
