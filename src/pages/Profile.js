@@ -9,6 +9,7 @@ import Navbar from '../components/Navbar.js';
 import FollowList from '../components/FollowList.js';
 import Post from '../components/Post.js';
 import { UsernameContext } from '../UsernameContext.js';
+import './pageCSS/Profile.css'
 class Profile extends Component {
 
     constructor(props){
@@ -54,7 +55,7 @@ class Profile extends Component {
 	}
 
     getFollowList() {
-        
+
     }
 
 
@@ -103,22 +104,26 @@ class Profile extends Component {
             		<Col
                 		xs={6}>
                 		<Container
-                    		className="My profile">
-                    		<Jumbotron>
+                    		className="my-profile">
+                    		<Jumbotron className="profileInside">
                         		<Card style={{width: '18rem'}}
-                            	className="bg-dark text-black">
+                            	>
                             	<Card.Img
                                 	src={url}
                             	/>
+                                <Card.Body>
+                                    <Card.Text>
+                                     <p>Name: {name}</p>
+                                     Username: @{this.context.username}
+                                    </Card.Text>
+                                </Card.Body>
                         		</Card>
-                        		<h1>{name}</h1>
-                        		<h2>@{this.context.username}</h2>
                     		</Jumbotron>
                 		</Container>
 
                 		<Container
                     		className="timeline">
-                    		<Jumbotron>
+                    		<Jumbotron className="timelineInside">
 								<h3>Your Timeline</h3>
 								<hr/>
 								<label>

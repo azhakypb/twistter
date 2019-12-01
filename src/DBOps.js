@@ -865,6 +865,7 @@ export function createPost(author,topics,text,quoteid=false){
                 });
         }
     });
+    
 }
 
 export function searchPost(id){
@@ -889,6 +890,7 @@ export function deletePost(postid){
         var res2 = await API.graphql(graphqlOperation(deletePostTemplate, JSON.stringify({
             id: postid
         })));
+        window.location.reload();
 
     });
 }

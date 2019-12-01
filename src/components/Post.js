@@ -9,6 +9,7 @@ import { Auth } from 'aws-amplify';
 import { searchPost, createLike, deleteLike, deletePost, getEngagement, createEngagement, updateEngagement, getFollowedTopics, updateNewTopics, updateFollowedTopics } from '../DBOps.js';
 import Quoteprocess from  './Quoteprocess'
 import Editprocess from  './Editprocess'
+import './compCSS/Post.css'
 // globals
 
 function TopicList(props){
@@ -156,10 +157,10 @@ class Post extends Component {
 			this.state.id = this.props.id;
 		}
 
-		this.pull 	   				= this.pull.bind(this);
-		this.stub 	   				= this.stub.bind(this);
-		this.handleQuoteClick 		= this.handleQuoteClick.bind(this);
-		this.handleEditClick 		= this.handleEditClick.bind(this);
+		this.pull 	   					= this.pull.bind(this);
+		this.stub 	   					= this.stub.bind(this);
+		this.handleQuoteClick 			= this.handleQuoteClick.bind(this);
+		this.handleEditClick 			= this.handleEditClick.bind(this);
 		this.handleDeleteClick 			= this.handleDeleteClick.bind(this);
 	}
 	handleQuoteClick() {
@@ -188,7 +189,6 @@ class Post extends Component {
 			})
 			.then((res)=>{
 				console.log('Deleting post', res);
-				window.location.reload();
 			});
 
 	}
@@ -249,9 +249,9 @@ class Post extends Component {
 		} = this.state;
 
 			return(
-				<div>
+				<div className="onePost">
 					<Toast>
-		  				<Toast.Header>
+		  				<Toast.Header closeButton={false}>
 		    				<strong
 		    					onClick={(e) => {
 		    						document.location.href = "/otherprofile/"+username;
@@ -263,32 +263,32 @@ class Post extends Component {
 
 						{ (q_username === '' ) ? null :
 
-						 	<div style={{ paddingLeft: 5, paddingRight: 5 }}>
+						 	<div className="quotePost">
 								<Toast>
-									<Toast.Header>
+									<Toast.Header closeButton={false}>
 			    						<strong
 			    							onClick={(e) => document.location.href = "/otherprofile/"+q_username }
 			    							className="mr-auto">
 			    							@{q_username}
 			    						</strong>
-			    						<small>{q_timestamp}</small>
+			    						<small >{q_timestamp}</small>
 									</Toast.Header>
-									<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
-										<Row style={{ paddingBottom: 5}} >
+									<Toast.Body bsPrefix="toastBody">
+										<Row className="rowText">
 											{q_text}
 										</Row>
 									</Toast.Body>
 								</Toast>
 							</div> }
 
-						<Toast.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
-							<Row style={{ paddingBottom: 5}}>
+						<Toast.Body bsPrefix="toastBody">
+							<Row className="rowText">
 								{text}
 							</Row>
-							<Row>
+							<Row className="rowTopic">
 								<TopicList topics={topics} new_topics={new_topics}/>
 							</Row>
-							<Row>
+							<Row className="rowButtons">
 								<Button variant="outline-danger" size="sm" onClick={this.createLike}><FontAwesomeIcon icon={faHeart}/>
 	  							<Badge variant="light">{this.state.likes.length}</Badge>
 								</Button>
@@ -306,9 +306,9 @@ class Post extends Component {
 								{editDeleteAllow ?
 									<Button
 										variant="outline-danger"
+										className="delIcon"
 										size="sm"
-										onClick={this.handleDeleteClick}
-										style={{ marginLeft: 159}}>
+										onClick={this.handleDeleteClick}>
 										<FontAwesomeIcon icon={faTrash}/>
 									</Button>
 									: null}
@@ -316,7 +316,7 @@ class Post extends Component {
 						</Toast.Body>
 					</Toast>
 					{this.state.showQuote ? <Quoteprocess quoteClick={this.handleQuoteClick} usernameq={this.state.username} text={this.state.text} topics={this.state.topics} showQuote={this.state.showQuote} id={this.props.id}/> : null}
-					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit}/> : null}
+					{this.state.showEdit ? <Editprocess action={this.handleEditClick} text={this.state.text} topics={this.state.topics} showEdit={this.state.showEdit} id={this.props.id}/> : null}
 				</div>
 			)
 	}

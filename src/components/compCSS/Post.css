@@ -1,0 +1,41 @@
+.onePost {
+    margin-bottom: 0.2em;
+}
+.quotePost {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.toast.show{
+    max-width: 54em;
+}
+.delIcon {
+    margin-left: 39em;
+}
+.toast-header {
+
+}
+.toastBody {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.rowText {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.rowTopic {
+    padding-top: 10px;
+    padding-bottom: 0.25em;
+}
+.rowButtons {
+    padding-bottom: 0.5em;
+}
+.btn {
+    margin-right: .3em;
+}
+small {
+    margin-left: 2em;
+}
+.badge {
+    margin: 0.1em;
+    font-size: 0.71rem!important;
+}

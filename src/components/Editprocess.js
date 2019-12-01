@@ -24,16 +24,13 @@ class Editprocess extends Component {
         */
         updatePost(this.props.id, this.state.editText)
             .catch((err)=>{
-                console.log('Error deleting post', err);
+                console.log('Error editing the post', err);
             })
             .then((res)=>{
-                console.log('Deleting post', res);
-                window.location.reload();
+                console.log('Editing the post', res);
             });
-
-		console.log(this.state.editText);
-		console.log(this.state.editTopic);
         this.props.action();
+
 	}
 	handleEditPost (event){
 		this.setState({ editText:	event.target.value}

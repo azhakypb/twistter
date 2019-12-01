@@ -15,7 +15,7 @@ class Singlepost extends Component {
       		submitable    : false,
       		text1         : '',
       		topics1       : '',
-      		postAuthorId1 : this.props.username,
+      		postAuthorId1 : this.props.username
     	}
     	//bind functions
     	this.handleAddPost      = this.handleAddPost.bind(this);
@@ -29,8 +29,6 @@ class Singlepost extends Component {
   	//handlers
   	handleDouble() {
     	this.handleCreatePost();
-        window.location.reload();
-        //window.location.reload();
   	}
   	handleAddPost (event){
     	this.setState({ text1:     event.target.value}
@@ -66,7 +64,7 @@ class Singlepost extends Component {
                     .then((res)=>{
                         console.log('single post','handle create post','success',res);
                     },(err)=>{
-                        console.log('single post','handle create post','success',err);
+                        console.log('single post','handle create post','error',err);
                     })
         	});
   	}
@@ -75,7 +73,7 @@ class Singlepost extends Component {
   	render() {
     	const {text1, topics1}  = this.state
     	const enabled           = this.handleLength(text1, topics1) &&
-                              	this.handleTopicNum(topics1);
+                              	  this.handleTopicNum(topics1);
     	let buttonColor         = enabled ? "primary" : "secondary"
 
     	return (
