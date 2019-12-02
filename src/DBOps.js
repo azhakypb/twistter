@@ -224,12 +224,14 @@ const followDeleteTemplate = `mutation deleteFollow($id: ID!) {
 const postCreateTemplate = `mutation createPost(
         $text: String!,
         $timestamp: String!,
-        $postAuthorId: ID!
+        $postAuthorId: ID!,
+        $image: String
     ) {
         createPost (input:{
         text: $text,
         timestamp: $timestamp,
-        postAuthorId: $postAuthorId
+        postAuthorId: $postAuthorId,
+        image: $image
     }){
         id,
         text,
@@ -237,6 +239,7 @@ const postCreateTemplate = `mutation createPost(
         author {
             id
         }
+        image
     }
 }`
 
@@ -270,13 +273,16 @@ const quotePostCreateTemplate = `mutation createPost(
         $text: String!,
         $timestamp: String!,
         $postAuthorId: ID!,
-        $quote: ID!
+        $quote: ID!,
+        $image: String
+
     ) {
         createPost (input:{
         text: $text,
         timestamp: $timestamp,
         postAuthorId: $postAuthorId,
-        postQuoteId: $quote
+        postQuoteId: $quote,
+        image: $image
     }){
         id,
         text,
@@ -284,6 +290,7 @@ const quotePostCreateTemplate = `mutation createPost(
         author {
             id
         }
+        image
     }
 }`
 
@@ -753,7 +760,7 @@ async function addTopics(author, topics) {
 }
 
 
-export function createPost(author,topics,text,quoteid=false){
+export function createPost(author,topics,text,quoteid=false, image=null){
     return new Promise((resolve,reject)=>{
 
         var timeid    = new Date().toString()
@@ -769,7 +776,8 @@ export function createPost(author,topics,text,quoteid=false){
                 postAuthorId: author,
                 timestamp: timeid,
                 text: text,
-                quote: quoteid
+                quote: quoteid,
+                image: image
             })))
                 .then((res)=>{
                     var postid = res.data.createPost.id
@@ -819,7 +827,8 @@ export function createPost(author,topics,text,quoteid=false){
             API.graphql(graphqlOperation(postCreateTemplate, JSON.stringify({
                 postAuthorId: author,
                 timestamp: timeid,
-                text: text
+                text: text,
+                image: image
             })))
                 .then((res)=>{
                     var postid = res.data.createPost.id
@@ -865,7 +874,7 @@ export function createPost(author,topics,text,quoteid=false){
                 });
         }
     });
-    
+
 }
 
 export function searchPost(id){
