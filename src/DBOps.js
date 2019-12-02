@@ -300,6 +300,7 @@ const postSearchTemplate = `query getPost(
   getPost (id: $id){
     id,
     quote{
+        image,
         text,
         timestamp,
         author{
@@ -761,7 +762,7 @@ async function addTopics(author, topics) {
 }
 
 
-export function createPost(author,topics,text,quoteid=false, image=null) {
+export function createPost(author,topics,text,image=null,quoteid=false) {
     return new Promise((resolve,reject)=>{
 
         var timeid    = new Date().toString()
