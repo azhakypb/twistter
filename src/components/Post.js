@@ -37,6 +37,8 @@ class Post extends Component {
 			'q_timestamp' 	: 'Quote Timestamp',
 			'text' 				: 'Post Text Post Text Post Text Post Text Post Text Post Text',
 			'q_text'			: 'Quote Text Quote Text Quote Text Quote Text Quote Text',
+			'image'				: 'Post Image',
+			'q_image'			: 'Quote Image',
 			'topics' 			: [ 'Topic 1', 'Topic 2', 'Topic 3']
 		});
 	}
@@ -112,6 +114,7 @@ class Post extends Component {
 									username: 		res.author,
 									timestamp: 		res.timestamp,
 									text: 			res.text,
+									image:			res.image,
 									topics: 		postTopics,
 									new_topics: 	newTopics,
 									likes: 			res.likes.items
@@ -121,6 +124,7 @@ class Post extends Component {
 									this.setState({
 										q_username: res.quote.author.id,
 										q_text: res.quote.text,
+										q_image: res.quote.image,
 										q_timestamp: res.quote.timestamp
 									});
 								}
@@ -144,6 +148,8 @@ class Post extends Component {
 			'q_timestamp'	: '',
 			'text'			: '',
 			'q_text'		: '',
+			'image'			: '',
+			'q_image'		: '',
 			'topics'		: [],
 			'new_topics'	: [],
 			'likes'			: [],
@@ -244,6 +250,8 @@ class Post extends Component {
 			q_timestamp,
 			text,
 			q_text,
+			image,
+			q_image,
 			topics,
 			new_topics
 		} = this.state;
@@ -277,6 +285,7 @@ class Post extends Component {
 										<Row className="rowText">
 											{q_text}
 										</Row>
+										<img src={q_image}/>
 									</Toast.Body>
 								</Toast>
 							</div> }
@@ -284,6 +293,9 @@ class Post extends Component {
 						<Toast.Body bsPrefix="toastBody">
 							<Row className="rowText">
 								{text}
+							</Row>
+							<Row classNmae="rowImage">
+								<img src={image}/>
 							</Row>
 							<Row className="rowTopic">
 								<TopicList topics={topics} new_topics={new_topics}/>
