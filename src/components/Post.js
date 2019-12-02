@@ -66,21 +66,21 @@ class Post extends Component {
 								var allPostTopics = res.topics.items.map((topic)=>topic.topic.id);
 								var postTopics = [];
 								var newTopics = [];
+								var followNewTopics = null;
+								var followFollowedTopics = null;
+								
 								if(tres.data.getFollow !== null){
 									if(tres.data.getFollow.newtopics !== null){
-										var followNewTopics = tres.data.getFollow.newtopics.split(',');
+										followNewTopics = tres.data.getFollow.newtopics.split(',');
 									} else {
-										var followNewTopics = [];
+										followNewTopics = [];
 									}
 
 									if(tres.data.getFollow.followedtopics !== null){
-										var followFollowedTopics = tres.data.getFollow.followedtopics.split(',');
+										followFollowedTopics = tres.data.getFollow.followedtopics.split(',');
 									} else {
-										var followNewTopics = [];
+										followNewTopics = [];
 									}
-								} else {
-									var followNewTopics = null;
-									var followFollowedTopics = null;
 								}
 
 								if(followNewTopics !== null){
