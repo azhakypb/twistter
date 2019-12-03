@@ -42,10 +42,14 @@ class Singlepost extends Component {
 	}
 	handleAddImage (event){
 		this.setState({image1:	event.target.value});
-	}  
+	}
   	handleAddTopic (event){
       event.target.value = (event.target.value.replace(/\s+/g, ''));
+      if(event.target.value === '') {
+          this.setState({ topics1:   ''});
+      } else {
     	this.setState({ topics1:   event.target.value.split(",")});
+    }
   	}
   	handleTopicNum(topics1) {
     	console.log('Singlepost.js handleTopicNum() called');
