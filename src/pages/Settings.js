@@ -5,6 +5,7 @@ import { Alert, Button, Col, FormControl, InputGroup, Jumbotron, Row, Modal } fr
 import { Auth } from 'aws-amplify'
 // components
 import Navbar from '../components/Navbar.js'
+import './pageCSS/shortPage.css'
 
 class Settings extends Component {
 
@@ -19,9 +20,9 @@ class Settings extends Component {
 			confirm_new_password : '',
             name            : '',
             url             : '',
-            alerts          : [], 
+            alerts          : [],
             errors          : [],
-			show : false       
+			show : false
         };
 
         // bind functions
@@ -93,7 +94,7 @@ class Settings extends Component {
 		var noError = true;
 		var index = this.state.email.indexOf('@');
     	if(this.state.email==='') {
-            this.addError('Cannot change email with an empty input'); 
+            this.addError('Cannot change email with an empty input');
         }
 		else if(!this.state.email.includes('@', 1) || !this.state.email.includes('.', index)){
 			this.addError('Email must be a valid format');
@@ -124,8 +125,8 @@ class Settings extends Component {
     }
     async handleSubmitPhoneNumber(event){
 		var noError = true;
-        if(this.state.phone_number==='') { 
-            this.addError('Cannot change phone number with an empty input'); 
+        if(this.state.phone_number==='') {
+            this.addError('Cannot change phone number with an empty input');
         }
 		else if(this.state.phone_number.length !== 10) {
 			this.addError('Phone number must be 10 digits');
@@ -140,7 +141,7 @@ class Settings extends Component {
 					phone_number: '+1'.concat(this.state.phone_number)
 				});
             Auth.currentAuthenticatedUser({ bypassCache: true })
-                .catch((err) => { 
+                .catch((err) => {
 					noError = false;
                     console.error('Error getting user', err);
 					this.addError('Error updating phone number; try again.');
@@ -148,10 +149,10 @@ class Settings extends Component {
 				.then((user)=>{
 					if(noError){
             			Auth.updateUserAttributes(user, {phone_number:this.state.phone_number})
-                			.catch((err) => { 
+                			.catch((err) => {
 								noError = false;
                     			console.error('Error updating phone num', err);
-								this.addError('Error updating phone number; try again.'); 
+								this.addError('Error updating phone number; try again.');
                 			})
                 			.then((res)=>{
 								if(noError){
@@ -165,8 +166,8 @@ class Settings extends Component {
     }
     async handleSubmitNewPassword(event){
 		var noError = true;
-        if(this.state.old_password==='' || this.state.new_password==='' || this.state.confirm_new_password==='') { 
-            this.addError('Cannot change password with empty input'); 
+        if(this.state.old_password==='' || this.state.new_password==='' || this.state.confirm_new_password==='') {
+            this.addError('Cannot change password with empty input');
         }
 		else if(this.state.new_password !== this.state.confirm_new_password){
 			this.addError('New password must match confirmed password');
@@ -181,7 +182,7 @@ class Settings extends Component {
         	console.log('updating user password');
 
         	Auth.currentAuthenticatedUser({ bypassCache: true })
-            	.catch((err) => { 
+            	.catch((err) => {
                 	console.error('Error getting user', err);
 					noError = false;
 					this.addError('Error updating password; try again.');
@@ -189,7 +190,7 @@ class Settings extends Component {
 				.then((user)=>{
 					if(noError){
         				Auth.changePassword(user, this.state.old_password, this.state.new_password)
-            				.catch((err) => { 
+            				.catch((err) => {
 								noError = false;
                 				console.error(err);
 								if(err.code === "NotAuthorizedException"){
@@ -197,7 +198,7 @@ class Settings extends Component {
 								}
 								else{
 									this.addError(err.code);
-								} 
+								}
             				})
             				.then((res) => {
 								if(noError){
@@ -206,13 +207,13 @@ class Settings extends Component {
 								}
             				});
         			}
-				});	
+				});
 		}
-		this.handleClose();	
+		this.handleClose();
     }
     async handleSubmitName(event){
 		var noError = true;
-        if(this.state.name==='') { 
+        if(this.state.name==='') {
             this.addError('Cannot change name with empty input');
         }
 		else if(this.state.name.length > 24){
@@ -222,17 +223,17 @@ class Settings extends Component {
 			console.log('updating user name');
             Auth.currentAuthenticatedUser({ bypassCache: true })
                 .catch((err) => {
-					noError = false; 
+					noError = false;
                     console.error('Error getting user', err);
-					this.addError('Error updating display name; try again.'); 
+					this.addError('Error updating display name; try again.');
                 })
 				.then((user)=>{
 					if(noError){
             			Auth.updateUserAttributes(user, {name:this.state.name})
-                			.catch((err) => { 
+                			.catch((err) => {
 								noError = false;
                     			console.error('Error updating display name', err);
-								this.addError('Error updating display name; try again.'); 
+								this.addError('Error updating display name; try again.');
                 			})
                 			.then((res)=>{
 								if(noError){
@@ -246,7 +247,7 @@ class Settings extends Component {
     }
     async handleSubmitUrl(event){
 		var noError = true;
-        if(this.state.url==='') { 
+        if(this.state.url==='') {
             this.addError('Cannot change picture with empty input');
         }
 		else if(this.state.url.length > 2048){
@@ -262,7 +263,7 @@ class Settings extends Component {
             console.log('updating user picture');
 
             Auth.currentAuthenticatedUser({ bypassCache: true })
-                .catch((err) => { 
+                .catch((err) => {
 					noError = false;
                     console.error('Error getting user', err);
 					this.addError('Error updating image; try again.');
@@ -271,9 +272,9 @@ class Settings extends Component {
 					if(noError){
             			Auth.updateUserAttributes(user,{picture: this.state.url})
                 			.catch((err) => {
-								noError = false; 
+								noError = false;
                     			console.error('Error updating image', err);
-								this.addError('Error updating image; try again.'); 
+								this.addError('Error updating image; try again.');
                 			})
 							.then((res) => {
 								if(noError){
@@ -312,8 +313,6 @@ class Settings extends Component {
                 </Col>
                 <Col md="6" xs="10" >
                     <Jumbotron>
-                        <h2>User Settings</h2>
-
                         {/* email field */}
                         <InputGroup
                             className="mb-3"
@@ -326,7 +325,8 @@ class Settings extends Component {
                             <InputGroup.Append>
                                 <Button
                                     variant="outline-secondary"
-                                    onClick={this.handleSubmitEmail}>
+                                    onClick={this.handleSubmitEmail}
+                                    className="settingsButton">
                                     Change Your Email
                                 </Button>
                             </InputGroup.Append>
@@ -344,7 +344,8 @@ class Settings extends Component {
                             <InputGroup.Append>
                                 <Button
                                     variant="outline-secondary"
-                                    onClick={this.handleSubmitPhoneNumber}>
+                                    onClick={this.handleSubmitPhoneNumber}
+                                    className="settingsButton">
                                     Change Your Phone #
                                 </Button>
                             </InputGroup.Append>
@@ -377,7 +378,8 @@ class Settings extends Component {
                             <InputGroup.Append>
                                 <Button
                                     variant="outline-secondary"
-                                    onClick={this.handleShow}>
+                                    onClick={this.handleShow}
+                                    className="settingsButton">
                                     Change Your Password
                                 </Button>
                             </InputGroup.Append>
@@ -408,7 +410,8 @@ class Settings extends Component {
                             <InputGroup.Append>
                                 <Button
                                     variant="outline-secondary"
-                                    onClick={this.handleSubmitName}>
+                                    onClick={this.handleSubmitName}
+                                    className="settingsButton">
                                     Change Your Name
                                 </Button>
                             </InputGroup.Append>
@@ -426,7 +429,8 @@ class Settings extends Component {
                             <InputGroup.Append>
                                 <Button
                                     variant="outline-secondary"
-                                    onClick={this.handleSubmitUrl}>
+                                    onClick={this.handleSubmitUrl}
+                                    className="settingsButton">
                                     Change Your Picture
                                 </Button>
                             </InputGroup.Append>
@@ -434,7 +438,6 @@ class Settings extends Component {
                     </Jumbotron>
                 </Col>
                 <Col>
-                    <p>.</p>
                 </Col>
             </Row>
             </div>

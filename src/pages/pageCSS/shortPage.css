@@ -1,0 +1,12 @@
+#root {
+    height: 1903px!important;
+}
+.jumbotron {
+    background-color: #F4F3EE!important;
+    padding-bottom: 2.4em!important;
+    margin-top: 1.0em!important;
+}
+
+.settingsButton {
+    width: 11.7em;
+}

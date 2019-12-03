@@ -20,7 +20,7 @@ import './App.css';
 
 class App extends Component {
 	state = { username: '' };
-	
+
 	async getUser(){
 		Auth.currentAuthenticatedUser({ bypassCache: true})
 			.catch((err)=>{

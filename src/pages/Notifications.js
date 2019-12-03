@@ -3,6 +3,7 @@ import {Col, Row, Alert } from 'react-bootstrap';
 import {getNotifications, deleteNotification}  from '../DBOps.js'
 import { Auth } from 'aws-amplify';
 import Navbar from '../components/Navbar.js'
+import './pageCSS/shortPage.css'
 
 class Notifications extends Component {
 
@@ -41,7 +42,7 @@ class Notifications extends Component {
 							});
 						}
 					});
-			});		
+			});
   	}
 
   	render() {

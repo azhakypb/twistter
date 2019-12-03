@@ -1,8 +1,12 @@
+//react modules
 import React, { Component, } from 'react';
 import { Button, InputGroup, FormControl, Form} from 'react-bootstrap';
+//aws modules
+import { Auth } from 'aws-amplify'
+//components
 import DBOps from '../DBOps.js'
 import { createPost } from '../DBOps.js'
-import { Auth } from 'aws-amplify'
+import './compCSS/Singlepost.css'
 
 class Singlepost extends Component {
 
@@ -103,6 +107,7 @@ class Singlepost extends Component {
                 	</InputGroup>
                 	<Button
                       type='button'
+                        className="submit"
                     	variant={buttonColor}
                     	size="md"
                     	disabled={!enabled}

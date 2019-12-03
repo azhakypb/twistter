@@ -4,6 +4,7 @@ import { Button, Col, FormControl, InputGroup, ListGroup, Jumbotron, Row, Dropdo
 // aws modules
 // components
 import Navbar from '../components/Navbar.js'
+import './pageCSS/shortPage.css'
 import { getFollowing, searchTopic, customQuery } from '../DBOps.js'
 import Post from '../components/Post.js'
 import UserlistItem from '../components/UserlistItem.js'
@@ -122,7 +123,7 @@ class Search extends Component {
                		 	// this.setState({posts:[<ListGroup.Item href={'/testing'} action>
                 		//     Check back soon for working version</ListGroup.Item>]});
 					});
-            }	
+            }
 
             else
             {
@@ -145,7 +146,6 @@ class Search extends Component {
                 </Col>
                 <Col md="6" xs="10">
                     <Jumbotron>
-                        <h2>Search</h2>
                         <InputGroup
                             className="mb-3"
                             value={this.state.search}
@@ -156,6 +156,7 @@ class Search extends Component {
                                 aria-describedby="basic-addon2"/>
                             <InputGroup.Append>
                                 <Button
+                                    className="searchButton"
                                     variant="outline-secondary"
                                     onClick={this.handleSubmitText}>
                                     Search

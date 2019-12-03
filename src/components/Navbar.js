@@ -1,13 +1,16 @@
 // react modules
 import React, { Component, } from 'react';
-import { Button, Jumbotron, Modal } from 'react-bootstrap';
+import { Button, Jumbotron, Modal,Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUserSlash, faDoorOpen, faStar, faUsersCog, faSearch, faUserCircle, faHome } from '@fortawesome/free-solid-svg-icons'
 // aws modules
 import { Auth } from 'aws-amplify';
 
 import DBOps from '../DBOps.js'
 import { deleteUser } from '../DBOps.js'
 import Postwrite from '../components/Postwrite.js'
+import './compCSS/Navbar.css'
 
 class Navbar extends Component {
 
@@ -53,7 +56,7 @@ class Navbar extends Component {
         	.then((res)=>{
         		console.log(res);
 
-        		
+
         		Auth.currentAuthenticatedUser()
         			.then((user: CognitoUser) =>{
 
@@ -72,79 +75,99 @@ class Navbar extends Component {
   	}
 
 	render() {
-
+		var del 	= " Delete User"
+		var logout 	= " Log Out"
+		var notific = " Notifications"
+		var sett    = " Settings"
+		var search  = " Search"
+		var profile	= " My Profile"
+		var home 	= " Home Page"
     	return(
-			<div>
-	    		<Jumbotron>
-	    			<h2>Navbar</h2>
+			<div id="navbar">
 					<Link
+						className = "links"
 						to= '/'
-						paddingtop='100px'>
+						>
 						<Button
-							variant="secondary"
+							className="home but"
+							variant="outline-light"
 							size="md"
 							block>
-							Home
+							<FontAwesomeIcon icon={faHome} />
+							{home}
 						</Button>
 					</Link>
 	    			<Link
+						className = "links"
 	    				to= '/profile'>
 		  				<Button
-		  					variant="secondary"
+							className="profile but"
+		  					variant="outline-light"
 		  					size="md"
 		  					block>
-		    				Profile
+							<FontAwesomeIcon icon={faUserCircle} />
+		    				{profile}
 		  				</Button>
 	    			</Link>
 					<Link
+						className = "links"
 						to= '/search'>
 						<Button
-							variant="secondary"
+							className="search but"
+							variant="outline-info"
 							size="md"
 							block>
-							Search
+							<FontAwesomeIcon icon={faSearch} />
+							{search}
 							</Button>
 					</Link>
 	    			<Link
-	    				to= '/settings'
-	    				paddingtop="50px">
+					    className = "links"
+	    				to= '/settings'>
 		  				<Button
-		  					variant="secondary"
+							className="settings but"
+		  					variant="outline-info"
 		  					size="md"
 		  					block>
-		    				Settings
+							<FontAwesomeIcon icon={faUsersCog} />
+		    				{sett}
 		  				</Button>
 	  				</Link>
 					<Link
-						to= '/notifications'
-						paddingtop="50px">
+						className = "links"
+						to= '/notifications'>
 						<Button
-							variant="secondary"
+							className="notifications but"
+							variant="outline-info"
 							size="md"
 							block>
-							Notifications
+							<FontAwesomeIcon icon={faStar} />
+							{notific}
 						</Button>
 					</Link>
 	          		<Link
-	            		to= '/'
-	            		paddingtop="50px">
+						className = "links"
+	            		to= '/'>
 	            		<Button
-	              			variant="secondary"
+							className="logout but"
+	              			variant="outline-dark"
 	              			size="md"
 	              			onClick={(e) => Auth.signOut()}
 	              			block>
-	              			Log Out
+							<FontAwesomeIcon icon={faDoorOpen} />
+	              			{logout}
 	            		</Button>
 	          		</Link>
 	  				<Button
-	  					variant="secondary"
+						className="delete but"
+	  					variant="outline-danger"
 	  					size="md"
 	  					onClick ={this.handleShow}
 	  					block>
-	    				Delete User
+						<FontAwesomeIcon icon={faUserSlash} />
+						{del}
 	  				</Button>
 	  				<Postwrite username={this.props.username}></Postwrite>
-	    		</Jumbotron>
 			<Modal show={this.state.show} onHide={this.handleClose}>
 				<Modal.Header>
 					<Modal.Title>Confirm Account Deletion</Modal.Title>
