@@ -81,7 +81,7 @@ class Post extends Component {
 									if(tres.data.getFollow.followedtopics !== null){
 										followFollowedTopics = tres.data.getFollow.followedtopics.split(',');
 									} else {
-										followNewTopics = [];
+										followFollowedTopics = [];
 									}
 								}
 
