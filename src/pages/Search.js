@@ -101,7 +101,7 @@ class Search extends Component {
 
             else if (this.state.searchType == "@") {
                 console.log("Searching for users w/ username\n" +
-                    "Username contains " + this.state.search);
+                    "Username contains " + this.state.search.toLowerCase());
                 const searchTemplate = `query searchUsers($input: ID!) {
                   searchUsers(filter: {id: {wildcard: $input}}) {
                     items {
@@ -109,7 +109,7 @@ class Search extends Component {
                     }
                   }
                 }`
-                var users = await customQuery(searchTemplate, {input: this.state.search + "*"})
+                var users = await customQuery(searchTemplate, {input: this.state.search.toLowerCase() + "*"})
 					.catch((err)=>{
 						console.log('Search.js error searching users', err);
 					})
