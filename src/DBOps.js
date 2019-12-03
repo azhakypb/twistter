@@ -695,8 +695,6 @@ async function addTopics(author, topics) {
     }
   }`
   var userData = await API.graphql(graphqlOperation(getUserTemplate, JSON.stringify({id: author})));
-  console.log(userData);
-  console.log(topics);
 
   var userTopics = (userData.data.getUser.topics == null) ? [] : userData.data.getUser.topics.split(",");
   for(const topic of topics){
@@ -710,6 +708,7 @@ async function addTopics(author, topics) {
   var followers = userData.data.getUser.followers.items;
   for (var i = 0; i < followers.length; i++) {
     var follow = await getFollowedTopics(followers[i].follower.id, author);
+    console.log(follow);
     var followerFTopics = (follow.data.getFollow.followedtopics == null) ? "" : follow.data.getFollow.followedtopics; // followed topics
     var followerNTopics = (follow.data.getFollow.newtopics == null) ? "" : follow.data.getFollow.newtopics; // new topics
     var followerUTopics = (follow.data.getFollow.unfollowedtopics == null) ? "" : follow.data.getFollow.unfollowedtopics; // unfollowed topics
@@ -744,10 +743,9 @@ async function addTopics(author, topics) {
       }
     }
 
-    var prom = updateNewTopics(followers[i].follower.id, author, followerNTopics);
-    var updatedTopics = await API.graphql(graphqlOperation(updateUserTopicsTemplate, JSON.stringify({id: author, topics: userTopics})));
-    console.log(updatedTopics);
+    var prom = await updateNewTopics(followers[i].follower.id, author, followerNTopics);
   }
+  var updatedTopics = await API.graphql(graphqlOperation(updateUserTopicsTemplate, JSON.stringify({id: author, topics: userTopics})));
 }
 
 
@@ -757,6 +755,8 @@ export function createPost(author,topics,text,image=null,quoteid=false) {
         var timeid    = new Date().toString()
 
         addTopics(author, topics);
+        console.log(author);
+        console.log(topics);
 
         console.log(timeid);
         console.log('The quote id is: ' + quoteid);
