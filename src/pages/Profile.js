@@ -98,7 +98,6 @@ class Profile extends Component {
                 		<Container
                     		className="timeline">
                     		<Jumbotron className="timelineInside">
-								<hr/>
 								<this.showPosts/>
                     		</Jumbotron>
                 		</Container>
