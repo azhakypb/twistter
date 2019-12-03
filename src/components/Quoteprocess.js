@@ -51,7 +51,7 @@ class Quoteprocess extends Component {
                     createPost(user.username, this.props.topics, this.state.quoteText, null, this.props.id)
                     .then((res)=>{
                         console.log('single post', 'handle create quoted post', 'success', res);
-                        //window.location.reload();
+                        window.location.reload();
                     },(err)=>{
                         console.log('single post', 'handle create quoted post', 'fail', err);
                     })
@@ -60,7 +60,7 @@ class Quoteprocess extends Component {
                     createPost(user.username, this.props.topics, this.state.quoteText, this.state.quoteImage, this.props.id)
                     .then((res)=>{
                         console.log('single post', 'handle create quoted post', 'success', res);
-                        //window.location.reload();
+                        window.location.reload();
                     },(err)=>{
                         console.log('single post', 'handle create quoted post', 'fail', err);
                     })
