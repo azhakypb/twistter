@@ -1,6 +1,8 @@
 // react modules
 import React, {Component} from 'react';
 import { Button, Card, Col, Container,  Jumbotron, Row, Image, InputGroup, FormControl } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBook } from '@fortawesome/free-solid-svg-icons'
 // aws modules
 import { Auth } from 'aws-amplify';
 // components
@@ -39,7 +41,7 @@ class Homepage extends Component {
             else if (this.state.sort === 'relevancy') {
 				console.log("Sorting posts by relevancy to user");
 				this.state.myposts.sort((a,b) => b.relevance - a.relevance);
-				
+
 			}
             else if (this.state.sort === 'potential') {
                 console.log("Sorting posts by potential for engagement");
@@ -123,7 +125,7 @@ class Homepage extends Component {
     render() {
 
         const { name, url} = this.state
-
+        var t7 = " Twistter 7"
         return (
         		<Row>
             		<Col>
@@ -135,7 +137,7 @@ class Homepage extends Component {
                 		<Container
                     		className="My homepage">
                     		<Jumbotron>
-                                <h1>Twistter7</h1>
+                                <h1><FontAwesomeIcon icon={faBook}/>{t7}</h1>
                     		</Jumbotron>
                 		</Container>
 
@@ -165,9 +167,6 @@ class Homepage extends Component {
             		</Col>
 
             		<Col>
-						<Jumbotron>
-            				<FollowList username={this.context.username}></FollowList>
-						</Jumbotron>
             		</Col>
       		</Row>
     );
