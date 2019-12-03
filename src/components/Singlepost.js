@@ -17,14 +17,16 @@ class Singlepost extends Component {
   		//  var today = new Date();
     	this.state = {
       		submitable    : false,
-      		text1         : '',
+			text1         : '',
+			image1		  : '',
       		topics1       : '',
       		postAuthorId1 : this.props.username
     	}
     	//bind functions
-    	this.handleAddPost      = this.handleAddPost.bind(this);
+		this.handleAddPost      = this.handleAddPost.bind(this);
+		this.handleAddImage		= this.handleAddImage.bind(this);
     	this.handleAddTopic     = this.handleAddTopic.bind(this);
-    	this.handleTopicNum     = this.handleTopicNum.bind(this);
+		this.handleTopicNum     = this.handleTopicNum.bind(this);
     	this.handleLength       = this.handleLength.bind(this);
     	this.handleCreatePost   = this.handleCreatePost.bind(this);
     	this.handleDouble       = this.handleDouble.bind(this);
@@ -37,7 +39,10 @@ class Singlepost extends Component {
   	handleAddPost (event){
     	this.setState({ text1:     event.target.value}
     	);
-  	}
+	}
+	handleAddImage (event){
+		this.setState({image1:	event.target.value});
+	}  
   	handleAddTopic (event){
       event.target.value = (event.target.value.replace(/\s+/g, ''));
     	this.setState({ topics1:   event.target.value.split(",")});
@@ -64,12 +69,22 @@ class Singlepost extends Component {
     	Auth.currentAuthenticatedUser({ bypassCache: true })
         	.catch((err)=>{console.log('error getting user',err);})
         	.then((user)=>{
-            	createPost(user.username,this.state.topics1,this.state.text1)
+				if (this.state.image1 === '') {
+					createPost(user.username,this.state.topics1,this.state.text1)
                     .then((res)=>{
-                        console.log('single post','handle create post','success',res);
+						console.log('single post','handle create post','success',res);
                     },(err)=>{
-                        console.log('single post','handle create post','error',err);
+						console.log('single post','handle create post','error',err);
                     })
+				}
+				else {
+					createPost(user.username,this.state.topics1,this.state.text1,this.state.image1)
+                    .then((res)=>{
+						console.log('single post','handle create post','success',res);
+                    },(err)=>{
+						console.log('single post','handle create post','error',err);
+                    })
+				}
         	});
   	}
 
@@ -94,6 +109,17 @@ class Singlepost extends Component {
                         	maxLength="407"
                     	/>
                 	</InputGroup>
+					<InputGroup
+						value={this.state.image1}
+						onChange={this.handleAddImage}>
+						<FormControl
+							rows='2'
+							placeholder="Paste image url here"
+							as="textarea"
+							aria-label="With textarea"
+							maxLength="407"
+						/>
+					</InputGroup>
                 	<InputGroup
                     	value={this.state.topics1}
                     	onChange={this.handleAddTopic}>

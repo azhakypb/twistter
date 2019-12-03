@@ -10,9 +10,11 @@ class Quoteprocess extends Component {
 		// props and states
 		super(props);
 		this.state = {
-			quoteText		: ''
+            quoteText		: '',
+            quoteImage      : ''
 		}
-		this.handleAddQuotePost 	    = this.handleAddQuotePost.bind(this);
+        this.handleAddQuotePost 	    = this.handleAddQuotePost.bind(this);
+        this.handleAddQuoteImage        = this.handleAddQuoteImage.bind(this);
 		this.handleLengthQuote       	= this.handleLengthQuote.bind(this);
         this.handleCreatePost           = this.handleCreatePost.bind(this);
 		this.handleDouble			    = this.handleDouble.bind(this);
@@ -26,8 +28,12 @@ class Quoteprocess extends Component {
 	}
 	handleAddQuotePost (event){
 		this.setState({ quoteText:	event.target.value}
-		);
-	}
+        );
+    }
+    handleAddQuoteImage (event){
+        this.setState({ quoteImage: event.target.value}
+        );
+    }
 
 	handleLengthQuote(quoteText, quoteTopic) {
 		if(quoteText.length > 0) {
@@ -41,18 +47,30 @@ class Quoteprocess extends Component {
         Auth.currentAuthenticatedUser({ bypassCache: true })
             .catch((err)=>{console.log('error getting user', err);})
             .then((user)=>{
-                createPost(user.username, this.props.topics, this.state.quoteText, this.props.id)
+                if (this.state.quoteImage === '') {
+                    createPost(user.username, this.props.topics, this.state.quoteText, null, this.props.id)
                     .then((res)=>{
                         console.log('single post', 'handle create quoted post', 'success', res);
                         window.location.reload();
                     },(err)=>{
                         console.log('single post', 'handle create quoted post', 'fail', err);
                     })
+                }
+                else {
+                    createPost(user.username, this.props.topics, this.state.quoteText, this.state.quoteImage, this.props.id)
+                    .then((res)=>{
+                        console.log('single post', 'handle create quoted post', 'success', res);
+                        window.location.reload();
+                    },(err)=>{
+                        console.log('single post', 'handle create quoted post', 'fail', err);
+                    })
+                }
             });
     }
     render() {
         const {
             quoteText,
+            quoteImage,
             quoteTopic
         } = this.state;
         const enabled 	= 	this.handleLengthQuote(quoteText, quoteTopic)
@@ -73,7 +91,18 @@ class Quoteprocess extends Component {
                                         placeholder='Quote Here'
                                         as='textarea'
                                         maxlength="407"
-
+                                    />
+                                </InputGroup>
+                            </Row>
+                            <Row>
+                                <InputGroup
+                                    value={this.state.quoteImage}
+                                    onChange={this.handleAddQuoteImage}>
+                                    <FormControl
+                                        rows='2'
+                                        placeholder='Image URL Here'
+                                        as='textarea'
+                                        maxlength="407"
                                     />
                                 </InputGroup>
                             </Row>
