@@ -19,15 +19,10 @@ class Profile extends Component {
             name        : '',
 			username    : '',
 			myposts		: [],
-			url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png',
-            followlist  : []
+			url         : 'https://vyshnevyi-partners.com/wp-content/uploads/2016/12/no-avatar-300x300.png'
         }
 		// bind functions
 		this.showPosts = this.showPosts.bind(this);
-		this.handleChangeSort = this.handleChangeSort.bind(this);
-		this.handleChangeText = this.handleChangeText.bind(this);
-		this.handleChangeTopic = this.handleChangeTopic.bind(this);
-        this.getFollowList      = this.getFollowList.bind(this);
 	}
 
 	showPosts(props){
@@ -38,27 +33,6 @@ class Profile extends Component {
 			<ul>{this.state.myposts}</ul>
 		)
 	}
-
-	handleChangeSort(event){
-		this.setState({ sort: event.target.value });
-		console.log("Set sort state to :" + event.target.value);
-	}
-
-	handleChangeText(event){
-		this.setState({ filterText: event.target.value });
-		console.log("Set filterText state to :" + event.target.value);
-	}
-
-	handleChangeTopic(event){
-		this.setState({ filterTopic: this.state.filterText });
-		console.log("Set filterTopic state to :" + this.state.filterText);
-	}
-
-    getFollowList() {
-
-    }
-
-
 
     async componentDidMount(){
 		Auth.currentAuthenticatedUser({ bypassCache: true })
@@ -124,37 +98,6 @@ class Profile extends Component {
                 		<Container
                     		className="timeline">
                     		<Jumbotron className="timelineInside">
-								<h3>Your Timeline</h3>
-								<hr/>
-								<label>
-									{"Sort by: "}
-									<select onChange={this.handleChangeSort}>
-										<option value="Time Posted">Time Posted</option>
-										<option value="Relevancy">Relevancy</option>
-										<option value="Potential">Engagement Potential</option>
-									</select>
-								</label>
-								<hr/>
-								<label>
-									{"Filter by:"}
-									<InputGroup
-										className="mb-3"
-										value={this.state.filterText}
-										onChange={this.handleChangeText}>
-										<FormControl
-											placeholder="Type Topic Here"
-											aria-label="Type Topic Here"
-											aria-describedby="basic-addon2"/>
-										<InputGroup.Append>
-											<Button
-												variant="outline-secondary"
-												onClick={this.handleChangeTopic}>
-												Submit
-											</Button>
-										</InputGroup.Append>
-									</InputGroup>
-								</label>
-								<hr/>
 								<this.showPosts/>
                     		</Jumbotron>
                 		</Container>

@@ -697,27 +697,15 @@ async function addTopics(author, topics) {
   var userData = await API.graphql(graphqlOperation(getUserTemplate, JSON.stringify({id: author})));
   console.log(userData);
   console.log(topics);
-  var userTopics = (userData.data.getUser.topics == null) ? "" : userData.data.getUser.topics;
-  var userTopicsArr = (userTopics.length == 0) ? [] : userTopics.split(",");
-  var userTopicsHash = [];
-  for (var i = 0; i < userTopicsArr; i++) {
-    userTopicsHash[userTopicsArr[i]] = true;
-  }
-  if (userTopics.length != 0) {
-    userTopics = userTopics + ",";
-  }
-  // add the new topics to user topics field
-  for (var i = 0; i < topics.length; i++) {
-    if (userTopicsHash[topics[i]] == true) {
-      continue; // skip if the topic already is in the topics field
-    }
-    else if (i == topics.length - 1) {
-      userTopics = userTopics + topics[i];
-    }
-    else {
-      userTopics = userTopics + topics[i] + ",";
+
+  var userTopics = (userData.data.getUser.topics == null) ? [] : userData.data.getUser.topics.split(",");
+  for(const topic of topics){
+    if(!userTopics.includes(topic)){
+      userTopics.push(topic);
     }
   }
+  userTopics = userTopics.join(',');
+
   // add new topics to each user
   var followers = userData.data.getUser.followers.items;
   for (var i = 0; i < followers.length; i++) {
@@ -757,7 +745,8 @@ async function addTopics(author, topics) {
     }
 
     var prom = updateNewTopics(followers[i].follower.id, author, followerNTopics);
-    var updatedTopics = API.graphql(graphqlOperation(updateUserTopicsTemplate, JSON.stringify({id: author, topics: userTopics})));
+    var updatedTopics = await API.graphql(graphqlOperation(updateUserTopicsTemplate, JSON.stringify({id: author, topics: userTopics})));
+    console.log(updatedTopics);
   }
 }
 
