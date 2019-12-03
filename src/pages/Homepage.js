@@ -1,6 +1,6 @@
 // react modules
 import React, {Component} from 'react';
-import { Button, Card, Col, Container,  Jumbotron, Row, Image, InputGroup, FormControl } from 'react-bootstrap';
+import { Button, Card, Col, Container,  Jumbotron, Row, Image, InputGroup, FormControl, Dropdown, DropdownButton } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBook } from '@fortawesome/free-solid-svg-icons'
 // aws modules
@@ -12,6 +12,7 @@ import Navbar from '../components/Navbar.js';
 import FollowList from '../components/FollowList.js';
 import Post from '../components/Post.js';
 import { UsernameContext } from '../UsernameContext.js';
+import './pageCSS/Homepage.css'
 
 class Homepage extends Component {
     constructor(props){
@@ -144,24 +145,46 @@ class Homepage extends Component {
                 		<Container
                     		className="timeline">
                     		<Jumbotron>
-								<h3>Your Timeline</h3>
-								<hr/>
-								<label>
-									{"Sort by: "}
-									<select onChange = {this.handleChangeSort}>
-										<option value="time">Time Posted</option>
-										<option value="relevancy">Relevancy</option>
-										<option value="potential">Engagement Potential</option>
-									</select>
-								</label>
-								<hr/>
-								<label>
-									{"Filter by: "}
-									<input type="text" placeholder="insert topic here" onChange={this.handleChangeText}/>
-									<button type="submit" onClick={this.handleChangeTopic}>Submit</button>
-								</label>
-								<hr/>
-								<this.showPosts/>
+                            <h3>Your Timeline</h3>
+                            <hr/>
+                            <Row>
+                                <Col>
+                                    <InputGroup size="sm" className="mb-3">
+                                        <InputGroup.Prepend>
+                                            <InputGroup.Text id="inputGroup-sizing-default">Sort by: </InputGroup.Text>
+                                        </InputGroup.Prepend>
+                                        <select onChange = {this.handleChangeSort}>
+                                            <option value="time">Time Posted</option>
+                                            <option value="relevancy">Relevancy</option>
+                                            <option value="potential">Engagement Potential</option>
+                                        </select>
+                                        </InputGroup>
+                                </Col>
+                                <Col>
+                                    <InputGroup size="sm" className="mb-3">
+                                        <InputGroup.Prepend>
+                                            <InputGroup.Text id="inputGroup-sizing-default">Filter by: </InputGroup.Text>
+                                        </InputGroup.Prepend>
+                                        <FormControl
+                                            type="text"
+                                            placeholder="insert topics here"
+                                            onChange={this.handleChangeText}
+                                            aria-label="Default"
+                                            aria-describedby="inputGroup-sizing-default"
+                                            />
+                                        <InputGroup.Append>
+                                            <Button
+                                                variant="outline-secondary"
+                                                type="submit"
+                                                onClick={this.handleChangeTopic}>
+                                                Submit
+                                            </Button>
+                                        </InputGroup.Append>
+                                    </InputGroup>
+                                    </Col>
+                            </Row>
+							<hr/>
+							<this.showPosts/>
                     		</Jumbotron>
                 		</Container>
             		</Col>
