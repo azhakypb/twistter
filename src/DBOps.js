@@ -628,6 +628,8 @@ export async function deleteUser(username){
         returnObj.notificationResults.push(notificationResult);
     }
 
+    var deleteu = await API.graphql(graphqlOperation(userDeletionTemplate, JSON.stringify({id: username})));
+
     return returnObj;
 }
 
