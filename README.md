@@ -6,6 +6,11 @@ In the project directory, you can run:
 
 ### `npm start`
 
+/**********************************************************************************************************************************/
+// Attention, due to the backend being inactive, you won't be able to create an account or log in to a previously existing one.   //
+// You, however, can take a look at the code written and tremendous work accomplished!                                            //
+/**********************************************************************************************************************************/
+
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
